@@ -55,9 +55,6 @@ model WalletModel {
   uzs        BigInt     @map("uzs")         @db.BigInt       @default(0)
   //amount_dollar
   usd        BigInt     @map("usd")         @db.BigInt       @default(0)
-  status     String     @map("status")      @db.VarChar()    @default("new")
-  isActive   Boolean    @map("is_active")   @db.Boolean      @default(true)
- 
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
@@ -75,8 +72,6 @@ model WarehouseModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   name       String     @map("name")        @db.VarChar()  
   type       String     @map("type")        @db.VarChar()    @default("product")
-  status     String     @map("status")      @db.VarChar()    @default("new")
-
   //admin
   staffId    String     @map("staff_id")    @db.Uuid 
   companyId  String     @map("company_id")  @db.Uuid
@@ -101,9 +96,6 @@ model CompanyModel {
   name       String     @map("name")        @db.VarChar()  
   //company_id
   sheetId    String     @map("sheet_id")    @db.VarChar()
-  isActive   Boolean    @map("is_active")   @db.Boolean      @default(true)
-  status     String     @map("status")      @db.VarChar()    @default("new")
-  
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
@@ -130,7 +122,7 @@ model StaffModel {
   //company_id
   sheetId    String   @map("sheet_id")     @db.VarChar()    
   password   String   @map("password")     @db.VarChar()  
-  isActive   Boolean  @map("is_active")    @db.Boolean      @default(true)
+  hashedPassword   String   @map("hashed_password")     @db.VarChar()  
   //bot_id
   telegramId BigInt   @map("telegram_id")  @db.BigInt()     @default(0)
   //use_bot
@@ -163,7 +155,6 @@ model StaffModel {
 
 model ProductModel {
   id           String     @map("id")            @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  isActive     Boolean    @map("is_active")     @db.Boolean      @default(true)
  
   orderId      String     @map("order_id")      @db.Uuid    
   warehouseId  String     @map("warehouse_id")  @db.Uuid    
@@ -197,7 +188,6 @@ model OrderModel {
   //copied
   isCopied       Boolean   @map("is_copied")       @db.Boolean        @default(true)
   status         String    @map("status")          @db.VarChar()      @default("new")
-  isActive       Boolean   @map("is_active")       @db.Boolean        @default(true)
   endDate        DateTime  @map("end_date")        @db.Timestamptz()  
   editedStatus   String    @map("edited_status")   @db.VarChar()      @default("new")
   isPushed       Boolean   @map("is_pushed")       @db.Boolean        @default(false)
@@ -241,9 +231,6 @@ model PaymentModel {
   change     BigInt     @map("change")       @db.BigInt       @default(0)
   isFirst    Boolean    @map("is_first")     @db.Boolean      @default(true)
   isCopied   Boolean    @map("is_copied")    @db.Boolean      @default(true)
-  isActive   Boolean    @map("is_active")    @db.Boolean      @default(true)
-  status     String     @map("status")       @db.VarChar()    @default("new")
-
   dealId     String     @map("deal_id")      @db.Uuid
   tellerId   String     @map("teller_id")    @db.Uuid
   walletId   String     @map("wallet_id")    @db.Uuid
@@ -269,8 +256,6 @@ model PaymentModel {
 
 model OrderLogModel {
   id         String   @map("id")      @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  status     String   @map("status")  @db.VarChar
-  //cathegory
   category   String?  @map("category") @db.VarChar()
   tissue     String?  @map("tissue")   @db.VarChar(64)
   title      String?  @map("title")    @db.VarChar(128)
@@ -282,7 +267,6 @@ model OrderLogModel {
   isFirst    Boolean  @map("is_first") @db.Boolean    @default(true)
   //copied
   isCopied   Boolean  @map("is_copied")  @db.Boolean  @default(true)
-  isActive   Boolean  @map("is_active")  @db.Boolean  @default(true)
   endDate    DateTime @map("end_date")   @db.Timestamptz()
 
   orderId    String   @map("order_id") @db.Uuid
@@ -306,9 +290,6 @@ model ModelModel {
   price             Decimal  @map("price")       @db.Decimal()        @default(0)
   sale              Decimal? @map("sale")        @db.Decimal()
   code              String?  @map("code")        @db.VarChar
-  isActive          Boolean  @map("is_active")   @db.Boolean          @default(true)
-  status            String   @map("status")      @db.VarChar(64)      @default("new")
-  factoryPrice      Decimal  @map("factory_price") @db.Decimal()      @default(0)
   forInvestor       Decimal  @map("for_investor")  @db.Decimal()      @default(0)
   priceForB2B       Decimal  @map("price_for_b2b") @db.Decimal()      @default(0)
   description       String   @map("description")   @db.VarChar        @default("")
@@ -339,9 +320,6 @@ model ModelLogModel {
   price             Decimal  @map("price")              @db.Decimal()   @default(0)
   sale              Decimal? @map("sale")               @db.Decimal()
   code              String?  @map("code")               @db.VarChar
-  isActive          Boolean  @map("is_active")          @db.Boolean     @default(true)
-  status            String   @map("status")             @db.VarChar(64) @default("new")
-  factoryPrice      Decimal  @map("factory_price")      @db.Decimal()   @default(0)
   forInvestor       Decimal  @map("for_investor")       @db.Decimal()   @default(0)
   priceForB2B       Decimal  @map("price_for_b2b")      @db.Decimal()   @default(0)
   description       String   @map("description")        @db.VarChar     @default("")
@@ -365,9 +343,6 @@ model MessageModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   text       String     @map("text")        @db.VarChar()  
   messageId  BigInt?    @map("message_id")  @db.BigInt
-  status     String     @map("status")      @db.VarChar(64)  @default("new")
-  isActive   Boolean    @map("is_active")   @db.Boolean      @default(true)
-
   orderId    String   @map("order_id") @db.Uuid
   
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
@@ -410,9 +385,6 @@ model DeliveryModel {
   title         String    @map("title")         @db.VarChar(2048) @default("")
   //copied
   isCopied      Boolean   @map("is_copied")     @db.Boolean       @default(true)
-  isActive      Boolean   @map("is_active")     @db.Boolean       @default(true)
-  status        String    @map("status")        @db.VarChar(64)   @default("new")
-  tripId        String    @map("trip_id")       @db.VarChar(1024) @default("000000")
   deliveryDate  DateTime  @map("delivery_date") @db.Timestamptz   @default(dbgenerated("CURRENT_DATE"))
   
   createdAt  DateTime   @map("created_at")  @db.Timestamptz       @default(dbgenerated("NOW()"))
@@ -440,9 +412,6 @@ model DealModel {
   //copied
   isCopied      Boolean   @map("is_copied")      @db.Boolean       @default(false)
   deliveryDate  DateTime  @map("delivery_date")  @db.Timestamptz   @default(dbgenerated("CURRENT_DATE"))
-  isActive      Boolean   @map("is_active")      @db.Boolean       @default(true)
-  status        String    @map("status")         @db.VarChar(64)   @default("new")
-  shop          String?   @map("shop")           @db.VarChar(255)  @default("--")
   address       String?   @map("address")        @db.VarChar
 
   clientId      String?   @map("client_id")  @db.Uuid
@@ -467,9 +436,6 @@ model ClientModel {
   name       String     @map("name")        @db.VarChar()  
   phone      String     @map("phone")       @db.VarChar()  
   whereFrom  String     @map("where_from")  @db.VarChar()   
-  status     String     @map("status")      @db.VarChar(64)  @default("new")
-  isActive   Boolean    @map("is_active")   @db.Boolean      @default(true)
-
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
@@ -488,7 +454,6 @@ model ChangeModel {
   oldValue      String   @map("old_value")     @db.VarChar(64)
   newValue      String   @map("new_value")     @db.VarChar(64)
   increaseCost  Decimal  @map("increase_cost") @db.Decimal()   @default(0)
-  isActive      Boolean  @map("is_active")     @db.Boolean     @default(false)
   isCanceled    Boolean  @map("is_canceled")   @db.Boolean     @default(false)
   comment       String   @map("comment")       @db.VarChar(64) @default("-")
   //copied
@@ -516,12 +481,9 @@ model ChangeModel {
 //   usd             Decimal  @map("usd")             @db.Decimal()    @default(0)
 //   //kurs
 //   course          Decimal  @map("course")          @db.Decimal()    @default(0)
-//   isActive        Boolean  @map("is_active")       @db.Boolean      @default(true)
 //   transactionFee  Decimal  @map("transaction_fee") @db.Decimal()    @default(0)
 //   //copied
 //   isCopied        Boolean  @map("is_copied")       @db.Boolean      @default(false)
-//   status          String   @map("status")          @db.VarChar(64)  @default("new")
-
 //   createdAt       DateTime   @map("created_at")    @db.Timestamptz  @default(dbgenerated("NOW()"))
 //   updatedAt       DateTime   @map("updated_at")    @db.Timestamptz  @updatedAt
 //   deletedAt       DateTime?  @map("deleted_at")    @db.Timestamptz
@@ -557,9 +519,6 @@ model ChangeModel {
 //   rest                Decimal   @map("rest")         @db.Decimal()    @default(0)
 //   //copied
 //   isCopied            Boolean    @map("is_copied")   @db.Boolean      @default(false)
-//   isActive            Boolean    @map("is_active")   @db.Boolean      @default(true)
-//   status              String     @map("status")      @db.VarChar(64)  @default("new")
-
 //   createdAt           DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
 //   updatedAt           DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
 //   deletedAt           DateTime?  @map("deleted_at")  @db.Timestamptz

@@ -33,6 +33,7 @@ export class StaffRequiredDto extends DefaultRequiredFieldsDto implements StaffR
 	sheetId: string
 	telegramId: bigint
 	role: string
+	hashedPassword: string
 }
 
 export class StaffOptionalDto extends DefaultOptionalFieldsDto implements StaffOptional {

@@ -45,3 +45,4 @@ export class CheckPermissionGuard implements CanActivate {
 		return true
 	}
 }
+
