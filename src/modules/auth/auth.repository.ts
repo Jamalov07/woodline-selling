@@ -12,7 +12,7 @@ export class AuthRepository {
 
 	async findOneStaff(body: StaffSignInRequest) {
 		const staff = await this.prisma.staffModel.findFirst({
-			where: { phone: body.phone },
+			where: { name: body.name },
 			select: {
 				id: true,
 				name: true,
@@ -21,9 +21,12 @@ export class AuthRepository {
 				createdAt: true,
 				deletedAt: true,
 				updatedAt: true,
+				companyId: true,
+				role: true,
+				sheetId: true,
 			},
 		})
-
+		
 		return staff
 	}
 }

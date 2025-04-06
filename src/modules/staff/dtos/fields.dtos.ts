@@ -14,7 +14,7 @@ export class StaffRequiredDto extends DefaultRequiredFieldsDto implements StaffR
 	@ApiProperty({ type: String, example: '00d7fa2e024' })
 	@IsNotEmpty()
 	@IsString()
-	@MinLength(8)
+	// @MinLength(8)
 	password: string
 
 	@ApiProperty({ type: String, example: 'jamalov n' })

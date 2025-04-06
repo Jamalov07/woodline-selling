@@ -1,6 +1,6 @@
-import { ApiProperty, IntersectionType } from '@nestjs/swagger'
-import { Tokens, StaffSignInData, StaffSignInResponse } from '../interfaces'
-import { StaffOptional, StaffOptionalDto } from '../../staff'
+import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
+import { StaffSignInData, StaffSignInResponse, TokenData, Tokens } from '../interfaces'
+import { StaffRequired, StaffRequiredDto } from '../../staff'
 import { GlobalModifyResponseDto, GlobalResponseDto } from '@common'
 
 export class TokensDto implements Tokens {
@@ -10,13 +10,17 @@ export class TokensDto implements Tokens {
 	@ApiProperty({ type: String })
 	refreshToken: string
 }
+export class StaffTokenData
+	extends IntersectionType(PickType(StaffRequiredDto, ['companyId', 'name', 'role']))
+	implements TokenData, Pick<StaffRequired, 'name' | 'role' | 'companyId'>
+{
+	@ApiProperty({ type: String })
+	token: string
+}
 
 export class StaffSignInDataDto implements StaffSignInData {
-	@ApiProperty({ type: StaffOptionalDto })
-	staff: StaffOptional
-
-	@ApiProperty({ type: TokensDto })
-	tokens: Tokens
+	@ApiProperty({ type: StaffTokenData })
+	token: TokenData & Pick<StaffRequired, 'name' | 'role' | 'companyId'>
 }
 
 export class StaffSignInResponseDto extends GlobalResponseDto implements StaffSignInResponse {

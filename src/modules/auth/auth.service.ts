@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { createResponse } from '@common'
 import { AuthGetValidTokensRequest, AuthSignOutRequest, StaffSignInRequest } from './interfaces'
 import { JsonWebTokenService } from './jwt.service'
@@ -20,17 +20,22 @@ export class AuthService {
 
 	async signIn(body: StaffSignInRequest) {
 		const staff = await this.authRepository.findOneStaff(body)
+		console.log(body,staff)
 
 		if (!staff) {
 			throw new UnauthorizedException('staff unauthorized')
 		}
+		console.log(staff)
 
 		if (staff.deletedAt) {
 			throw new BadRequestException('staff was deleted')
 		}
 
-		const isCorrect = await bcrypt.compare(body.password, staff.password)
-		if (!isCorrect) {
+		// const isCorrect = await bcrypt.compare(body.password, staff.password)
+		// if (!isCorrect) {
+		// 	throw new UnauthorizedException('wrong password')
+		// }
+		if (body.password !== staff.password) {
 			throw new UnauthorizedException('wrong password')
 		}
 		delete staff.password
@@ -38,7 +43,10 @@ export class AuthService {
 		const tokens = await this.jwtService.getTokens({ id: staff.id })
 		await this.staffRepository.updateOne({ id: staff.id }, { token: tokens.refreshToken })
 
-		return createResponse({ data: { staff: { ...staff }, tokens: tokens }, success: { messages: ['sign in success'] } })
+		return createResponse({
+			data: { token: { token: tokens.accessToken, name: staff.name, companyId: staff.sheetId, role: staff.role } },
+			success: { messages: ['sign in success'] },
+		})
 	}
 
 	async signOut(body: AuthSignOutRequest) {

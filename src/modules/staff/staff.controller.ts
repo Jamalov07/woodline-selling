@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from '@nestjs/common'
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { StaffService } from './staff.service'
-import { AuthOptions, CheckPermissionGuard } from '@common'
+import { AuthOptions } from '@common'
 import {
 	StaffFindManyRequestDto,
 	StaffCreateOneRequestDto,
@@ -17,7 +17,6 @@ import {
 } from './dtos'
 
 @ApiTags('Staff')
-// @UseGuards(CheckPermissionGuard)
 @Controller('staff')
 export class StaffController {
 	private readonly staffService: StaffService

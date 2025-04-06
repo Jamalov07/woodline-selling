@@ -33,7 +33,7 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone, mode: 'insensitive' },
+				phone: { contains: query.phone, mode: 'insensitive' },
 				name: { contains: query.name, mode: 'insensitive' },
 			},
 			...paginationOptions,
@@ -47,7 +47,7 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: query.id,
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone, mode: 'insensitive' },
+				phone: { contains: query.phone, mode: 'insensitive' },
 				name: { contains: query.name, mode: 'insensitive' },
 			},
 			select: { id: true, createdAt: true, deletedAt: true, token: true, name: true, phone: true, updatedAt: true },
@@ -61,7 +61,7 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone, mode: 'insensitive' },
+				phone: { contains: query.phone, mode: 'insensitive' },
 				name: { contains: query.name, mode: 'insensitive' },
 			},
 		})
@@ -79,7 +79,7 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone },
+				phone: { contains: query.phone },
 				name: query.name,
 			},
 			...paginationOptions,
@@ -92,7 +92,7 @@ export class StaffRepository implements OnModuleInit {
 		const staff = await this.prisma.staffModel.findFirst({
 			where: {
 				id: query.id,
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone },
+				phone: { contains: query.phone },
 				name: query.name,
 				token: query.token,
 				deletedAt: deletedAtConverter(query.isDeleted),
@@ -106,7 +106,7 @@ export class StaffRepository implements OnModuleInit {
 		const staffsCount = await this.prisma.staffModel.count({
 			where: {
 				id: { in: query.ids },
-				phone: { not: process.env.STAFF_PHONE, contains: query.phone },
+				phone: { contains: query.phone },
 				name: query.name,
 				deletedAt: deletedAtConverter(query.isDeleted),
 			},

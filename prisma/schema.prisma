@@ -60,7 +60,6 @@ model WalletModel {
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
   payments   PaymentModel[]
-  // approvals  ApprovalModel[]
 
   @@id([ id ])
   @@index([ id ])
@@ -104,7 +103,6 @@ model CompanyModel {
   staffs      StaffModel[]
   models      ModelModel[]
   payments    PaymentModel[]
-  // approvals   ApprovalModel[]
   modelLogs   ModelLogModel[]
   warehouses  WarehouseModel[]
 
@@ -141,7 +139,6 @@ model StaffModel {
 
   deals       DealModel[]
   orders      OrderModel[]
-  // applies     ApplyModel[]
   payments    PaymentModel[]
   orderLogs   OrderLogModel[]
   deliveries  DeliveryModel[]
@@ -472,65 +469,3 @@ model ChangeModel {
   @@index([ id ])
   @@map("change")
 }
-
-// model ApprovalModel {
-//   id              String   @map("id")              @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-//   //amount_in_sum
-//   uzs             Decimal  @map("uzs")             @db.Decimal()    @default(0)
-//   //amount_in_dollar
-//   usd             Decimal  @map("usd")             @db.Decimal()    @default(0)
-//   //kurs
-//   course          Decimal  @map("course")          @db.Decimal()    @default(0)
-//   transactionFee  Decimal  @map("transaction_fee") @db.Decimal()    @default(0)
-//   //copied
-//   isCopied        Boolean  @map("is_copied")       @db.Boolean      @default(false)
-//   createdAt       DateTime   @map("created_at")    @db.Timestamptz  @default(dbgenerated("NOW()"))
-//   updatedAt       DateTime   @map("updated_at")    @db.Timestamptz  @updatedAt
-//   deletedAt       DateTime?  @map("deleted_at")    @db.Timestamptz
-
-//   applyId    String  @map("apply_id")    @db.Uuid
-//   walletId   String  @map("wallet_id")   @db.Uuid
-//   companyId  String  @map("company_id")  @db.Uuid
-
-//   apply    ApplyModel?    @relation(fields: [ applyId     ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-//   wallet   WalletModel?   @relation(fields: [ walletId    ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-//   company  CompanyModel?  @relation(fields: [ companyId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-
-//   @@id([ id ])
-//   @@index([ id ])
-//   @@map("approval")
-// }
-
-
-// model ApplyModel {
-//   id                  String    @map("id")           @db.Uuid        @default(dbgenerated("GEN_RANDOM_UUID()"))
-//   //applyId
-//   publicId            Int       @map("public_id")    @db.Integer      @default(autoincrement())
-//   //cathegory
-//   category            String    @map("category")             @db.VarChar(1024)
-//   receiverDepartment  String    @map("receiver_department")  @db.VarChar(1024)
-//   receiverFinish      String    @map("receiver_finish")      @db.VarChar(1024)
-//   title               String    @map("title")                @db.VarChar(2048)  @default("")
-//   //amount_in_sum
-//   uzs                 BigInt    @map("uzs")          @db.BigInt       @default(0)
-//   //amount_in_dollar
-//   usd                 BigInt    @map("usd")          @db.BigInt       @default(0)
-//   rest                Decimal   @map("rest")         @db.Decimal()    @default(0)
-//   //copied
-//   isCopied            Boolean    @map("is_copied")   @db.Boolean      @default(false)
-//   createdAt           DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-//   updatedAt           DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-//   deletedAt           DateTime?  @map("deleted_at")  @db.Timestamptz
-
-//   //applier_id
-//   staffId  String  @map("staff_id")  @db.Uuid
-
-//   staff    StaffModel?    @relation(fields: [ staffId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-//   approvals  ApprovalModel[]
-
-//   @@id([ id ])
-//   @@index([ id ])
-//   @@map("apply")
-// }

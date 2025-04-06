@@ -1,0 +1,7 @@
+export * from './dtos'
+export * from './interfaces'
+export * from './furniture-type.controller'
+export * from './furniture-type.module'
+export * from './furniture-type.repository'
+export * from './furniture-type.repository'
+export * from './furniture-type.service'

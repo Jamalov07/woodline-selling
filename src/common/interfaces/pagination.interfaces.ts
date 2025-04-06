@@ -5,8 +5,8 @@ export declare interface PaginationRequest {
 }
 
 export declare interface PaginationResponse<T> {
-	totalCount: number
-	pagesCount: number
-	pageSize: number
+	totalCount?: number
+	pagesCount?: number
+	pageSize?: number
 	data: T[]
 }
