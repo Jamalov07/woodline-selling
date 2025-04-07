@@ -1,6 +1,6 @@
 import { IntersectionType, PickType } from '@nestjs/swagger'
 import { ClientCreateOneRequest, ClientDeleteOneRequest, ClientFindManyRequest, ClientFindOneRequest, ClientUpdateOneRequest } from '../interfaces'
-import { ClientOptionalDto, ClientRequiredDto } from './field.dtos'
+import { ClientOptionalDto, ClientRequiredDto } from './fields.dtos'
 import { RequestOtherFieldsDto } from '../../../common'
 
 export class ClientFindManyRequestDto

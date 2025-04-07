@@ -94,9 +94,18 @@ export class StaffService {
 			}
 		}
 
+		if (body.name) {
+			const candidate = await this.staffRepository.getOne({ name: body.name })
+			if (candidate && candidate.id !== query.id) {
+				throw new BadRequestException('name already exists')
+			}
+		}
+
 		await this.staffRepository.updateOne(query, { ...body, password: body.password ? await bcrypt.hash(body.password, 7) : undefined })
 
-		return createResponse({ data: null, success: { messages: ['update one success'] } })
+		const result = await this.findMany({})
+
+		return createResponse({ data: result.data, success: { messages: ['update one success'] } })
 	}
 
 	async deleteOne(query: StaffDeleteOneRequest) {

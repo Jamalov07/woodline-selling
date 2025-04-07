@@ -14,6 +14,9 @@ export declare interface ClientFindManyResponse extends GlobalResponse {
 export declare interface ClientFindOneResponse extends GlobalResponse {
 	data: ClientFindOneData
 }
+export declare interface ClientCreateOneResponse extends GlobalResponse {
+	data: ClientFindOneData
+}
 
 export declare interface ClientModifyResposne extends GlobalResponse {
 	data: null

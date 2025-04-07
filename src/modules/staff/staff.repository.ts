@@ -30,8 +30,12 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { contains: query.phone, mode: 'insensitive' },
-				name: { contains: query.name, mode: 'insensitive' },
+				OR: [
+					{ phone: { contains: query.phone, mode: 'insensitive' } },
+					{ name: { contains: query.name, mode: 'insensitive' } },
+					{ phone: { contains: query.search, mode: 'insensitive' } },
+					{ name: { contains: query.search, mode: 'insensitive' } },
+				],
 			},
 			...paginationOptions,
 		})
@@ -58,8 +62,12 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { contains: query.phone, mode: 'insensitive' },
-				name: { contains: query.name, mode: 'insensitive' },
+				OR: [
+					{ phone: { contains: query.phone, mode: 'insensitive' } },
+					{ name: { contains: query.name, mode: 'insensitive' } },
+					{ phone: { contains: query.search, mode: 'insensitive' } },
+					{ name: { contains: query.search, mode: 'insensitive' } },
+				],
 			},
 		})
 
@@ -76,7 +84,7 @@ export class StaffRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
-				phone: { contains: query.phone },
+				phone: query.phone,
 				name: query.name,
 			},
 			...paginationOptions,
@@ -103,7 +111,7 @@ export class StaffRepository implements OnModuleInit {
 		const staffsCount = await this.prisma.staffModel.count({
 			where: {
 				id: { in: query.ids },
-				phone: { contains: query.phone },
+				phone: query.phone,
 				name: query.name,
 				deletedAt: deletedAtConverter(query.isDeleted),
 			},
@@ -113,22 +121,24 @@ export class StaffRepository implements OnModuleInit {
 	}
 
 	async createOne(body: StaffCreateOneRequest) {
+		const company = await this.prisma.companyModel.findFirst({ where: { id: body.companyId } })
+
 		const staff = await this.prisma.staffModel.create({
 			data: {
 				phone: body.phone,
 				name: body.name,
 				password: body.password,
-				hashedPassword: body.password,
-				role: 'a',
-				sheetId: 'a',
-				botAccess: true,
-				companyId: 'a',
+				role: body.role,
+				companyId: body.companyId,
+				sheetId: company.sheetId,
 			},
 		})
 		return staff
 	}
 
 	async updateOne(query: StaffGetOneRequest, body: StaffUpdateOneRequest) {
+		const company = await this.prisma.companyModel.findFirst({ where: { id: body.companyId } })
+
 		const staff = await this.prisma.staffModel.update({
 			where: { id: query.id },
 			data: {
@@ -137,6 +147,11 @@ export class StaffRepository implements OnModuleInit {
 				password: body.password,
 				deletedAt: body.deletedAt,
 				token: body.token,
+				botAccess: body.botAccess,
+				companyId: body.companyId,
+				telegramId: body.telegramId,
+				role: body.role,
+				sheetId: body.companyId ? company.sheetId : undefined,
 			},
 		})
 

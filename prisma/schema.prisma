@@ -120,11 +120,11 @@ model StaffModel {
   //company_id
   sheetId    String   @map("sheet_id")     @db.VarChar()    
   password   String   @map("password")     @db.VarChar()  
-  hashedPassword   String   @map("hashed_password")     @db.VarChar()  
+  hashedPassword   String?   @map("hashed_password")     @db.VarChar()  
   //bot_id
-  telegramId BigInt   @map("telegram_id")  @db.BigInt()     @default(0)
+  telegramId BigInt?   @map("telegram_id")  @db.BigInt()     @default(0)
   //use_bot
-  botAccess  Boolean  @map("bot_access")   @db.Boolean      @default(false)
+  botAccess  Boolean?  @map("bot_access")   @db.Boolean      @default(false)
   
   //comp_id
   companyId  String   @map("company_id")   @db.Uuid    

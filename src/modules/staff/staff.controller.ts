@@ -12,6 +12,7 @@ import {
 	StaffFindOneResponseDto,
 	StaffModifyResponseDto,
 	StaffCreateOneResponseDto,
+	StaffUpdateOneResponseDto,
 } from './dtos'
 
 @ApiTags('Staff')
@@ -50,8 +51,8 @@ export class StaffController {
 	@Roles(StaffRoles.SUPER_ADMIN)
 	@Patch('one')
 	@ApiOperation({ summary: 'update one staff' })
-	@ApiOkResponse({ type: StaffModifyResponseDto })
-	async updateOne(@Param() query: StaffFindOneRequestDto, @Body() body: StaffUpdateOneRequestDto): Promise<StaffModifyResponseDto> {
+	@ApiOkResponse({ type: StaffUpdateOneResponseDto })
+	async updateOne(@Param() query: StaffFindOneRequestDto, @Body() body: StaffUpdateOneRequestDto): Promise<StaffUpdateOneResponseDto> {
 		return this.staffService.updateOne(query, body)
 	}
 

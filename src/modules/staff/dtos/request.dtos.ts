@@ -4,7 +4,7 @@ import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { StaffOptionalDto, StaffRequiredDto } from './fields.dtos'
 
 export class StaffFindManyRequestDto
-	extends IntersectionType(PickType(StaffOptionalDto, ['name', 'phone']), PaginationRequestDto, PickType(RequestOtherFieldsDto, ['isDeleted']))
+	extends IntersectionType(PickType(StaffOptionalDto, ['name', 'phone']), PaginationRequestDto, PickType(RequestOtherFieldsDto, ['isDeleted', 'search']))
 	implements StaffFindManyRequest {}
 
 export class StaffFindOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id'])) implements StaffFindOneRequest {}

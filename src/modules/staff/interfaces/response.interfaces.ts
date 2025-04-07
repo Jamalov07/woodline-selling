@@ -17,6 +17,10 @@ export declare interface StaffCreateOneResponse extends GlobalResponse {
 	data: StaffFindOneData
 }
 
+export declare interface StaffUpdateOneResponse extends GlobalResponse {
+	data: StaffFindManyData | StaffFindOneData[]
+}
+
 export declare interface StaffModifyResposne extends GlobalResponse {
 	data: null
 }
