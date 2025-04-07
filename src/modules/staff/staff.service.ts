@@ -7,9 +7,6 @@ import {
 	StaffCreateOneRequest,
 	StaffUpdateOneRequest,
 	StaffDeleteOneRequest,
-	StaffCreateManyRequest,
-	StaffUpdateManyRequest,
-	StaffDeleteManyRequest,
 	StaffGetManyRequest,
 	StaffFindManyRequest,
 	StaffFindOneRequest,
@@ -82,16 +79,9 @@ export class StaffService {
 
 		const password = await bcrypt.hash(body.password, 7)
 
-		await this.staffRepository.createOne({ ...body, password: password })
+		const staff = await this.staffRepository.createOne({ ...body, password: password })
 
-		return createResponse({ data: null, success: { messages: ['create success'] } })
-	}
-
-	async createMany(body: StaffCreateManyRequest) {
-		body.datas = body.datas.map((u) => ({ ...u, password: bcrypt.hashSync(u.password, 7) }))
-		await this.staffRepository.createMany(body)
-
-		return createResponse({ data: null, success: { messages: ['create many success'] } })
+		return createResponse({ data: staff, success: { messages: ['create one success'] } })
 	}
 
 	async updateOne(query: StaffGetOneRequest, body: StaffUpdateOneRequest) {
@@ -106,13 +96,7 @@ export class StaffService {
 
 		await this.staffRepository.updateOne(query, { ...body, password: body.password ? await bcrypt.hash(body.password, 7) : undefined })
 
-		return createResponse({ data: null, success: { messages: ['update success'] } })
-	}
-
-	async updateMany(body: StaffUpdateManyRequest) {
-		await this.staffRepository.updateMany(body)
-
-		return createResponse({ data: null, success: { messages: ['update many success'] } })
+		return createResponse({ data: null, success: { messages: ['update one success'] } })
 	}
 
 	async deleteOne(query: StaffDeleteOneRequest) {
@@ -122,16 +106,6 @@ export class StaffService {
 		} else {
 			await this.staffRepository.updateOne(query, { deletedAt: new Date() })
 		}
-		return createResponse({ data: null, success: { messages: ['delete success'] } })
-	}
-
-	async deleteMany(query: StaffDeleteManyRequest) {
-		if (query.method === 'soft') {
-			await this.staffRepository.updateMany({ ...query, deletedAt: new Date() })
-		} else {
-			await this.staffRepository.deleteMany(query)
-		}
-
-		return createResponse({ data: null, success: { messages: ['delete many success'] } })
+		return createResponse({ data: null, success: { messages: ['delete one success'] } })
 	}
 }

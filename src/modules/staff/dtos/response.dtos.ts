@@ -1,5 +1,5 @@
 import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
-import { StaffFindManyData, StaffFindManyResponse, StaffFindOneData, StaffFindOneResponse, StaffModifyResposne } from '../interfaces'
+import { StaffCreateOneResponse, StaffFindManyData, StaffFindManyResponse, StaffFindOneData, StaffFindOneResponse, StaffModifyResposne } from '../interfaces'
 import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } from '@common'
 import { StaffRequiredDto } from './fields.dtos'
 
@@ -12,15 +12,17 @@ export class StaffFindManyDataDto extends PaginationResponseDto implements Staff
 
 export class StaffFindManyResponseDto extends GlobalResponseDto implements StaffFindManyResponse {
 	@ApiProperty({ type: StaffFindManyDataDto })
-	data: StaffFindManyData | { data: StaffFindOneData[] }
+	data: StaffFindManyData | StaffFindOneData[]
 }
-export class StaffFindOneActionIdsDto {
-	@ApiProperty({ type: String, isArray: true })
-	actionIds?: string[]
-}
+
 export class StaffFindOneResponseDto extends GlobalResponseDto implements StaffFindOneResponse {
-	@ApiProperty({ type: IntersectionType(StaffFindOneDataDto, StaffFindOneActionIdsDto) })
-	data: StaffFindOneData & { actionIds?: string[] }
+	@ApiProperty({ type: StaffFindOneDataDto })
+	data: StaffFindOneData
+}
+
+export class StaffCreateOneResponseDto extends GlobalResponseDto implements StaffCreateOneResponse {
+	@ApiProperty({ type: StaffFindOneDataDto })
+	data: StaffFindOneData
 }
 
 export class StaffModifyResponseDto extends IntersectionType(GlobalResponseDto, GlobalModifyResponseDto) implements StaffModifyResposne {}

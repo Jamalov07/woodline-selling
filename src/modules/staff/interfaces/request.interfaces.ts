@@ -14,21 +14,11 @@ export declare interface StaffGetManyRequest extends Pick<StaffOptional, 'phone'
 export declare interface StaffGetOneRequest extends Pick<StaffOptional, 'id' | 'phone' | 'name' | 'token'>, Pick<RequestOtherFields, 'isDeleted'> {}
 
 //body
-export declare interface StaffCreateOneRequest extends Pick<StaffRequired, 'phone' | 'password'>, Pick<StaffOptional, 'name'> {}
+export declare interface StaffCreateOneRequest extends Pick<StaffRequired, 'phone' | 'password' | 'name' | 'companyId' | 'role'> {}
 
 //body
-export declare interface StaffCreateManyRequest {
-	datas: StaffCreateOneRequest[]
-}
-
-//body
-export declare interface StaffUpdateOneRequest extends Pick<StaffOptional, 'phone' | 'name' | 'deletedAt' | 'password' | 'token'> {}
-
-//body
-export declare interface StaffUpdateManyRequest extends Pick<StaffOptional, 'deletedAt'>, Pick<RequestOtherFields, 'ids'> {}
+export declare interface StaffUpdateOneRequest
+	extends Pick<StaffOptional, 'phone' | 'name' | 'deletedAt' | 'password' | 'token' | 'role' | 'botAccess' | 'companyId' | 'telegramId'> {}
 
 //query
 export declare interface StaffDeleteOneRequest extends Pick<StaffRequired, 'id'>, Pick<RequestOtherFields, 'method'> {}
-
-//query
-export declare interface StaffDeleteManyRequest extends Pick<RequestOtherFields, 'ids' | 'method'> {}

@@ -3,11 +3,8 @@ import { PrismaService } from '@shared'
 import {
 	StaffGetOneRequest,
 	StaffCreateOneRequest,
-	StaffCreateManyRequest,
 	StaffUpdateOneRequest,
-	StaffUpdateManyRequest,
 	StaffDeleteOneRequest,
-	StaffDeleteManyRequest,
 	StaffGetManyRequest,
 	StaffFindOneRequest,
 	StaffFindManyRequest,
@@ -131,23 +128,6 @@ export class StaffRepository implements OnModuleInit {
 		return staff
 	}
 
-	async createMany(body: StaffCreateManyRequest) {
-		const staffs = await this.prisma.staffModel.createMany({
-			data: body.datas.map((u) => ({
-				phone: u.phone,
-				name: u.name,
-				password: u.password,
-				hashedPassword: u.password,
-				role: 'a',
-				sheetId: 'a',
-				botAccess: true,
-				companyId: 'a',
-			})),
-		})
-
-		return staffs
-	}
-
 	async updateOne(query: StaffGetOneRequest, body: StaffUpdateOneRequest) {
 		const staff = await this.prisma.staffModel.update({
 			where: { id: query.id },
@@ -163,27 +143,11 @@ export class StaffRepository implements OnModuleInit {
 		return staff
 	}
 
-	async updateMany(body: StaffUpdateManyRequest) {
-		const staffs = await this.prisma.staffModel.updateMany({
-			where: { id: { in: body.ids } },
-			data: { deletedAt: body.deletedAt },
-		})
-
-		return staffs
-	}
-
 	async deleteOne(query: StaffDeleteOneRequest) {
 		const staff = await this.prisma.staffModel.delete({
 			where: { id: query.id },
 		})
 		return staff
-	}
-
-	async deleteMany(query: StaffDeleteManyRequest) {
-		const staffs = await this.prisma.staffModel.deleteMany({
-			where: { id: { in: query.ids } },
-		})
-		return staffs
 	}
 
 	async onModuleInit() {

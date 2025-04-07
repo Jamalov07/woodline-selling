@@ -6,11 +6,15 @@ export declare interface StaffFindManyData extends PaginationResponse<StaffFindO
 export declare interface StaffFindOneData extends Pick<StaffRequired, 'id' | 'phone' | 'name' | 'createdAt' | 'deletedAt'> {}
 
 export declare interface StaffFindManyResponse extends GlobalResponse {
-	data: StaffFindManyData | { data: StaffFindOneData[] }
+	data: StaffFindManyData | StaffFindOneData[]
 }
 
 export declare interface StaffFindOneResponse extends GlobalResponse {
-	data: StaffFindOneData & { actionIds?: string[] }
+	data: StaffFindOneData
+}
+
+export declare interface StaffCreateOneResponse extends GlobalResponse {
+	data: StaffFindOneData
 }
 
 export declare interface StaffModifyResposne extends GlobalResponse {

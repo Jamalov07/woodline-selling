@@ -1,8 +1,7 @@
-import { IsBoolean, IsEmail, IsEnum, IsJWT, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, MinLength } from 'class-validator'
+import { IsBoolean, IsEnum, IsJWT, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUUID, MinLength } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '@common'
+import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto, StaffRoles } from '@common'
 import { StaffOptional, StaffRequired } from '../interfaces'
-import { $Enums } from '@prisma/client'
 
 export class StaffRequiredDto extends DefaultRequiredFieldsDto implements StaffRequired {
 	@ApiProperty({ type: String, example: '998949174127' })
@@ -27,12 +26,33 @@ export class StaffRequiredDto extends DefaultRequiredFieldsDto implements StaffR
 	@IsJWT()
 	token: string
 
+	@ApiProperty({ type: Boolean })
+	@IsNotEmpty()
+	@IsBoolean()
 	botAccess: boolean
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsUUID('4')
 	companyId: string
-	isActive: boolean
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsString()
 	sheetId: string
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
 	telegramId: bigint
+
+	@ApiProperty({ enum: StaffRoles })
+	@IsNotEmpty()
+	@IsEnum(StaffRoles)
 	role: string
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsString()
 	hashedPassword: string
 }
 
@@ -58,4 +78,33 @@ export class StaffOptionalDto extends DefaultOptionalFieldsDto implements StaffO
 	@IsOptional()
 	@IsJWT()
 	token?: string
+
+	@ApiPropertyOptional({ type: Boolean })
+	@IsOptional()
+	@IsBoolean()
+	botAccess?: boolean
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsUUID('4')
+	companyId?: string
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsString()
+	sheetId?: string
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	telegramId?: bigint
+
+	@ApiPropertyOptional({ enum: StaffRoles })
+	@IsOptional()
+	@IsEnum(StaffRoles)
+	role?: string
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsString()
+	hashedPassword?: string
 }
