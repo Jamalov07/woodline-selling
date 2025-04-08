@@ -378,6 +378,7 @@ model DeliveryModel {
   id            String    @map("id")            @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   //incrementId
   publicId      Int       @map("public_id")     @db.Integer       @default(autoincrement()) 
+  tripId        String    @map("trip_id")       @db.VarChar()     @default("000000") 
   price         Decimal   @map("price")         @db.Decimal()     @default(0)
   title         String    @map("title")         @db.VarChar(2048) @default("")
   //copied
