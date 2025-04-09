@@ -19,7 +19,7 @@ export declare interface DeliveryGetOneRequest
 
 export declare interface DeliveryCreateOneRequest extends Pick<DeliveryRequired, 'orderId' | 'staffId'>, Pick<DeliveryOptional, 'price' | 'title' | 'deliveryDate' | 'tripId'> {}
 
-export declare interface DeliveryCreateOneRequest {
+export declare interface DeliveryCreateManyRequest {
 	datas: DeliveryCreateOneRequest[]
 }
 
