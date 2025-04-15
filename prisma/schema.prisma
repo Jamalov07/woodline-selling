@@ -25,453 +25,60 @@ model ActionModel {
   description  String            @map("description")  @db.VarChar()  @default("")
   method       ActionMethodEnum  
 
+  roles  RoleModel[]
+  users  UserModel[]
+
   @@id([ id ])
   @@index([ id ])
   @@unique([ url, name, method ])
   @@map("action")
 }
 
-model FurnitureTypeModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String     @map("name")        @db.VarChar()  
- 
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+model RoleModel {
+  id         String    @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       String    @map("name")        @db.VarChar()
 
-  models  ModelModel[]
+  users    UserModel[]
+  actions  ActionModel[]
 
   @@id([ id ])
   @@index([ id ])
   @@unique([ name ])
-  @@map("furniture_type")
+  @@map("role")
 }
 
-model WalletModel {
+
+model UserModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String     @map("name")        @db.VarChar()  
-  type       String     @map("type")        @db.VarChar()  
-  //amount_sum
-  uzs        BigInt     @map("uzs")         @db.BigInt       @default(0)
-  //amount_dollar
-  usd        BigInt     @map("usd")         @db.BigInt       @default(0)
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  payments   PaymentModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@unique([ name ])
-  @@map("wallet")
-}
-
-model WarehouseModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String     @map("name")        @db.VarChar()  
-  type       String     @map("type")        @db.VarChar()    @default("product")
-  //admin
-  staffId    String     @map("staff_id")    @db.Uuid 
-  companyId  String     @map("company_id")  @db.Uuid
+  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  username   String     @map("username")    @db.VarChar()                                    @unique
+  fullname   String     @map("fullname")    @db.VarChar()
+  password   String     @map("password")    @db.VarChar()  
  
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  staff    StaffModel    @relation(fields: [ staffId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  company  CompanyModel  @relation(fields: [ companyId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  partnerInfo  PartnerInfo?
 
-  products  ProductModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@unique([ name ])
-  @@map("warehouse")
-}
-
-model CompanyModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String     @map("name")        @db.VarChar()  
-  //company_id
-  sheetId    String     @map("sheet_id")    @db.VarChar()
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  deals       DealModel[]
-  staffs      StaffModel[]
-  models      ModelModel[]
-  payments    PaymentModel[]
-  modelLogs   ModelLogModel[]
-  warehouses  WarehouseModel[]
+  roles    RoleModel[]
+  actions  ActionModel[]
 
   @@id([ id ])
   @@index([ id ])
-  @@unique([ name ])
-  @@map("company")
+  @@map("user")
 }
 
-model StaffModel {
-  id         String   @map("id")           @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String   @map("name")         @db.VarChar()  
-  role       String   @map("role")         @db.VarChar()
-  phone      String   @map("phone")        @db.VarChar()  
-  //company_id
-  sheetId    String   @map("sheet_id")     @db.VarChar()    
-  password   String   @map("password")     @db.VarChar()  
-  hashedPassword   String?   @map("hashed_password")     @db.VarChar()  
-  //bot_id
-  telegramId BigInt?   @map("telegram_id")  @db.BigInt()     @default(0)
-  //use_bot
-  botAccess  Boolean?  @map("bot_access")   @db.Boolean      @default(false)
-  
-  //comp_id
-  companyId  String   @map("company_id")   @db.Uuid    
+model PartnerInfo {
+  userId     String  @map("user_id")     @db.Uuid       @id           @unique
+  balance    BigInt  @map("balance")     @db.BigInt     @default(0)
+  whereFrom  String  @map("where_from")  @db.VarChar()  @default("")
 
-  token      String?    @map("token")       @db.VarChar()    @default("")
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  user  UserModel  @relation(fields: [ userId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
-  company  CompanyModel  @relation(fields: [ companyId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-
-  deals       DealModel[]
-  orders      OrderModel[]
-  payments    PaymentModel[]
-  orderLogs   OrderLogModel[]
-  deliveries  DeliveryModel[]
-  warehouses  WarehouseModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@unique([ name ])
-  @@map("staff")
-}
-
-model ProductModel {
-  id           String     @map("id")            @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
- 
-  orderId      String     @map("order_id")      @db.Uuid    
-  warehouseId  String     @map("warehouse_id")  @db.Uuid    
- 
-  createdAt    DateTime   @map("created_at")    @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt    DateTime   @map("updated_at")    @db.Timestamptz  @updatedAt
-  deletedAt    DateTime?  @map("deleted_at")    @db.Timestamptz
-
-  order      OrderModel      @relation(fields: [ orderId     ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  warehouse  WarehouseModel  @relation(fields: [ warehouseId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("product")
-}
-
-model OrderModel {
-  id             String    @map("id")             @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
-  //orderId
-  publicId       BigInt    @map("public_id")       @db.BigInt
-  //cathegory
-  category       String    @map("category")        @db.VarChar()  
-  tissue         String    @map("tissue")          @db.VarChar()  
-  title          String    @map("title")           @db.VarChar()  
-  cost           BigInt    @map("cost")            @db.BigInt         @default(0)
-  //qty
-  quantity       Int       @map("quantity")        @db.Integer        @default(0)
-  sale           Decimal   @map("sale")            @db.Decimal()      @default(0)
-  sum            Decimal   @map("sum")             @db.Decimal()      @default(0)
-  isFirst        Boolean   @map("is_first")        @db.Boolean        @default(true)
-  //copied
-  isCopied       Boolean   @map("is_copied")       @db.Boolean        @default(true)
-  status         String    @map("status")          @db.VarChar()      @default("new")
-  endDate        DateTime  @map("end_date")        @db.Timestamptz()  
-  editedStatus   String    @map("edited_status")   @db.VarChar()      @default("new")
-  isPushed       Boolean   @map("is_pushed")       @db.Boolean        @default(false)
-  direction      String    @map("direction")       @db.VarChar()  
-  copiedChanges  Boolean   @map("copied_changes")  @db.Boolean        @default(true)
-  
-  //sellerId
-  staffId        String    @map("staff_id")        @db.Uuid
-  dealId         String    @map("deal_id")         @db.Uuid
-  modelId        String    @map("model_id")        @db.Uuid
-
-  createdAt      DateTime  @map("created_at")      @db.Timestamptz    @default(dbgenerated("NOW()"))
-  updatedAt      DateTime  @map("updated_at")      @db.Timestamptz    @updatedAt
-  deletedAt      DateTime? @map("deleted_at")      @db.Timestamptz  
-
-  deal   DealModel     @relation(fields: [ dealId    ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  staff  StaffModel    @relation(fields: [ staffId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  model  ModelModel    @relation(fields: [ modelId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  changes     ChangeModel[]
-  messages    MessageModel[]
-  products    ProductModel[]
-  orderLogs   OrderLogModel[]
-  deliveries  DeliveryModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("order")
-}
-
-model PaymentModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  //payment_type
-  type       String   @map("type")          @db.VarChar()  
-  //payment_sum
-  uzs        BigInt     @map("uzs")         @db.BigInt       @default(0)
-  //payment_dollar
-  usd        BigInt     @map("usd")         @db.BigInt       @default(0)
-  //dollar_to_sum
-  usdINuzs   BigInt     @map("usd_in_uzs")   @db.BigInt       @default(0)
-  change     BigInt     @map("change")       @db.BigInt       @default(0)
-  isFirst    Boolean    @map("is_first")     @db.Boolean      @default(true)
-  isCopied   Boolean    @map("is_copied")    @db.Boolean      @default(true)
-  dealId     String     @map("deal_id")      @db.Uuid
-  tellerId   String     @map("teller_id")    @db.Uuid
-  walletId   String     @map("wallet_id")    @db.Uuid
-  companyId  String     @map("company_id")   @db.Uuid
-  deliveryId String     @map("delivery_id")  @db.Uuid
-
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  deal       DealModel      @relation(fields: [ dealId     ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  wallet     WalletModel    @relation(fields: [ walletId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  teller     StaffModel     @relation(fields: [ tellerId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  company    CompanyModel   @relation(fields: [ companyId  ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  delivery   DeliveryModel  @relation(fields: [ deliveryId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  
- 
-  @@id([ id ])
-  @@index([ id ])  
-  @@map("payment")
-}
-
-model OrderLogModel {
-  id         String   @map("id")      @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  category   String?  @map("category") @db.VarChar()
-  tissue     String?  @map("tissue")   @db.VarChar(64)
-  title      String?  @map("title")    @db.VarChar(128)
-  cost       BigInt?  @map("cost")     @db.BigInt
-  sale       Decimal? @map("sale")     @db.Decimal()
-  //qty
-  quantity   Int?     @map("quantity") @db.Integer
-  sum        Decimal? @map("sum")      @db.Decimal()
-  isFirst    Boolean  @map("is_first") @db.Boolean    @default(true)
-  //copied
-  isCopied   Boolean  @map("is_copied")  @db.Boolean  @default(true)
-  endDate    DateTime @map("end_date")   @db.Timestamptz()
-
-  orderId    String   @map("order_id") @db.Uuid
-  staffId    String?  @map("staff_id") @db.Uuid
-
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
- 
-  staff    StaffModel?    @relation(fields: [ staffId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  order    OrderModel    @relation(fields: [ orderId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([ id ])
-  @@index([ id ]) 
-  @@map("order_log")
-}
-
-model ModelModel {
-  id                String   @map("id")          @db.Uuid             @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name              String   @map("name")        @db.VarChar(128)
-  price             Decimal  @map("price")       @db.Decimal()        @default(0)
-  sale              Decimal? @map("sale")        @db.Decimal()
-  code              String?  @map("code")        @db.VarChar
-  forInvestor       Decimal  @map("for_investor")  @db.Decimal()      @default(0)
-  priceForB2B       Decimal  @map("price_for_b2b") @db.Decimal()      @default(0)
-  description       String   @map("description")   @db.VarChar        @default("")
-  retailPrice       Decimal  @map("retail_price")  @db.Decimal()      @default(0)
-  sellerMaxSale     Decimal  @map("seller_max_sale")    @db.Decimal() @default(0)
-  percentForSeller  Decimal  @map("percent_for_seller") @db.Decimal() @default(0)
-  fixForSeller      Decimal  @map("fix_for_seller")     @db.Decimal() @default(0)
-  
-  companyId         String?  @map("company_id")  @db.Uuid
-  typeId            String   @map("type_id")     @db.Uuid
-
-  type     FurnitureTypeModel? @relation(fields: [ typeId      ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  company  CompanyModel?       @relation(fields: [ companyId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-
-  modelLogs   ModelLogModel[]
-  orders      OrderModel[]
-  gifts       GiftModel[]  @relation(name: "model")
-  mainModels  GiftModel[]  @relation(name: "gift")
-
-  @@id([ id ])
-  @@index([ id ]) 
-  @@map("model")
-}
-
-model ModelLogModel {
-  id                String   @map("id")                 @db.Uuid        @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name              String   @map("name")               @db.VarChar(128)
-  price             Decimal  @map("price")              @db.Decimal()   @default(0)
-  sale              Decimal? @map("sale")               @db.Decimal()
-  code              String?  @map("code")               @db.VarChar
-  forInvestor       Decimal  @map("for_investor")       @db.Decimal()   @default(0)
-  priceForB2B       Decimal  @map("price_for_b2b")      @db.Decimal()   @default(0)
-  description       String   @map("description")        @db.VarChar     @default("")
-  retailPrice       Decimal  @map("retail_price")       @db.Decimal()   @default(0)
-  sellerMaxSale     Decimal  @map("seller_max_sale")    @db.Decimal()   @default(0)
-  percentForSeller  Decimal  @map("percent_for_seller") @db.Decimal()   @default(0)
-  fixForSeller      Decimal  @map("fix_for_seller")     @db.Decimal()   @default(0)
-  
-  modelId         String  @map("model_id")   @db.Uuid
-  companyId       String? @map("company_id") @db.Uuid
-
-  company   CompanyModel?    @relation(fields: [ companyId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  model     ModelModel       @relation(fields: [ modelId     ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([ id ])
-  @@index([ id ]) 
-  @@map("model_log")
-}
-
-model MessageModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  text       String     @map("text")        @db.VarChar()  
-  messageId  BigInt?    @map("message_id")  @db.BigInt
-  orderId    String   @map("order_id") @db.Uuid
-  
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  order    OrderModel    @relation(fields: [ orderId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("message")
+  @@index([ userId ])
+  @@map("partner_info")
 }
 
 
-model GiftModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  //qty
-  quantity   Int        @map("quantity")    @db.Integer      @default(1)
 
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  giftId    String   @map("gift_id") @db.Uuid
-  modelId   String   @map("model_id") @db.Uuid
-  
-  gift      ModelModel @relation(name: "gift",  fields: [ giftId  ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  model     ModelModel @relation(name: "model", fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  
-  @@id([ id ])
-  @@index([ id ])
-  @@map("gift")
-}
-
-model DeliveryModel {
-  id            String    @map("id")            @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  //incrementId
-  publicId      Int       @map("public_id")     @db.Integer       @default(autoincrement()) 
-  tripId        String    @map("trip_id")       @db.VarChar()     @default("000000") 
-  price         Decimal   @map("price")         @db.Decimal()     @default(0)
-  title         String    @map("title")         @db.VarChar(2048) @default("")
-  //copied
-  isCopied      Boolean   @map("is_copied")     @db.Boolean       @default(true)
-  deliveryDate  DateTime  @map("delivery_date") @db.Timestamptz   @default(dbgenerated("CURRENT_DATE"))
-  
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz       @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz       @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  orderId  String  @map("order_id")  @db.Uuid
-  staffId  String  @map("staff_id")  @db.Uuid
-
-  order     OrderModel @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  staff     StaffModel @relation(fields: [staffId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  payments  PaymentModel[]
-     
-  @@id([ id ])
-  @@index([ id ])
-  @@map("delivery")
-}
-
-model DealModel {
-  id            String    @map("id")             @db.Uuid          @default(dbgenerated("GEN_RANDOM_UUID()"))
-  //dealId
-  publicId      Int       @map("public_id")      @db.Integer       @default(autoincrement())
-  rest          Decimal   @map("rest")           @db.Decimal()     @default(0)
-  //copied
-  isCopied      Boolean   @map("is_copied")      @db.Boolean       @default(false)
-  deliveryDate  DateTime  @map("delivery_date")  @db.Timestamptz   @default(dbgenerated("CURRENT_DATE"))
-  address       String?   @map("address")        @db.VarChar
-
-  clientId      String?   @map("client_id")  @db.Uuid
-  //seller_id
-  staffId       String?   @map("staff_id")   @db.Uuid
-  companyId     String?   @map("company_id") @db.Uuid
-
-  company  CompanyModel?  @relation(fields: [ companyId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  client   ClientModel?   @relation(fields: [ clientId    ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  staff    StaffModel?    @relation(fields: [ staffId     ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-  payments  PaymentModel[]  
-  orders    OrderModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("deals")
-}
-
-model ClientModel {
-  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       String     @map("name")        @db.VarChar()  
-  phone      String     @map("phone")       @db.VarChar()  
-  whereFrom  String     @map("where_from")  @db.VarChar()   
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  deals  DealModel[]
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("client")
-}
-
-model ChangeModel {
-  id            String   @map("id")            @db.Uuid        @default(dbgenerated("GEN_RANDOM_UUID()"))
-  deleted       Boolean  @map("deleted")       @db.Boolean     @default(false)
-  editedField   String   @map("edited_field")  @db.VarChar(64)
-  oldValue      String   @map("old_value")     @db.VarChar(64)
-  newValue      String   @map("new_value")     @db.VarChar(64)
-  increaseCost  Decimal  @map("increase_cost") @db.Decimal()   @default(0)
-  isCanceled    Boolean  @map("is_canceled")   @db.Boolean     @default(false)
-  comment       String   @map("comment")       @db.VarChar(64) @default("-")
-  //copied
-  isCopied      Boolean   @map("is_copied") @db.Boolean @default(false)
-
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
-
-  orderId     String?   @map("order_id") @db.Uuid
-
-  order    OrderModel?    @relation(fields: [ orderId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-
-
-  @@id([ id ])
-  @@index([ id ])
-  @@map("change")
-}
