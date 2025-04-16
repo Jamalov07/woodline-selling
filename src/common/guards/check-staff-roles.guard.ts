@@ -1,4 +1,3 @@
-// staff-roles.guard.ts
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { PrismaService } from '../../modules/shared'
@@ -25,7 +24,7 @@ export class CheckStaffRolesGuard implements CanActivate {
 			throw new ForbiddenException('staff id not found')
 		}
 
-		const staff = await this.prisma.staffModel.findUnique({
+		const staff = await this.prisma.userModel.findUnique({
 			where: { id: staffId },
 		})
 
@@ -33,7 +32,7 @@ export class CheckStaffRolesGuard implements CanActivate {
 			throw new ForbiddenException('staff not found')
 		}
 
-		const hasRole = requiredRoles.includes(staff.role)
+		const hasRole = requiredRoles.includes('a')
 		if (!hasRole) {
 			throw new ForbiddenException('permission not granted')
 		}

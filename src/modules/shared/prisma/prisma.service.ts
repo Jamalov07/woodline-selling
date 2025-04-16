@@ -3,7 +3,7 @@ import { Global, Injectable, RequestMethod } from '@nestjs/common'
 import { Controller } from '@nestjs/common/interfaces'
 import { ConfigService } from '@nestjs/config'
 import { ActionMethodEnum, PrismaClient } from '@prisma/client'
-import { actionDescriptionConverter } from '../../../common'
+import { actionDescriptionConverter } from '../../../common/helper'
 
 @Global()
 @Injectable()

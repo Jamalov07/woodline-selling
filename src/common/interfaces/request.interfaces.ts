@@ -15,5 +15,5 @@ export declare interface RequestOtherFields {
 }
 
 export declare interface CRequest extends Request {
-	staff?: { id: string; token?: string }
+	user?: { id: string; token?: string }
 }

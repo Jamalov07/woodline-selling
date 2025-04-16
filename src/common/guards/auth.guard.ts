@@ -1,6 +1,6 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common'
-import { StaffOptional } from '../../modules'
-import { PrismaService } from '../../modules/shared'
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger, Global } from '@nestjs/common'
+import { UserOptional } from '../../modules/user'
+import { PrismaService } from '../../modules/shared/prisma'
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
@@ -79,9 +79,9 @@ export class AuthGuard implements CanActivate {
 					throw new UnauthorizedException('invalid token')
 				}
 			}
-			let staff: StaffOptional
+			let staff: UserOptional
 			if (payload?.id) {
-				staff = await this.prisma.staffModel.findFirst({ where: { id: payload?.id } })
+				staff = await this.prisma.userModel.findFirst({ where: { id: payload?.id } })
 			}
 
 			if (isStaffRequired) {
