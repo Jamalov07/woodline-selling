@@ -35,6 +35,7 @@
     "class-validator": "^0.14.1",
     "colors": "^1.4.0",
     "exceljs": "^4.4.0",
+    "express": "^5.1.0",
     "moment-timezone": "^0.5.48",
     "nodemailer": "^6.10.0",
     "prisma": "^6.5.0",
