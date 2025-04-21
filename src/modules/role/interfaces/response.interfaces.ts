@@ -1,21 +1,39 @@
 import { GlobalResponse, PaginationResponse } from '@common'
-import { RoleRequired } from './fields.interfaces'
+import { PartnerRoleRequired, StaffRoleRequired } from './fields.interfaces'
 import { ActionFindOneData } from '../../action/interfaces'
 
-export declare interface RoleFindManyData extends PaginationResponse<RoleFindOneData> {}
+export declare interface StaffRoleFindManyData extends PaginationResponse<StaffRoleFindOneData> {}
 
-export declare interface RoleFindOneData extends Pick<RoleRequired, 'id' | 'name' | 'createdAt'> {
+export declare interface StaffRoleFindOneData extends Pick<StaffRoleRequired, 'id'> {
 	actions?: ActionFindOneData[]
 }
 
-export declare interface RoleFindManyResponse extends GlobalResponse {
-	data: RoleFindManyData | { data: RoleFindOneData[] }
+export declare interface StaffRoleFindManyResponse extends GlobalResponse {
+	data: StaffRoleFindManyData
 }
 
-export declare interface RoleFindOneResponse extends GlobalResponse {
-	data: RoleFindOneData
+export declare interface StaffRoleFindOneResponse extends GlobalResponse {
+	data: StaffRoleFindOneData
 }
 
-export declare interface RoleModifyResposne extends GlobalResponse {
+export declare interface StaffRoleModifyResposne extends GlobalResponse {
+	data: null
+}
+
+export declare interface PartnerRoleFindManyData extends PaginationResponse<PartnerRoleFindOneData> {}
+
+export declare interface PartnerRoleFindOneData extends Pick<PartnerRoleRequired, 'id' | 'name' | 'createdAt'> {
+	actions?: ActionFindOneData[]
+}
+
+export declare interface PartnerRoleFindManyResponse extends GlobalResponse {
+	data: PartnerRoleFindManyData
+}
+
+export declare interface PartnerRoleFindOneResponse extends GlobalResponse {
+	data: PartnerRoleFindOneData
+}
+
+export declare interface PartnerRoleModifyResposne extends GlobalResponse {
 	data: null
 }

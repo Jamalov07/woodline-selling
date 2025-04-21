@@ -1,2 +1,1 @@
-export * from './response.interfaces'
-export * from './request.interfaces'
+export * from './tokens.interfaces'

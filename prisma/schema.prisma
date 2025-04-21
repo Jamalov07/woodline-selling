@@ -18,25 +18,32 @@ enum ActionMethodEnum {
   @@map("action_method")
 }
 
-enum RoleNameEnum {
+enum PartnerRoleEnum {
+  provider     @map("provider")
+  client       @map("client")
+
+  @@map("partner_role_name")
+}
+
+enum StaffRoleEnum {
   admin        @map("admin")
   seller       @map("seller")
   storekeeper  @map("storekeeper")
-  provider     @map("provider")
-  cliet        @map("cliet")
 
-  @@map("role_name")
+  @@map("staff_role_name")
 }
 
 model ActionModel {
   id           String            @map("id")           @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   url          String            @map("url")          @db.VarChar()
   name         String            @map("name")         @db.VarChar()
-  description  String            @map("description")  @db.VarChar()  @default("")
   method       ActionMethodEnum  
+  description  String            @map("description")  @db.VarChar()  @default("")
 
-  roles  RoleModel[]
-  users  UserModel[]
+  staffs        StaffModel[]
+  partners      PartnerModel[]
+  staffRoles    StaffRoleModel[]
+  partnerRoles  PartnerRoleModel[]
 
   @@id([ id ])
   @@index([ id ])
@@ -44,22 +51,58 @@ model ActionModel {
   @@map("action")
 }
 
-model RoleModel {
-  id         String        @map("id")          @db.Uuid  @default(dbgenerated("GEN_RANDOM_UUID()"))
-  name       RoleNameEnum  @map("name")
-  createdAt  DateTime      @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+model PartnerRoleModel {
+  id         String           @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       PartnerRoleEnum  @map("name")
+  createdAt  DateTime         @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
 
+  actions   ActionModel[]
+  partners  PartnerModel[]
 
-  users    UserModel[]
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("partner_role")
+}
+
+model StaffRoleModel {
+  id         String         @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       StaffRoleEnum  @map("name")
+  createdAt  DateTime       @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+
+  staffs   StaffModel[]
   actions  ActionModel[]
 
   @@id([ id ])
   @@index([ id ])
   @@unique([ name ])
-  @@map("role")
+  @@map("staff_role")
 }
 
-model UserModel {
+model PartnerModel {
+  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  username   String     @map("username")    @db.VarChar()                                    @unique
+  fullname   String     @map("fullname")    @db.VarChar()
+  password   String     @map("password")    @db.VarChar()  
+  token      String?    @map("token")       @db.VarChar()  
+  balance    BigInt     @map("balance")     @db.BigInt     @default(0)
+  whereFrom  String     @map("where_from")  @db.VarChar()  @default("")
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  roles    PartnerRoleModel[]
+  actions  ActionModel[]
+  models   ModelModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("partner")
+}
+
+model StaffModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   phone      String     @map("phone")       @db.VarChar()                                    @unique 
   username   String     @map("username")    @db.VarChar()                                    @unique
@@ -71,26 +114,45 @@ model UserModel {
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  partnerInfo  PartnerInfo?
-
-  roles    RoleModel[]
+  roles    StaffRoleModel[]
   actions  ActionModel[]
 
   @@id([ id ])
   @@index([ id ])
-  @@map("user")
+  @@map("staff")
 }
 
-model PartnerInfo {
-  userId     String  @map("user_id")     @db.Uuid       @id           @unique
-  balance    BigInt  @map("balance")     @db.BigInt     @default(0)
-  whereFrom  String  @map("where_from")  @db.VarChar()  @default("")
+model FurnitureTypeModel {
+  id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       String     @map("name")        @db.VarChar()  
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  user  UserModel  @relation(fields: [ userId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  models  ModelModel[]
 
-  @@index([ userId ])
-  @@map("partner_info")
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("furniture_type")
 }
 
+model ModelModel {
+  id               String     @map("id")                 @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name             String     @map("name")               @db.VarChar()  
+  partnerId        String     @map("partner_id")         @db.Uuid  
+  furnitureTypeId  String     @map("furniture_type_id")  @db.Uuid  
+ 
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
+  partner        PartnerModel        @relation(fields: [ partnerId       ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  furnitureType  FurnitureTypeModel  @relation(fields: [ furnitureTypeId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("model")
+}

@@ -1,5 +1,9 @@
-import { RoleModel } from '@prisma/client'
+import { PartnerRoleModel, StaffRoleModel } from '@prisma/client'
 
-export declare interface RoleRequired extends Required<RoleModel> {}
+export declare interface StaffRoleRequired extends Required<StaffRoleModel> {}
 
-export declare interface RoleOptional extends Partial<RoleModel> {}
+export declare interface StaffRoleOptional extends Partial<StaffRoleModel> {}
+
+export declare interface PartnerRoleRequired extends Required<PartnerRoleModel> {}
+
+export declare interface PartnerRoleOptional extends Partial<PartnerRoleModel> {}

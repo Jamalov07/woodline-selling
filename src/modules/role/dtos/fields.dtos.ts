@@ -1,19 +1,33 @@
 import { ApiProperty, ApiPropertyOptional, PickType } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '../../../common'
-import { RoleOptional, RoleRequired } from '../interfaces'
-import { IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator'
-import { RoleNameEnum } from '@prisma/client'
+import { PartnerRoleOptional, PartnerRoleRequired, StaffRoleOptional, StaffRoleRequired } from '../interfaces'
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { PartnerRoleEnum, StaffRoleEnum } from '@prisma/client'
 
-export class RoleRequiredDto extends PickType(DefaultRequiredFieldsDto, ['id', 'createdAt']) implements RoleRequired {
+export class StaffRoleRequiredDto extends PickType(DefaultRequiredFieldsDto, ['id', 'createdAt']) implements StaffRoleRequired {
 	@ApiProperty({ type: String })
 	@IsNotEmpty()
 	@IsString()
-	name: RoleNameEnum
+	name: StaffRoleEnum
 }
 
-export class RoleOptionalDto extends PickType(DefaultOptionalFieldsDto, ['id', 'createdAt']) implements RoleOptional {
+export class StaffRoleOptionalDto extends PickType(DefaultOptionalFieldsDto, ['id', 'createdAt']) implements StaffRoleOptional {
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()
 	@IsString()
-	name?: RoleNameEnum
+	name?: StaffRoleEnum
+}
+
+export class PartnerRoleRequiredDto extends PickType(DefaultRequiredFieldsDto, ['id', 'createdAt']) implements PartnerRoleRequired {
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsString()
+	name: PartnerRoleEnum
+}
+
+export class PartnerRoleOptionalDto extends PickType(DefaultOptionalFieldsDto, ['id', 'createdAt']) implements PartnerRoleOptional {
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsString()
+	name?: PartnerRoleEnum
 }

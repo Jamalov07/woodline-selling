@@ -1,12 +1,33 @@
 import { PickType, IntersectionType } from '@nestjs/swagger'
-import { RoleDeleteOneRequest, RoleFindManyRequest, RoleFindOneRequest, RoleUpdateOneRequest } from '../interfaces'
+import {
+	PartnerRoleDeleteOneRequest,
+	PartnerRoleFindManyRequest,
+	PartnerRoleFindOneRequest,
+	PartnerRoleUpdateOneRequest,
+	StaffRoleDeleteOneRequest,
+	StaffRoleFindManyRequest,
+	StaffRoleFindOneRequest,
+	StaffRoleUpdateOneRequest,
+} from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
-import { RoleOptionalDto, RoleRequiredDto } from './fields.dtos'
+import { PartnerRoleOptionalDto, PartnerRoleRequiredDto, StaffRoleOptionalDto, StaffRoleRequiredDto } from './fields.dtos'
 
-export class RoleFindManyRequestDto extends IntersectionType(PickType(RoleOptionalDto, ['name']), PaginationRequestDto) implements RoleFindManyRequest {}
+export class StaffRoleFindManyRequestDto extends IntersectionType(PickType(StaffRoleOptionalDto, ['name']), PaginationRequestDto) implements StaffRoleFindManyRequest {}
 
-export class RoleFindOneRequestDto extends IntersectionType(PickType(RoleRequiredDto, ['id'])) implements RoleFindOneRequest {}
+export class StaffRoleFindOneRequestDto extends IntersectionType(PickType(StaffRoleRequiredDto, ['id'])) implements StaffRoleFindOneRequest {}
 
-export class RoleUpdateOneRequestDto extends IntersectionType(PickType(RequestOtherFieldsDto, ['actionsToConnect', 'actionsToDisconnect'])) implements RoleUpdateOneRequest {}
+export class StaffRoleUpdateOneRequestDto
+	extends IntersectionType(PickType(RequestOtherFieldsDto, ['actionsToConnect', 'actionsToDisconnect']))
+	implements StaffRoleUpdateOneRequest {}
 
-export class RoleDeleteOneRequestDto extends IntersectionType(PickType(RoleRequiredDto, ['id'])) implements RoleDeleteOneRequest {}
+export class StaffRoleDeleteOneRequestDto extends IntersectionType(PickType(StaffRoleRequiredDto, ['id'])) implements StaffRoleDeleteOneRequest {}
+
+export class PartnerRoleFindManyRequestDto extends IntersectionType(PickType(PartnerRoleOptionalDto, ['name']), PaginationRequestDto) implements PartnerRoleFindManyRequest {}
+
+export class PartnerRoleFindOneRequestDto extends IntersectionType(PickType(PartnerRoleRequiredDto, ['id'])) implements PartnerRoleFindOneRequest {}
+
+export class PartnerRoleUpdateOneRequestDto
+	extends IntersectionType(PickType(RequestOtherFieldsDto, ['actionsToConnect', 'actionsToDisconnect']))
+	implements PartnerRoleUpdateOneRequest {}
+
+export class PartnerRoleDeleteOneRequestDto extends IntersectionType(PickType(PartnerRoleRequiredDto, ['id'])) implements PartnerRoleDeleteOneRequest {}

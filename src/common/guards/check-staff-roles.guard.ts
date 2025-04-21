@@ -24,7 +24,7 @@ export class CheckStaffRolesGuard implements CanActivate {
 			throw new ForbiddenException('staff id not found')
 		}
 
-		const staff = await this.prisma.userModel.findUnique({
+		const staff = await this.prisma.staffModel.findUnique({
 			where: { id: staffId },
 		})
 
