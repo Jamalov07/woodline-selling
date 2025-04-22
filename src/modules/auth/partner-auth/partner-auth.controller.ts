@@ -1,9 +1,10 @@
 import { Body, Controller, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PartnerAuthService } from './partner-auth.service'
 import { AuthModifyResponseDto, PartnerSignInRequestDto, PartnerSignInResponseDto } from './dtos'
 import { CRequest, AuthOptions, RefreshTokenInterceptor } from '@common'
 
+@ApiTags('Auth')
 @Controller('auth/partner')
 export class PartnerAuthController {
 	private readonly authService: PartnerAuthService

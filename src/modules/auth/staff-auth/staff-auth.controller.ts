@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { StaffAuthService } from './staff-auth.service'
 import { AuthModifyResponseDto, StaffSignInRequestDto, StaffSignInResponseDto } from './dtos'
 import { CRequest, AuthOptions, RefreshTokenInterceptor } from '@common'
-
+@ApiTags('Auth')
 @Controller('auth/staff')
 export class StaffAuthController {
 	private readonly authService: StaffAuthService
