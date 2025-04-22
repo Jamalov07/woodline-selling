@@ -9,7 +9,6 @@ export class RequestOtherFieldsDto implements RequestOtherFields {
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	// @ArrayNotEmpty({ message: 'UUIDs array should not be empty' })
 	@ArrayUnique({ message: 'UUIDs should be unique' })
 	ids: string[] = []
 
@@ -33,7 +32,6 @@ export class RequestOtherFieldsDto implements RequestOtherFields {
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	// @ArrayNotEmpty({ message: 'UUIDs array should not be empty' })
 	@ArrayUnique({ message: 'UUIDs should be unique' })
 	rolesToConnect?: string[] = []
 
@@ -41,7 +39,6 @@ export class RequestOtherFieldsDto implements RequestOtherFields {
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	// @ArrayNotEmpty({ message: 'UUIDs array should not be empty' })
 	@ArrayUnique({ message: 'UUIDs should be unique' })
 	rolesToDisconnect?: string[] = []
 
@@ -49,7 +46,6 @@ export class RequestOtherFieldsDto implements RequestOtherFields {
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	// @ArrayNotEmpty({ message: 'UUIDs array should not be empty' })
 	@ArrayUnique({ message: 'UUIDs should be unique' })
 	actionsToConnect?: string[] = []
 
@@ -57,7 +53,6 @@ export class RequestOtherFieldsDto implements RequestOtherFields {
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	// @ArrayNotEmpty({ message: 'UUIDs array should not be empty' })
 	@ArrayUnique({ message: 'UUIDs should be unique' })
 	actionsToDisconnect?: string[] = []
 

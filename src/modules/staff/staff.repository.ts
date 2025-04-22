@@ -91,7 +91,8 @@ export class StaffRepository implements OnModuleInit {
 				fullname: body.fullname,
 				password: body.password,
 				phone: body.phone,
-				username: body.username,
+				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
+				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
 		})
 		return staff
@@ -106,7 +107,14 @@ export class StaffRepository implements OnModuleInit {
 				phone: body.phone,
 				token: body.token,
 				deletedAt: body.deletedAt,
-				username: body.username,
+				roles: {
+					connect: (body.rolesToConnect ?? []).map((r) => ({ id: r })),
+					disconnect: (body.rolesToDisconnect ?? []).map((r) => ({ id: r })),
+				},
+				actions: {
+					connect: (body.actionsToConnect ?? []).map((r) => ({ id: r })),
+					disconnect: (body.actionsToDisconnect ?? []).map((r) => ({ id: r })),
+				},
 			},
 		})
 

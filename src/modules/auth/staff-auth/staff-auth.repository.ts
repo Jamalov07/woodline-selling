@@ -12,7 +12,7 @@ export class StaffAuthRepository {
 
 	async findOneStaff(body: StaffSignInRequest) {
 		const user = await this.prisma.staffModel.findFirst({
-			where: { username: body.username },
+			where: { phone: body.phone },
 		})
 
 		return user

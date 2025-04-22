@@ -77,11 +77,6 @@ export class StaffService {
 			throw new BadRequestException('phone already exists')
 		}
 
-		const candidate2 = await this.staffRepository.getOne({ username: body.username })
-		if (candidate2) {
-			throw new BadRequestException('username already exists')
-		}
-
 		const password = await bcrypt.hash(body.password, 7)
 
 		await this.staffRepository.createOne({ ...body, password: password })
@@ -96,13 +91,6 @@ export class StaffService {
 			const candidate = await this.staffRepository.getOne({ phone: body.phone })
 			if (candidate) {
 				throw new BadRequestException('phone already exists')
-			}
-		}
-
-		if (body.username) {
-			const candidate2 = await this.staffRepository.getOne({ username: body.username })
-			if (candidate2) {
-				throw new BadRequestException('username already exists')
 			}
 		}
 

@@ -94,7 +94,6 @@ export class PartnerRepository implements OnModuleInit {
 				whereFrom: body.whereFrom,
 				password: body.password,
 				phone: body.phone,
-				username: body.username,
 				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
@@ -113,14 +112,13 @@ export class PartnerRepository implements OnModuleInit {
 				phone: body.phone,
 				token: body.token,
 				deletedAt: body.deletedAt,
-				username: body.username,
 				roles: {
-					connect: body.rolesToConnect.map((r) => ({ id: r })),
-					disconnect: body.rolesToDisconnect.map((r) => ({ id: r })),
+					connect: (body.rolesToConnect ?? []).map((r) => ({ id: r })),
+					disconnect: (body.rolesToDisconnect ?? []).map((r) => ({ id: r })),
 				},
 				actions: {
-					connect: body.actionsToConnect.map((r) => ({ id: r })),
-					disconnect: body.actionsToDisconnect.map((r) => ({ id: r })),
+					connect: (body.actionsToConnect ?? []).map((r) => ({ id: r })),
+					disconnect: (body.actionsToDisconnect ?? []).map((r) => ({ id: r })),
 				},
 			},
 		})

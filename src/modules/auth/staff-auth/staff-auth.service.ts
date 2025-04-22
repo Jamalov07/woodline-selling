@@ -34,6 +34,7 @@ export class StaffAuthService {
 			throw new UnauthorizedException('wrong password')
 		}
 		delete staff.password
+		delete staff.token
 
 		const tokens = await this.jwtService.getTokens({ id: staff.id })
 		await this.staffRepository.updateOne({ id: staff.id }, { token: tokens.refreshToken })
@@ -58,6 +59,9 @@ export class StaffAuthService {
 		if (!staff) {
 			throw new UnauthorizedException('staff not found')
 		}
+
+		delete staff.password
+		delete staff.token
 
 		const tokens = await this.jwtService.getTokens({ id: body.staff.id })
 		await this.staffRepository.updateOne({ id: staff.id }, { token: tokens.refreshToken })

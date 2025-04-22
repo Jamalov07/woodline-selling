@@ -22,6 +22,8 @@ export class StaffRoleUpdateOneRequestDto
 
 export class StaffRoleDeleteOneRequestDto extends IntersectionType(PickType(StaffRoleRequiredDto, ['id'])) implements StaffRoleDeleteOneRequest {}
 
+//==//
+
 export class PartnerRoleFindManyRequestDto extends IntersectionType(PickType(PartnerRoleOptionalDto, ['name']), PaginationRequestDto) implements PartnerRoleFindManyRequest {}
 
 export class PartnerRoleFindOneRequestDto extends IntersectionType(PickType(PartnerRoleRequiredDto, ['id'])) implements PartnerRoleFindOneRequest {}

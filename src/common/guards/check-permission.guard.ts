@@ -9,8 +9,8 @@ export class CheckPermissionGuard implements CanActivate {
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest()
 
-		if (!request.staff) {
-			throw new UnauthorizedException('check permission guard: staff not found')
+		if (!request.user) {
+			throw new UnauthorizedException('check permission guard: user not found')
 		}
 
 		const controller = context.getClass()

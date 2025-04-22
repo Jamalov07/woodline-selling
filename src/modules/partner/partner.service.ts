@@ -77,11 +77,6 @@ export class PartnerService {
 			throw new BadRequestException('phone already exists')
 		}
 
-		const candidate2 = await this.partnerRepository.getOne({ username: body.username })
-		if (candidate2) {
-			throw new BadRequestException('username already exists')
-		}
-		console.log(body)
 		const password = await bcrypt.hash(body.password, 7)
 
 		await this.partnerRepository.createOne({ ...body, password: password })
@@ -96,13 +91,6 @@ export class PartnerService {
 			const candidate = await this.partnerRepository.getOne({ phone: body.phone })
 			if (candidate) {
 				throw new BadRequestException('phone already exists')
-			}
-		}
-
-		if (body.username) {
-			const candidate2 = await this.partnerRepository.getOne({ username: body.username })
-			if (candidate2) {
-				throw new BadRequestException('username already exists')
 			}
 		}
 

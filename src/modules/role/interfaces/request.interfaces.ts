@@ -15,6 +15,8 @@ export declare interface StaffRoleUpdateOneRequest extends Pick<RequestOtherFiel
 
 export declare interface StaffRoleDeleteOneRequest extends Pick<StaffRoleOptional, 'id'> {}
 
+//====//
+
 export declare interface PartnerRoleFindManyRequest extends Pick<PartnerRoleOptional, 'name'>, PaginationRequest, Pick<RequestOtherFields, 'ids'> {}
 
 export declare interface PartnerRoleFindOneRequest extends Pick<PartnerRoleOptional, 'id' | 'name'> {}

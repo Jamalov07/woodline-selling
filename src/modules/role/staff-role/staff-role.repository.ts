@@ -92,7 +92,10 @@ export class StaffRoleRepository implements OnModuleInit {
 
 	async createOne(body: StaffRoleCreateOneRequest) {
 		const role = await this.prisma.staffRoleModel.create({
-			data: { name: body.name, actions: { connect: body.actionsToConnect.map((a) => ({ id: a })) } },
+			data: {
+				name: body.name,
+				actions: { connect: body.actionsToConnect.map((a) => ({ id: a })) },
+			},
 		})
 		return role
 	}

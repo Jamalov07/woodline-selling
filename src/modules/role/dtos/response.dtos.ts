@@ -33,7 +33,7 @@ export class StaffRoleFindOneResponseDto extends GlobalResponseDto implements St
 
 export class StaffRoleModifyResponseDto extends IntersectionType(GlobalResponseDto, GlobalModifyResponseDto) implements StaffRoleModifyResposne {}
 
-//===
+//===//
 
 export class PartnerRoleFindOneDataDto extends PickType(PartnerRoleRequiredDto, ['id', 'name', 'createdAt']) implements PartnerRoleFindOneData {}
 

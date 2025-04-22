@@ -34,6 +34,7 @@ export class PartnerAuthService {
 			throw new UnauthorizedException('wrong password')
 		}
 		delete partner.password
+		delete partner.token
 
 		const tokens = await this.jwtService.getTokens({ id: partner.id })
 		await this.partnerRepository.updateOne({ id: partner.id }, { token: tokens.refreshToken })
@@ -58,6 +59,8 @@ export class PartnerAuthService {
 		if (!partner) {
 			throw new UnauthorizedException('partner not found')
 		}
+
+		delete partner.token
 
 		const tokens = await this.jwtService.getTokens({ id: body.partner.id })
 		await this.partnerRepository.updateOne({ id: partner.id }, { token: tokens.refreshToken })

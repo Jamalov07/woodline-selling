@@ -1,7 +1,7 @@
 import { GlobalResponse } from '@common'
 import { PartnerOptional, PartnerRequired } from '../../../partner'
 
-export declare interface PartnerSignInRequest extends Pick<PartnerRequired, 'password' | 'username'> {}
+export declare interface PartnerSignInRequest extends Pick<PartnerRequired, 'password' | 'phone'> {}
 
 export declare interface AuthModifyResponse extends GlobalResponse {
 	data: null

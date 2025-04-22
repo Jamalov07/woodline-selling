@@ -32,11 +32,6 @@ export class PartnerRequiredDto extends DefaultRequiredFieldsDto implements Part
 	@ApiProperty({ type: String })
 	@IsNotEmpty()
 	@IsString()
-	username: string
-
-	@ApiProperty({ type: String })
-	@IsNotEmpty()
-	@IsString()
 	whereFrom: string
 }
 
@@ -65,11 +60,6 @@ export class PartnerOptionalDto extends DefaultOptionalFieldsDto implements Part
 	@IsOptional()
 	@IsJWT()
 	token?: string
-
-	@ApiPropertyOptional({ type: String })
-	@IsOptional()
-	@IsString()
-	username?: string
 
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()

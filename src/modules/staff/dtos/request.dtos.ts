@@ -1,18 +1,21 @@
 import { PickType, IntersectionType } from '@nestjs/swagger'
 import { StaffCreateOneRequest, StaffDeleteOneRequest, StaffFindManyRequest, StaffFindOneRequest, StaffUpdateOneRequest } from '../interfaces'
-import { PaginationRequestDto } from '@common'
+import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { StaffOptionalDto, StaffRequiredDto } from './fields.dtos'
 
-export class StaffFindManyRequestDto
-	extends IntersectionType(PickType(StaffOptionalDto, ['fullname', 'phone', 'username']), PaginationRequestDto)
-	implements StaffFindManyRequest {}
+export class StaffFindManyRequestDto extends IntersectionType(PickType(StaffOptionalDto, ['fullname', 'phone']), PaginationRequestDto) implements StaffFindManyRequest {}
 
 export class StaffFindOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id'])) implements StaffFindOneRequest {}
 
-export class StaffCreateOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['fullname', 'username', 'phone', 'password'])) implements StaffCreateOneRequest {}
+export class StaffCreateOneRequestDto
+	extends IntersectionType(PickType(StaffRequiredDto, ['fullname', 'phone', 'password']), PickType(RequestOtherFieldsDto, ['rolesToConnect', 'actionsToConnect']))
+	implements StaffCreateOneRequest {}
 
 export class StaffUpdateOneRequestDto
-	extends IntersectionType(PickType(StaffOptionalDto, ['deletedAt', 'fullname', 'password', 'phone', 'token', 'username']))
+	extends IntersectionType(
+		PickType(StaffOptionalDto, ['deletedAt', 'fullname', 'password', 'phone', 'token']),
+		PickType(RequestOtherFieldsDto, ['rolesToConnect', 'actionsToConnect', 'rolesToDisconnect', 'actionsToDisconnect']),
+	)
 	implements StaffUpdateOneRequest {}
 
 export class StaffDeleteOneRequestDto extends IntersectionType(PickType(StaffRequiredDto, ['id'])) implements StaffDeleteOneRequest {}

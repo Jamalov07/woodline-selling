@@ -2,7 +2,7 @@ import { PaginationRequest, RequestOtherFields } from '@common'
 import { PartnerOptional, PartnerRequired } from './fields.interfaces'
 
 export declare interface PartnerFindManyRequest
-	extends Pick<PartnerOptional, 'fullname' | 'phone' | 'username' | 'whereFrom'>,
+	extends Pick<PartnerOptional, 'fullname' | 'phone' | 'whereFrom'>,
 		PaginationRequest,
 		Pick<RequestOtherFields, 'ids' | 'isDeleted'> {}
 
@@ -13,11 +13,11 @@ export declare interface PartnerGetManyRequest extends PartnerOptional, Paginati
 export declare interface PartnerGetOneRequest extends PartnerOptional, Pick<RequestOtherFields, 'isDeleted'> {}
 
 export declare interface PartnerCreateOneRequest
-	extends Pick<PartnerRequired, 'fullname' | 'phone' | 'username' | 'whereFrom' | 'balance' | 'password'>,
+	extends Pick<PartnerRequired, 'fullname' | 'phone' | 'whereFrom' | 'balance' | 'password'>,
 		Pick<RequestOtherFields, 'rolesToConnect' | 'actionsToConnect'> {}
 
 export declare interface PartnerUpdateOneRequest
-	extends Pick<PartnerOptional, 'balance' | 'fullname' | 'id' | 'password' | 'phone' | 'token' | 'username' | 'whereFrom' | 'deletedAt'>,
+	extends Pick<PartnerOptional, 'balance' | 'fullname' | 'id' | 'password' | 'phone' | 'token' | 'whereFrom' | 'deletedAt'>,
 		Pick<RequestOtherFields, 'rolesToConnect' | 'actionsToConnect' | 'rolesToDisconnect' | 'actionsToDisconnect'> {}
 
 export declare interface PartnerDeleteOneRequest extends Pick<PartnerOptional, 'id'>, Pick<RequestOtherFields, 'method'> {}

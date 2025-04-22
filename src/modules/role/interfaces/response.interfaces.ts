@@ -20,6 +20,8 @@ export declare interface StaffRoleModifyResposne extends GlobalResponse {
 	data: null
 }
 
+//==//
+
 export declare interface PartnerRoleFindManyData extends PaginationResponse<PartnerRoleFindOneData> {}
 
 export declare interface PartnerRoleFindOneData extends Pick<PartnerRoleRequired, 'id' | 'name' | 'createdAt'> {

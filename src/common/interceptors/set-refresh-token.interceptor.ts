@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { Observable } from 'rxjs'
 import { isJWT } from 'class-validator'
 import * as colors from 'colors'
+import { PartnerOptional, StaffOptional } from '../../modules'
 
 @Injectable()
 export class RefreshTokenInterceptor implements NestInterceptor {
@@ -44,22 +45,26 @@ export class RefreshTokenInterceptor implements NestInterceptor {
 			if (!payload || !payload?.id) {
 				throw new UnauthorizedException('Invalid token payload')
 			}
+			let user: Partial<StaffOptional> & Partial<PartnerOptional>
+			user =
+				(await this.prismaService.staffModel.findFirst({
+					where: { id: payload?.id, token: token },
+				})) ??
+				(await this.prismaService.partnerModel.findFirst({
+					where: { id: payload?.id, token: token },
+				}))
 
-			const staff = await this.prismaService.staffModel.findFirst({
-				where: { id: payload?.id, token: token },
-			})
-
-			if (!staff) {
-				throw new UnauthorizedException('Staff not found with this token')
+			if (!user) {
+				throw new UnauthorizedException('user not found with this token')
 			}
 
-			if (staff.deletedAt) {
-				throw new UnauthorizedException('Staff was deleted')
+			if (user.deletedAt) {
+				throw new UnauthorizedException('user was deleted')
 			}
 
-			request['staff'] = { id: staff.id, token: token }
+			request['user'] = { id: user.id, token: token }
 
-			this.logger.debug(colors.magenta({ ...request['staff'] }))
+			this.logger.debug(colors.magenta({ ...request['user'] }))
 
 			return next.handle()
 		} catch (e) {

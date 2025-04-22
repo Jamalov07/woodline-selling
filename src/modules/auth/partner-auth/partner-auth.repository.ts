@@ -12,7 +12,7 @@ export class PartnerAuthRepository {
 
 	async findOnePartner(body: PartnerSignInRequest) {
 		const user = await this.prisma.partnerModel.findFirst({
-			where: { username: body.username },
+			where: { phone: body.phone },
 		})
 
 		return user

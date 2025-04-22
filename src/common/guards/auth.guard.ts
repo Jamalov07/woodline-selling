@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Reflector } from '@nestjs/core'
 import * as colors from 'colors'
+import { PartnerOptional } from '../../modules'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -31,9 +32,9 @@ export class AuthGuard implements CanActivate {
 			if (!token) {
 				throw new UnauthorizedException('Token not provided')
 			} else {
-				const staff = await this.parseTokenWithJwt(token, isStaffRequired)
-				request['staff'] = staff
-				this.logger.debug(colors.cyan(request['staff']))
+				const user = await this.parseTokenWithJwt(token, isStaffRequired)
+				request['user'] = user
+				this.logger.debug(colors.cyan(request['user']))
 
 				return true
 			}
@@ -41,11 +42,11 @@ export class AuthGuard implements CanActivate {
 			if (!token) {
 				return true
 			} else {
-				const staff = await this.parseTokenWithJwt(token, isStaffRequired)
-				if (Object.keys(staff).length) {
-					request['staff'] = staff
+				const user = await this.parseTokenWithJwt(token, isStaffRequired)
+				if (Object.keys(user).length) {
+					request['user'] = user
 				}
-				this.logger.debug(colors.cyan(request['staff']))
+				this.logger.debug(colors.cyan(request['user']))
 
 				return true
 			}
@@ -79,21 +80,21 @@ export class AuthGuard implements CanActivate {
 					throw new UnauthorizedException('invalid token')
 				}
 			}
-			let staff: StaffOptional
+			let user: Partial<PartnerOptional> & Partial<StaffOptional>
 			if (payload?.id) {
-				staff = await this.prisma.staffModel.findFirst({ where: { id: payload?.id } })
+				user = (await this.prisma.staffModel.findFirst({ where: { id: payload?.id } })) ?? (await this.prisma.partnerModel.findFirst({ where: { id: payload?.id } }))
 			}
 
 			if (isStaffRequired) {
-				if (!staff) {
-					throw new UnauthorizedException('staff not found with this token')
+				if (!user) {
+					throw new UnauthorizedException('user not found with this token')
 				}
-				if (staff.deletedAt) {
-					throw new UnauthorizedException('staff was deleted')
+				if (user.deletedAt) {
+					throw new UnauthorizedException('user was deleted')
 				}
 			}
 
-			return { id: staff?.id }
+			return { id: user?.id }
 		} catch (e) {
 			if (isStaffRequired) {
 				throw new UnauthorizedException(e?.message || e)

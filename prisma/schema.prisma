@@ -82,7 +82,6 @@ model StaffRoleModel {
 model PartnerModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   phone      String     @map("phone")       @db.VarChar()                                    @unique 
-  username   String     @map("username")    @db.VarChar()                                    @unique
   fullname   String     @map("fullname")    @db.VarChar()
   password   String     @map("password")    @db.VarChar()  
   token      String?    @map("token")       @db.VarChar()  
@@ -105,7 +104,6 @@ model PartnerModel {
 model StaffModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   phone      String     @map("phone")       @db.VarChar()                                    @unique 
-  username   String     @map("username")    @db.VarChar()                                    @unique
   fullname   String     @map("fullname")    @db.VarChar()
   password   String     @map("password")    @db.VarChar()  
   token      String?    @map("token")       @db.VarChar()  
