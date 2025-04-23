@@ -13,7 +13,7 @@ export declare interface PartnerGetManyRequest extends PartnerOptional, Paginati
 export declare interface PartnerGetOneRequest extends PartnerOptional, Pick<RequestOtherFields, 'isDeleted'> {}
 
 export declare interface PartnerCreateOneRequest
-	extends Pick<PartnerRequired, 'fullname' | 'phone' | 'whereFrom' | 'balance' | 'password'>,
+	extends Pick<PartnerRequired, 'fullname' | 'phone' | 'whereFrom' | 'password'>,
 		Pick<RequestOtherFields, 'rolesToConnect' | 'actionsToConnect'> {}
 
 export declare interface PartnerUpdateOneRequest

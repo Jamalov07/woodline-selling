@@ -9,10 +9,10 @@ export declare interface StaffGetManyRequest extends StaffOptional, PaginationRe
 
 export declare interface StaffGetOneRequest extends StaffOptional, Pick<RequestOtherFields, 'isDeleted'> {}
 
-export declare interface StaffCreateOneRequest extends Pick<StaffRequired, 'fullname' | 'phone' | 'password'>, Pick<RequestOtherFields, 'rolesToConnect' | 'actionsToConnect'> {}
+export declare interface StaffCreateOneRequest extends Pick<StaffRequired, 'fullname' | 'phone' | 'password'>, Pick<RequestOtherFields, 'actionsToConnect'> {}
 
 export declare interface StaffUpdateOneRequest
 	extends Pick<StaffOptional, 'fullname' | 'id' | 'password' | 'phone' | 'token' | 'deletedAt'>,
-		Pick<RequestOtherFields, 'rolesToConnect' | 'actionsToConnect' | 'rolesToDisconnect' | 'actionsToDisconnect'> {}
+		Pick<RequestOtherFields, 'actionsToConnect' | 'actionsToDisconnect'> {}
 
 export declare interface StaffDeleteOneRequest extends Pick<StaffOptional, 'id'>, Pick<RequestOtherFields, 'method'> {}

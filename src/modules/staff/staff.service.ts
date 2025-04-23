@@ -43,7 +43,7 @@ export class StaffService {
 			throw new BadRequestException('staff not found')
 		}
 
-		return createResponse({ data: staff, success: { messages: ['find one success'] } })
+		return createResponse({ data: { ...staff, actionIds: staff.actions.map((a) => a.id) }, success: { messages: ['find one success'] } })
 	}
 
 	async getMany(query: StaffGetManyRequest) {

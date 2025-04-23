@@ -10,10 +10,7 @@ export class PartnerFindManyRequestDto
 export class PartnerFindOneRequestDto extends IntersectionType(PickType(PartnerRequiredDto, ['id'])) implements PartnerFindOneRequest {}
 
 export class PartnerCreateOneRequestDto
-	extends IntersectionType(
-		PickType(PartnerRequiredDto, ['fullname', 'whereFrom', 'phone', 'password', 'balance']),
-		PickType(RequestOtherFieldsDto, ['rolesToConnect', 'actionsToConnect']),
-	)
+	extends IntersectionType(PickType(PartnerRequiredDto, ['fullname', 'whereFrom', 'phone', 'password']), PickType(RequestOtherFieldsDto, ['rolesToConnect', 'actionsToConnect']))
 	implements PartnerCreateOneRequest {}
 
 export class PartnerUpdateOneRequestDto

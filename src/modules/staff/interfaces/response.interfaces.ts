@@ -1,9 +1,13 @@
 import { GlobalResponse, PaginationResponse } from '@common'
 import { StaffRequired } from './fields.interfaces'
+import { StaffRoleFindOneData } from '../../role'
 
 export declare interface StaffFindManyData extends PaginationResponse<StaffFindOneData> {}
 
-export declare interface StaffFindOneData extends Pick<StaffRequired, 'id' | 'fullname' | 'createdAt'> {}
+export declare interface StaffFindOneData extends Pick<StaffRequired, 'id' | 'fullname' | 'createdAt'> {
+	actionIds?: string[]
+	roles?: StaffRoleFindOneData[]
+}
 
 export declare interface StaffFindManyResponse extends GlobalResponse {
 	data: StaffFindManyData

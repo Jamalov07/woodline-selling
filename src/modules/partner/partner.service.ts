@@ -43,7 +43,7 @@ export class PartnerService {
 			throw new BadRequestException('partner not found')
 		}
 
-		return createResponse({ data: partner, success: { messages: ['find one success'] } })
+		return createResponse({ data: { ...partner, actionIds: partner.actions.map((a) => a.id) }, success: { messages: ['find one success'] } })
 	}
 
 	async getMany(query: PartnerGetManyRequest) {

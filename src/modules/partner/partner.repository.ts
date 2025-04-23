@@ -29,6 +29,18 @@ export class PartnerRepository implements OnModuleInit {
 				id: { in: query.ids },
 				fullname: query.fullname,
 			},
+			select: {
+				id: true,
+				fullname: true,
+				phone: true,
+				balance: true,
+				whereFrom: true,
+				actions: true,
+				roles: true,
+				updatedAt: true,
+				createdAt: true,
+				deletedAt: true,
+			},
 
 			...paginationOptions,
 		})
@@ -39,6 +51,18 @@ export class PartnerRepository implements OnModuleInit {
 	async findOne(query: PartnerFindOneRequest) {
 		const partner = await this.prisma.partnerModel.findFirst({
 			where: { id: query.id },
+			select: {
+				id: true,
+				fullname: true,
+				phone: true,
+				balance: true,
+				whereFrom: true,
+				actions: true,
+				roles: true,
+				updatedAt: true,
+				createdAt: true,
+				deletedAt: true,
+			},
 		})
 
 		return partner
@@ -87,14 +111,19 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async createOne(body: PartnerCreateOneRequest) {
+		const rolesToConnect = body.actionsToConnect.length
+			? await this.prisma.staffRoleModel.findMany({
+					where: { actions: { some: { id: { in: body.actionsToConnect } } } },
+				})
+			: []
+
 		const partner = await this.prisma.partnerModel.create({
 			data: {
-				balance: body.balance,
 				fullname: body.fullname,
 				whereFrom: body.whereFrom,
 				password: body.password,
 				phone: body.phone,
-				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
+				roles: { connect: rolesToConnect.map((r) => ({ id: r.id })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
 		})
@@ -102,6 +131,26 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async updateOne(query: PartnerGetOneRequest, body: PartnerUpdateOneRequest) {
+		const user = await this.prisma.partnerModel.findFirst({ where: { id: query.id }, select: { actions: true, roles: true } })
+
+		const currentActionIds = user.actions.map((a) => a.id)
+
+		const actionIdsToConnect = [...currentActionIds.filter((id) => !body.actionsToDisconnect.includes(id)), ...body.actionsToConnect]
+
+		const rolesToConnect = (
+			await this.prisma.partnerRoleModel.findMany({
+				where: { actions: { some: { id: { in: actionIdsToConnect } } } },
+			})
+		).map((r) => r.id)
+
+		const rolesToDisconnect = (
+			await this.prisma.partnerRoleModel.findMany({
+				where: { actions: { some: { id: { in: body.actionsToDisconnect } } } },
+			})
+		)
+			.map((r) => r.id)
+			.filter((r) => !rolesToConnect.includes(r))
+
 		const partner = await this.prisma.partnerModel.update({
 			where: { id: query.id },
 			data: {
@@ -113,8 +162,8 @@ export class PartnerRepository implements OnModuleInit {
 				token: body.token,
 				deletedAt: body.deletedAt,
 				roles: {
-					connect: (body.rolesToConnect ?? []).map((r) => ({ id: r })),
-					disconnect: (body.rolesToDisconnect ?? []).map((r) => ({ id: r })),
+					connect: rolesToConnect.map((r) => ({ id: r })),
+					disconnect: rolesToDisconnect.map((r) => ({ id: r })),
 				},
 				actions: {
 					connect: (body.actionsToConnect ?? []).map((r) => ({ id: r })),
