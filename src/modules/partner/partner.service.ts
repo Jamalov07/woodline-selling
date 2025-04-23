@@ -73,6 +73,7 @@ export class PartnerService {
 
 	async createOne(body: PartnerCreateOneRequest) {
 		const candidate = await this.partnerRepository.getOne({ phone: body.phone })
+
 		if (candidate) {
 			throw new BadRequestException('phone already exists')
 		}

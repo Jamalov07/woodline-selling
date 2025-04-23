@@ -95,7 +95,7 @@ export class PartnerRepository implements OnModuleInit {
 
 	async getOne(query: PartnerGetOneRequest) {
 		const partner = await this.prisma.partnerModel.findFirst({
-			where: { id: query.id, fullname: query.fullname },
+			where: { id: query.id, fullname: query.fullname, phone: query.phone },
 			select: { id: true, balance: true, createdAt: true, fullname: true, phone: true, roles: true, token: true },
 		})
 

@@ -74,6 +74,6 @@ export class StaffRoleService {
 
 		await this.roleRepository.updateOne(query, { ...body })
 
-		return createResponse({ data: null, success: { messages: ['update success'] } })
+		return createResponse({ data: null, success: { messages: ['update one success'] } })
 	}
 }

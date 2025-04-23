@@ -90,7 +90,7 @@ export class StaffRepository implements OnModuleInit {
 
 	async getOne(query: StaffGetOneRequest) {
 		const staff = await this.prisma.staffModel.findFirst({
-			where: { id: query.id, fullname: query.fullname },
+			where: { id: query.id, fullname: query.fullname, phone: query.phone },
 		})
 
 		return staff
@@ -110,6 +110,7 @@ export class StaffRepository implements OnModuleInit {
 					where: { actions: { some: { id: { in: body.actionsToConnect } } } },
 				})
 			: []
+
 
 		const staff = await this.prisma.staffModel.create({
 			data: {
