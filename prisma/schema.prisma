@@ -33,6 +33,35 @@ enum StaffRoleEnum {
   @@map("staff_role_name")
 }
 
+enum PaymentMethodEnum {
+  cash_with_receipt  // Наличный с чеком
+  cash_without_receipt  // Наличный без чека
+  card_payme  // С карты PayMe
+  card_uzum  // С карты Uzum
+  card_anor  // С карты Anor
+  card_solfy  // С карты Solfy
+  card_zoodpay  // С карты ZoodPay
+  card_to_card  // С карты на карту
+  transfer  // Перечисление
+  terminal  // Терминал
+
+  @@map("payment_method")
+}
+
+
+enum PaymentCurrencyEnum {
+  uzs  @map("uzs")
+  usd  @map("usd")
+
+  @@map("payment_currency")
+}
+
+enum ProductDirectionEnum {
+  right  @map("right")
+  left   @map("left")
+  none   @map("no_direction") 
+}
+
 model ActionModel {
   id           String            @map("id")           @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   url          String            @map("url")          @db.VarChar()
@@ -112,8 +141,10 @@ model StaffModel {
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  roles    StaffRoleModel[]
-  actions  ActionModel[]
+  carts          CartModel[]
+  roles          StaffRoleModel[]
+  actions        ActionModel[]
+  orderProducts  OrderProductModel[]
 
   @@id([ id ])
   @@index([ id ])
@@ -149,8 +180,109 @@ model ModelModel {
   partner        PartnerModel        @relation(fields: [ partnerId       ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   furnitureType  FurnitureTypeModel  @relation(fields: [ furnitureTypeId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
+  carts          CartModel[]
+  orderProducts  OrderProductModel[]
+
   @@id([ id ])
   @@index([ id ])
   @@unique([ name ])
   @@map("model")
+}
+
+model PaymentModel {
+  id            String               @map("id")             @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
+  sum           BigInt               @map("sum")            @db.BigInt     @default(0)
+  method        PaymentMethodEnum    @map("method")                        @default(cash_with_receipt)
+  fromCurrency  PaymentCurrencyEnum  @map("from_currency")                 @default(uzs)
+  exchangeRate  BigInt               @map("exchange_rate")  @db.BigInt     @default(1)
+  toCurrency    PaymentCurrencyEnum  @map("to_currency")                   @default(uzs)
+  totalSum      BigInt               @map("total_sum")      @db.BigInt     @default(0)
+  description   String               @map("description")    @db.VarChar()  @default("")
+  
+  orderId       String               @map("order_id")       @db.Uuid
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  order  OrderModel  @relation(fields: [ orderId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("payment")
+}
+
+model OrderModel {
+  id               String    @map("id")                @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
+  
+  clientId         String    @map("client_id")         @db.Uuid
+  deliveryDate     DateTime  @map("delivery_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
+  deliveryAddress  String    @map("delivery_address")  @db.VarChar()
+
+
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  payments  PaymentModel[]
+  products  OrderProductModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("order")
+}
+
+model OrderProductModel {
+  id             String                @map("id")                 @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
+  publicId       String                @map("public_id")          @db.VarChar()
+  tissue         String                @map("tissue")             @db.VarChar()
+  direction      ProductDirectionEnum  @map("direction")
+  quantity       Int                   @map("quantity")           @db.Integer    @default(1)
+  sale           Int                   @map("sale")               @db.Integer    @default(0)
+  price          BigInt                @map("price")              @db.BigInt     @default(0)
+  priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
+  totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
+  description    String                @map("decsription")        @db.VarChar()  @default("")
+  modelId        String                @map("furniture_type_id")  @db.Uuid 
+  staffId        String                @map("staff_id")           @db.Uuid    
+  orderId        String                @map("order_id")           @db.Uuid
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  order  OrderModel  @relation(fields: [ orderId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  model  ModelModel  @relation(fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  staff  StaffModel  @relation(fields: [ staffId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("order_product")
+}
+
+model CartModel {
+  id             String                @map("id")                 @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
+  publicId       String                @map("public_id")          @db.VarChar()
+  tissue         String                @map("tissue")             @db.VarChar()
+  modelId        String                @map("furniture_type_id")  @db.Uuid 
+  direction      ProductDirectionEnum  @map("direction")
+  quantity       Int                   @map("quantity")           @db.Integer    @default(1)
+  sale           Int                   @map("sale")               @db.Integer    @default(0)
+  price          BigInt                @map("price")              @db.BigInt     @default(0)
+  priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
+  totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
+  description    String                @map("decsription")        @db.VarChar()  @default("")
+  staffId        String                @map("staff_id")           @db.Uuid    
+
+  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  model  ModelModel  @relation(fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  staff  StaffModel  @relation(fields: [ staffId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("cart")
 }

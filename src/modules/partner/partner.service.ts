@@ -90,7 +90,7 @@ export class PartnerService {
 
 		if (body.phone) {
 			const candidate = await this.partnerRepository.getOne({ phone: body.phone })
-			if (candidate) {
+			if (candidate && candidate.id !== query.id) {
 				throw new BadRequestException('phone already exists')
 			}
 		}
