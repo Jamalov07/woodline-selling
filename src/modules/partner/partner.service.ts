@@ -36,6 +36,22 @@ export class PartnerService {
 		return createResponse({ data: result, success: { messages: ['find many success'] } })
 	}
 
+	async findManyProvider(query: PartnerFindManyRequest) {
+		const partners = await this.partnerRepository.findManyProvider(query)
+		const partnersCount = await this.partnerRepository.countFindManyProvider(query)
+
+		const result = query.pagination
+			? {
+					totalCount: partnersCount,
+					pagesCount: Math.ceil(partnersCount / query.pageSize),
+					pageSize: partners.length,
+					data: partners,
+				}
+			: { data: partners }
+
+		return createResponse({ data: result, success: { messages: ['find many success'] } })
+	}
+
 	async findOne(query: PartnerFindOneRequest) {
 		const partner = await this.partnerRepository.findOne(query)
 

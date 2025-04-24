@@ -10,6 +10,7 @@ import {
 	PartnerUpdateOneRequest,
 } from './interfaces'
 import { PartnerController } from './partner.controller'
+import { PartnerRoleEnum } from '@prisma/client'
 
 @Injectable()
 export class PartnerRepository implements OnModuleInit {
@@ -28,6 +29,39 @@ export class PartnerRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				fullname: query.fullname,
+			},
+			select: {
+				id: true,
+				fullname: true,
+				phone: true,
+				balance: true,
+				whereFrom: true,
+				actions: true,
+				roles: true,
+				updatedAt: true,
+				createdAt: true,
+				deletedAt: true,
+			},
+
+			...paginationOptions,
+		})
+
+		return partners
+	}
+
+	async findManyProvider(query: PartnerFindManyRequest) {
+		const partnerRole = await this.prisma.partnerRoleModel.findFirst({ where: { name: PartnerRoleEnum.provider } })
+
+		let paginationOptions = {}
+		if (query.pagination) {
+			paginationOptions = { take: query.pageSize, skip: (query.pageNumber - 1) * query.pageSize }
+		}
+
+		const partners = await this.prisma.partnerModel.findMany({
+			where: {
+				id: { in: query.ids },
+				fullname: query.fullname,
+				roles: { some: { id: partnerRole?.id } },
 			},
 			select: {
 				id: true,
@@ -73,6 +107,20 @@ export class PartnerRepository implements OnModuleInit {
 			where: {
 				id: { in: query.ids },
 				fullname: query.fullname,
+			},
+		})
+
+		return partnersCount
+	}
+
+	async countFindManyProvider(query: PartnerFindManyRequest) {
+		const partnerRole = await this.prisma.partnerRoleModel.findFirst({ where: { name: PartnerRoleEnum.provider } })
+
+		const partnersCount = await this.prisma.partnerModel.count({
+			where: {
+				id: { in: query.ids },
+				fullname: query.fullname,
+				roles: { some: { id: partnerRole.id } },
 			},
 		})
 
