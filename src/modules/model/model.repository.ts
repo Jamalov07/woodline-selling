@@ -101,7 +101,7 @@ export class ModelRepository {
 
 	async createOne(body: ModelCreateOneRequest) {
 		const model = await this.prisma.modelModel.create({
-			data: { name: body.name, furnitureTypeId: body.furnitureTypeId, partnerId: body.partnerId },
+			data: { name: body.name, furnitureTypeId: body.furnitureTypeId, providerId: body.providerId },
 		})
 		return model
 	}
@@ -109,7 +109,7 @@ export class ModelRepository {
 	async updateOne(query: ModelGetOneRequest, body: ModelUpdateOneRequest) {
 		const model = await this.prisma.modelModel.update({
 			where: { id: query.id },
-			data: { name: body.name, furnitureTypeId: body.furnitureTypeId, partnerId: body.partnerId },
+			data: { name: body.name, furnitureTypeId: body.furnitureTypeId, providerId: body.providerId },
 		})
 
 		return model

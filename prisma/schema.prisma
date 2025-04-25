@@ -124,6 +124,7 @@ model PartnerModel {
   roles    PartnerRoleModel[]
   actions  ActionModel[]
   models   ModelModel[]
+  orders   OrderModel[]
 
   @@id([ id ])
   @@index([ id ])
@@ -170,14 +171,14 @@ model FurnitureTypeModel {
 model ModelModel {
   id               String     @map("id")                 @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
   name             String     @map("name")               @db.VarChar()  
-  partnerId        String     @map("partner_id")         @db.Uuid  
+  providerId       String     @map("provider_id")        @db.Uuid  
   furnitureTypeId  String     @map("furniture_type_id")  @db.Uuid  
  
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  partner        PartnerModel        @relation(fields: [ partnerId       ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  provider       PartnerModel        @relation(fields: [ providerId      ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   furnitureType  FurnitureTypeModel  @relation(fields: [ furnitureTypeId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
   carts          CartModel[]
@@ -214,16 +215,15 @@ model PaymentModel {
 
 model OrderModel {
   id               String    @map("id")                @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
-  
   clientId         String    @map("client_id")         @db.Uuid
   deliveryDate     DateTime  @map("delivery_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
   deliveryAddress  String    @map("delivery_address")  @db.VarChar()
 
-
-
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+
+  client  PartnerModel  @relation(fields: [ clientId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
   payments  PaymentModel[]
   products  OrderProductModel[]

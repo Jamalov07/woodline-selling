@@ -19,7 +19,7 @@ export class ModelRequiredDto extends DefaultRequiredFieldsDto implements ModelR
 	@IsNotEmpty()
 	@IsString()
 	@IsUUID('4')
-	partnerId: string
+	providerId: string
 }
 
 export class ModelOptionalDto extends DefaultOptionalFieldsDto implements ModelOptional {
@@ -38,5 +38,5 @@ export class ModelOptionalDto extends DefaultOptionalFieldsDto implements ModelO
 	@IsOptional()
 	@IsString()
 	@IsUUID('4')
-	partnerId?: string
+	providerId?: string
 }
