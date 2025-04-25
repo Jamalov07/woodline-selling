@@ -159,19 +159,13 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async createOne(body: PartnerCreateOneRequest) {
-		const rolesToConnect = body.actionsToConnect.length
-			? await this.prisma.staffRoleModel.findMany({
-					where: { actions: { some: { id: { in: body.actionsToConnect } } } },
-				})
-			: []
-
 		const partner = await this.prisma.partnerModel.create({
 			data: {
 				fullname: body.fullname,
 				whereFrom: body.whereFrom,
 				password: body.password,
 				phone: body.phone,
-				roles: { connect: rolesToConnect.map((r) => ({ id: r.id })) },
+				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
 		})
@@ -179,7 +173,6 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async updateOne(query: PartnerGetOneRequest, body: PartnerUpdateOneRequest) {
-		
 		const partner = await this.prisma.partnerModel.update({
 			where: { id: query.id },
 			data: {

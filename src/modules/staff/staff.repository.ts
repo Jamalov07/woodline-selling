@@ -105,18 +105,12 @@ export class StaffRepository implements OnModuleInit {
 	}
 
 	async createOne(body: StaffCreateOneRequest) {
-		const rolesToConnect = body.actionsToConnect.length
-			? await this.prisma.staffRoleModel.findMany({
-					where: { actions: { some: { id: { in: body.actionsToConnect } } } },
-				})
-			: []
-
 		const staff = await this.prisma.staffModel.create({
 			data: {
 				fullname: body.fullname,
 				password: body.password,
 				phone: body.phone,
-				roles: { connect: rolesToConnect.map((r) => ({ id: r.id })) },
+				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
 		})
