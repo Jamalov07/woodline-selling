@@ -76,7 +76,7 @@ export class FurnitureTypeService {
 
 		await this.furnitureTypeRepository.createOne({ ...body })
 
-		return createResponse({ data: null, success: { messages: ['create success'] } })
+		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
 	async updateOne(query: FurnitureTypeGetOneRequest, body: FurnitureTypeUpdateOneRequest) {

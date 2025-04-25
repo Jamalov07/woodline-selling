@@ -30,6 +30,7 @@ export class ModelRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				name: { contains: query.name, mode: 'insensitive' },
 			},
+			select: { id: true, createdAt: true, updatedAt: true, deletedAt: true, furnitureType: true, provider: true },
 			...paginationOptions,
 		})
 
@@ -41,6 +42,7 @@ export class ModelRepository {
 			where: {
 				id: query.id,
 			},
+			select: { id: true, createdAt: true, updatedAt: true, deletedAt: true, furnitureType: true, provider: true },
 		})
 
 		return staff

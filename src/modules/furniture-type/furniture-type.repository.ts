@@ -49,7 +49,6 @@ export class FurnitureTypeRepository {
 	async countFindMany(query: FurnitureTypeFindManyRequest) {
 		const furnitureTypeCount = await this.prisma.furnitureTypeModel.count({
 			where: {
-				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
 				name: { contains: query.name, mode: 'insensitive' },
 			},
@@ -87,7 +86,7 @@ export class FurnitureTypeRepository {
 		return staff
 	}
 
-	async countGetMany(query: FurnitureTypeFindManyRequest) {
+	async countGetMany(query: FurnitureTypeGetManyRequest) {
 		const furnitureTypeCount = await this.prisma.furnitureTypeModel.count({
 			where: {
 				id: { in: query.ids },

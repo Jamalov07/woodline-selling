@@ -19,7 +19,7 @@ export class FurnitureTypeController {
 
 	@Get('many')
 	@ApiOkResponse({ type: FurnitureTypeFindManyResponseDto })
-	@ApiOperation({ summary: 'get all staffs' })
+	@ApiOperation({ summary: 'get all furniture types' })
 	async findMany(@Query() query: FurnitureTypeFindManyRequestDto): Promise<FurnitureTypeFindManyResponseDto> {
 		return this.furnitureTypeService.findMany(query)
 	}
