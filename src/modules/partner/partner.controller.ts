@@ -30,7 +30,7 @@ export class PartnerController {
 
 	@Get('provider/many')
 	@ApiOkResponse({ type: PartnerFindManyResponseDto })
-	@ApiOperation({ summary: 'get all partners' })
+	@ApiOperation({ summary: 'get all providers' })
 	async findManyProvider(@Query() query: PartnerFindManyRequestDto): Promise<PartnerFindManyResponseDto> {
 		return this.partnerService.findManyProvider(query)
 	}

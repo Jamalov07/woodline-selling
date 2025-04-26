@@ -2,8 +2,20 @@ import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
 import { OrderFindManyData, OrderFindManyResponse, OrderFindOneData, OrderFindOneResponse, OrderModifyResposne } from '../interfaces'
 import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } from '@common'
 import { OrderRequiredDto } from './fields.dtos'
+import { OrderProductFindOneData, OrderProductFindOneDataDto } from '../../order-product'
+import { PartnerFindOneData, PartnerFindOneDataDto } from '../../partner'
+import { PaymentFindOneData, PaymentFindOneDataDto } from '../../payment'
 
-export class OrderFindOneDataDto extends PickType(OrderRequiredDto, ['id', 'deliveryAddress', 'deliveryDate', 'createdAt']) implements OrderFindOneData {}
+export class OrderFindOneDataDto extends PickType(OrderRequiredDto, ['id', 'deliveryAddress', 'purchaseStatus', 'deliveryDate', 'createdAt']) implements OrderFindOneData {
+	@ApiProperty({ type: PartnerFindOneDataDto })
+	client?: PartnerFindOneData
+
+	@ApiProperty({ type: PaymentFindOneDataDto, isArray: true })
+	payments?: PaymentFindOneData[]
+
+	@ApiProperty({ type: OrderProductFindOneDataDto, isArray: true })
+	products?: OrderProductFindOneData[]
+}
 
 export class OrderFindManyDataDto extends PaginationResponseDto implements OrderFindManyData {
 	@ApiProperty({ type: OrderFindOneDataDto, isArray: true })

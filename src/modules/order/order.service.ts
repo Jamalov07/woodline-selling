@@ -10,12 +10,16 @@ import {
 	OrderUpdateOneRequest,
 } from './interfaces'
 import { createResponse } from '../../common'
+import { PartnerService } from '../partner'
+import { ClientPurchaseStatus, PartnerRoleEnum } from '@prisma/client'
 
 @Injectable()
 export class OrderService {
 	private readonly orderRepository: OrderRepository
-	constructor(orderRepository: OrderRepository) {
+	private readonly partnerService: PartnerService
+	constructor(orderRepository: OrderRepository, partnerService: PartnerService) {
 		this.orderRepository = orderRepository
+		this.partnerService = partnerService
 	}
 
 	async findMany(query: OrderFindManyRequest) {
@@ -69,13 +73,27 @@ export class OrderService {
 	}
 
 	async createOne(body: OrderCreateOneRequest) {
-		await this.orderRepository.createOne({ ...body })
+		const client = await this.partnerService.getOne({ id: body.clientId })
+		const clientRole = client.data.roles.find((r) => r.name === PartnerRoleEnum.client)
+		if (!clientRole) {
+			throw new BadRequestException('client not found')
+		}
+
+		await this.orderRepository.createOne({ ...body, purchaseStatus: client.data.orders.length ? ClientPurchaseStatus.next : ClientPurchaseStatus.first })
 
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
 	async updateOne(query: OrderGetOneRequest, body: OrderUpdateOneRequest) {
 		await this.getOne(query)
+
+		if (body.clientId) {
+			const client = await this.partnerService.getOne({ id: body.clientId })
+			const clientRole = client.data.roles.find((r) => r.name === PartnerRoleEnum.client)
+			if (!clientRole) {
+				throw new BadRequestException('client not found')
+			}
+		}
 
 		await this.orderRepository.updateOne(query, { ...body })
 

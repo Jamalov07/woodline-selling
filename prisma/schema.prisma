@@ -62,6 +62,17 @@ enum ProductDirectionEnum {
   none   @map("no_direction") 
 }
 
+enum OrderStatusEnum {
+  new  @map("new")
+  cancelled   @map("cancelled")
+  closed   @map("closed") 
+}
+
+enum ClientPurchaseStatus {
+  first  @map("first")
+  next   @map("next")
+}
+
 model ActionModel {
   id           String            @map("id")           @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   url          String            @map("url")          @db.VarChar()
@@ -214,10 +225,12 @@ model PaymentModel {
 }
 
 model OrderModel {
-  id               String    @map("id")                @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
-  clientId         String    @map("client_id")         @db.Uuid
-  deliveryDate     DateTime  @map("delivery_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
-  deliveryAddress  String    @map("delivery_address")  @db.VarChar()
+  id               String           @map("id")                @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
+  clientId         String           @map("client_id")         @db.Uuid
+  deliveryDate     DateTime         @map("delivery_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
+  deliveryAddress  String           @map("delivery_address")  @db.VarChar()
+  status           OrderStatusEnum                                               @default(new)      
+  purchaseStatus   ClientPurchaseStatus                                          @default(first)
 
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
@@ -265,7 +278,6 @@ model CartModel {
   id             String                @map("id")                 @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   publicId       String                @map("public_id")          @db.VarChar()
   tissue         String                @map("tissue")             @db.VarChar()
-  modelId        String                @map("furniture_type_id")  @db.Uuid 
   direction      ProductDirectionEnum  @map("direction")
   quantity       Int                   @map("quantity")           @db.Integer    @default(1)
   sale           Int                   @map("sale")               @db.Integer    @default(0)
@@ -273,6 +285,7 @@ model CartModel {
   priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
   totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
   description    String                @map("decsription")        @db.VarChar()  @default("")
+  modelId        String                @map("furniture_type_id")  @db.Uuid 
   staffId        String                @map("staff_id")           @db.Uuid    
 
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
@@ -285,4 +298,13 @@ model CartModel {
   @@id([ id ])
   @@index([ id ])
   @@map("cart")
+}
+
+model PublicIdModel {
+  id         String    @map("id")          @db.VarChar()    @id @unique
+  createdAt  DateTime  @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+
+
+  @@index([ id ])
+  @@map("public_id")
 }

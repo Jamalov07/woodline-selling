@@ -30,6 +30,22 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: { contains: query.deliveryAddress, mode: 'insensitive' },
 				clientId: query.clientId,
+				OR: [
+					{ client: { phone: { contains: query.search, mode: 'insensitive' } } },
+					{ client: { fullname: { contains: query.search, mode: 'insensitive' } } },
+					{ products: { some: { publicId: { contains: query.search, mode: 'insensitive' } } } },
+				],
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				status: true,
+				client: true,
+				deliveryAddress: true,
+				deliveryDate: true,
+				payments: true,
+				purchaseStatus: true,
+				products: true,
 			},
 			...paginationOptions,
 		})
@@ -42,6 +58,17 @@ export class OrderRepository {
 			where: {
 				id: query.id,
 			},
+			select: {
+				id: true,
+				createdAt: true,
+				status: true,
+				client: true,
+				deliveryAddress: true,
+				deliveryDate: true,
+				payments: true,
+				purchaseStatus: true,
+				products: true,
+			},
 		})
 
 		return staff
@@ -53,6 +80,11 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: { contains: query.deliveryAddress, mode: 'insensitive' },
 				clientId: query.clientId,
+				OR: [
+					{ client: { phone: { contains: query.search, mode: 'insensitive' } } },
+					{ client: { fullname: { contains: query.search, mode: 'insensitive' } } },
+					{ products: { some: { publicId: { contains: query.search, mode: 'insensitive' } } } },
+				],
 			},
 		})
 
@@ -112,7 +144,7 @@ export class OrderRepository {
 	async updateOne(query: OrderGetOneRequest, body: OrderUpdateOneRequest) {
 		const order = await this.prisma.orderModel.update({
 			where: { id: query.id },
-			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate },
+			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate, status: body.status },
 		})
 
 		return order

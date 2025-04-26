@@ -1,10 +1,10 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto, IsIntOrBigInt, IsPublicId } from '@common'
-import { CartOptional, CartRequired } from '../interfaces'
+import { OrderProductOptional, OrderProductRequired } from '../interfaces'
 import { $Enums, ProductDirectionEnum } from '@prisma/client'
 
-export class CartRequiredDto extends DefaultRequiredFieldsDto implements CartRequired {
+export class OrderProductRequiredDto extends DefaultRequiredFieldsDto implements OrderProductRequired {
 	@ApiProperty({ type: String })
 	@IsNotEmpty()
 	@IsString()
@@ -53,6 +53,11 @@ export class CartRequiredDto extends DefaultRequiredFieldsDto implements CartReq
 
 	@ApiProperty({ type: String })
 	@IsNotEmpty()
+	@IsUUID('4')
+	orderId: string
+
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
 	@IsString()
 	tissue: string
 
@@ -62,7 +67,7 @@ export class CartRequiredDto extends DefaultRequiredFieldsDto implements CartReq
 	totalSum: bigint
 }
 
-export class CartOptionalDto extends DefaultOptionalFieldsDto implements CartOptional {
+export class OrderProductOptionalDto extends DefaultOptionalFieldsDto implements OrderProductOptional {
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()
 	@IsString()
@@ -108,6 +113,11 @@ export class CartOptionalDto extends DefaultOptionalFieldsDto implements CartOpt
 	@IsOptional()
 	@IsUUID('4')
 	staffId?: string
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsUUID('4')
+	orderId?: string
 
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()

@@ -5,63 +5,63 @@ import { createResponse } from '../../common'
 
 @Injectable()
 export class CartService {
-	private readonly furnitureTypeRepository: CartRepository
-	constructor(furnitureTypeRepository: CartRepository) {
-		this.furnitureTypeRepository = furnitureTypeRepository
+	private readonly cartRepository: CartRepository
+	constructor(cartRepository: CartRepository) {
+		this.cartRepository = cartRepository
 	}
 
 	async findMany(query: CartFindManyRequest) {
-		const furnitureTypes = await this.furnitureTypeRepository.findMany(query)
-		const furnitureTypesCount = await this.furnitureTypeRepository.countFindMany(query)
+		const carts = await this.cartRepository.findMany(query)
+		const cartsCount = await this.cartRepository.countFindMany(query)
 
 		const result = query.pagination
 			? {
-					totalCount: furnitureTypesCount,
-					pagesCount: Math.ceil(furnitureTypesCount / query.pageSize),
-					pageSize: furnitureTypes.length,
-					data: furnitureTypes,
+					totalCount: cartsCount,
+					pagesCount: Math.ceil(cartsCount / query.pageSize),
+					pageSize: carts.length,
+					data: carts,
 				}
-			: { data: furnitureTypes }
+			: { data: carts }
 
 		return createResponse({ data: result, success: { messages: ['find many success'] } })
 	}
 
 	async findOne(query: CartFindOneRequest) {
-		const staff = await this.furnitureTypeRepository.findOne(query)
+		const cart = await this.cartRepository.findOne(query)
 
-		if (!staff) {
-			throw new BadRequestException('furniture type not found')
+		if (!cart) {
+			throw new BadRequestException('cart not found')
 		}
-		return createResponse({ data: { ...staff }, success: { messages: ['find one success'] } })
+		return createResponse({ data: { ...cart }, success: { messages: ['find one success'] } })
 	}
 
 	async getMany(query: CartGetManyRequest) {
-		const furnitureTypes = await this.furnitureTypeRepository.getMany(query)
-		const furnitureTypesCount = await this.furnitureTypeRepository.countGetMany(query)
+		const carts = await this.cartRepository.getMany(query)
+		const cartsCount = await this.cartRepository.countGetMany(query)
 
 		const result = query.pagination
 			? {
-					pagesCount: Math.ceil(furnitureTypesCount / query.pageSize),
-					pageSize: furnitureTypes.length,
-					data: furnitureTypes,
+					pagesCount: Math.ceil(cartsCount / query.pageSize),
+					pageSize: carts.length,
+					data: carts,
 				}
-			: { data: furnitureTypes }
+			: { data: carts }
 
 		return createResponse({ data: result, success: { messages: ['get many success'] } })
 	}
 
 	async getOne(query: CartGetOneRequest) {
-		const staff = await this.furnitureTypeRepository.getOne(query)
+		const cart = await this.cartRepository.getOne(query)
 
-		if (!staff) {
-			throw new BadRequestException('furniture type not found')
+		if (!cart) {
+			throw new BadRequestException('cart not found')
 		}
 
-		return createResponse({ data: staff, success: { messages: ['get one success'] } })
+		return createResponse({ data: cart, success: { messages: ['get one success'] } })
 	}
 
 	async createOne(body: CartCreateOneRequest) {
-		await this.furnitureTypeRepository.createOne({ ...body })
+		await this.cartRepository.createOne({ ...body })
 
 		return createResponse({ data: null, success: { messages: ['create success'] } })
 	}
@@ -69,7 +69,7 @@ export class CartService {
 	async updateOne(query: CartGetOneRequest, body: CartUpdateOneRequest) {
 		await this.getOne(query)
 
-		await this.furnitureTypeRepository.updateOne(query, { ...body })
+		await this.cartRepository.updateOne(query, { ...body })
 
 		return createResponse({ data: null, success: { messages: ['update one success'] } })
 	}
@@ -77,9 +77,9 @@ export class CartService {
 	async deleteOne(query: CartDeleteOneRequest) {
 		await this.getOne(query)
 		if (query.method === 'hard') {
-			await this.furnitureTypeRepository.deleteOne(query)
+			await this.cartRepository.deleteOne(query)
 		} else {
-			await this.furnitureTypeRepository.updateOne(query, { deletedAt: new Date() })
+			await this.cartRepository.updateOne(query, { deletedAt: new Date() })
 		}
 		return createResponse({ data: null, success: { messages: ['delete one success'] } })
 	}

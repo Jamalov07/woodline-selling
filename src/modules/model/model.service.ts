@@ -78,10 +78,10 @@ export class ModelService {
 			throw new BadRequestException('name already exists')
 		}
 
-		const partner = await this.partnerService.getOne({ id: body.providerId })
-		const partnerRole = partner.data.roles.find((r) => r.name === PartnerRoleEnum.provider)
-		if (!partnerRole) {
-			throw new BadRequestException('partner not found')
+		const provider = await this.partnerService.getOne({ id: body.providerId })
+		const providerRole = provider.data.roles.find((r) => r.name === PartnerRoleEnum.provider)
+		if (!providerRole) {
+			throw new BadRequestException('provider not found')
 		}
 
 		await this.modelRepository.createOne({ ...body })
@@ -100,10 +100,10 @@ export class ModelService {
 		}
 
 		if (body.providerId) {
-			const partner = await this.partnerService.getOne({ id: body.providerId })
-			const partnerRole = partner.data.roles.find((r) => r.name === PartnerRoleEnum.provider)
-			if (!partnerRole) {
-				throw new BadRequestException('partner not found')
+			const provider = await this.partnerService.getOne({ id: body.providerId })
+			const providerRole = provider.data.roles.find((r) => r.name === PartnerRoleEnum.provider)
+			if (!providerRole) {
+				throw new BadRequestException('provider not found')
 			}
 		}
 
