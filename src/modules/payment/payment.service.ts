@@ -74,6 +74,12 @@ export class PaymentService {
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
+	async createMany(body: PaymentCreateOneRequest[]) {
+		await this.paymentRepository.createMany({ ...body })
+
+		return createResponse({ data: null, success: { messages: ['create many success'] } })
+	}
+
 	async updateOne(query: PaymentGetOneRequest, body: PaymentUpdateOneRequest) {
 		await this.getOne(query)
 

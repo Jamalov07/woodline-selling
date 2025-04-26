@@ -113,6 +113,23 @@ export class PaymentRepository {
 		return payment
 	}
 
+	async createMany(body: PaymentCreateOneRequest[]) {
+		const payments = await this.prisma.paymentModel.createMany({
+			data: body.map((p) => {
+				return {
+					description: p.description,
+					exchangeRate: p.exchangeRate,
+					fromCurrency: p.fromCurrency,
+					method: p.method,
+					orderId: p.orderId,
+					sum: p.sum,
+					totalSum: p.totalSum,
+				}
+			}),
+		})
+		return payments
+	}
+
 	async updateOne(query: PaymentGetOneRequest, body: PaymentUpdateOneRequest) {
 		const payment = await this.prisma.paymentModel.update({
 			where: { id: query.id },

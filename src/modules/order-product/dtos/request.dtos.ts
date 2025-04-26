@@ -7,27 +7,14 @@ export class OrderProductFindManyRequestDto
 	extends IntersectionType(
 		PaginationRequestDto,
 		PickType(RequestOtherFieldsDto, ['ids', 'isDeleted']),
-		PickType(OrderProductOptionalDto, ['description', 'modelId', 'orderId', 'direction', 'publicId', 'staffId', 'tissue', 'totalSum']),
+		PickType(OrderProductOptionalDto, ['description', 'modelId', 'orderId', 'direction', 'publicId', 'tissue', 'totalSum']),
 	)
 	implements OrderProductFindManyRequest {}
 
 export class OrderProductFindOneRequestDto extends PickType(OrderProductRequiredDto, ['id']) implements OrderProductFindOneRequest {}
 
 export class OrderProductCreateOneRequestDto
-	extends PickType(OrderProductRequiredDto, [
-		'description',
-		'orderId',
-		'modelId',
-		'price',
-		'direction',
-		'priceWithSale',
-		'publicId',
-		'quantity',
-		'sale',
-		'staffId',
-		'tissue',
-		'totalSum',
-	])
+	extends PickType(OrderProductRequiredDto, ['description', 'orderId', 'modelId', 'price', 'direction', 'priceWithSale', 'publicId', 'quantity', 'sale', 'tissue', 'totalSum'])
 	implements OrderProductCreateOneRequest {}
 
 export class OrderProductUpdateOneRequestDto
@@ -40,7 +27,6 @@ export class OrderProductUpdateOneRequestDto
 		'publicId',
 		'quantity',
 		'sale',
-		'staffId',
 		'tissue',
 		'totalSum',
 		'deletedAt',

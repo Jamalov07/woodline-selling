@@ -31,7 +31,6 @@ export class OrderProductRepository {
 				description: { contains: query.description, mode: 'insensitive' },
 				publicId: { contains: query.publicId, mode: 'insensitive' },
 				tissue: { contains: query.tissue, mode: 'insensitive' },
-				staffId: query.staffId,
 				modelId: query.modelId,
 				orderId: query.orderId,
 				direction: query.direction,
@@ -59,7 +58,6 @@ export class OrderProductRepository {
 				description: { contains: query.description, mode: 'insensitive' },
 				publicId: { contains: query.publicId, mode: 'insensitive' },
 				tissue: { contains: query.tissue, mode: 'insensitive' },
-				staffId: query.staffId,
 				modelId: query.modelId,
 				orderId: query.orderId,
 				direction: query.direction,
@@ -82,7 +80,6 @@ export class OrderProductRepository {
 				description: query.description,
 				publicId: query.publicId,
 				tissue: query.tissue,
-				staffId: query.staffId,
 				orderId: query.orderId,
 				modelId: query.modelId,
 				direction: query.direction,
@@ -113,7 +110,6 @@ export class OrderProductRepository {
 				publicId: query.publicId,
 				tissue: query.tissue,
 				orderId: query.orderId,
-				staffId: query.staffId,
 				modelId: query.modelId,
 				direction: query.direction,
 			},
@@ -131,7 +127,6 @@ export class OrderProductRepository {
 				orderId: body.orderId,
 				tissue: body.tissue,
 				totalSum: body.totalSum,
-				staffId: body.staffId,
 				sale: body.sale,
 				price: body.price,
 				priceWithSale: body.priceWithSale,
@@ -140,6 +135,27 @@ export class OrderProductRepository {
 			},
 		})
 		return orderProduct
+	}
+
+	async createMany(body: OrderProductCreateOneRequest[]) {
+		const orderProducts = await this.prisma.orderProductModel.createMany({
+			data: body.map((orp) => {
+				return {
+					description: orp.description,
+					direction: orp.direction,
+					publicId: orp.publicId,
+					orderId: orp.orderId,
+					tissue: orp.tissue,
+					totalSum: orp.totalSum,
+					sale: orp.sale,
+					price: orp.price,
+					priceWithSale: orp.priceWithSale,
+					quantity: orp.quantity,
+					modelId: orp.modelId,
+				}
+			}),
+		})
+		return orderProducts
 	}
 
 	async updateOne(query: OrderProductGetOneRequest, body: OrderProductUpdateOneRequest) {
@@ -151,7 +167,6 @@ export class OrderProductRepository {
 				publicId: body.publicId,
 				tissue: body.tissue,
 				totalSum: body.totalSum,
-				staffId: body.staffId,
 				sale: body.sale,
 				orderId: body.orderId,
 				price: body.price,

@@ -30,6 +30,7 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: { contains: query.deliveryAddress, mode: 'insensitive' },
 				clientId: query.clientId,
+				staffId: query.staffId,
 				OR: [
 					{ client: { phone: { contains: query.search, mode: 'insensitive' } } },
 					{ client: { fullname: { contains: query.search, mode: 'insensitive' } } },
@@ -80,6 +81,7 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: { contains: query.deliveryAddress, mode: 'insensitive' },
 				clientId: query.clientId,
+				staffId: query.staffId,
 				OR: [
 					{ client: { phone: { contains: query.search, mode: 'insensitive' } } },
 					{ client: { fullname: { contains: query.search, mode: 'insensitive' } } },
@@ -103,6 +105,7 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: query.deliveryAddress,
 				clientId: query.clientId,
+				staffId: query.staffId,
 			},
 			...paginationOptions,
 		})
@@ -128,6 +131,7 @@ export class OrderRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				deliveryAddress: query.deliveryAddress,
 				clientId: query.clientId,
+				staffId: query.staffId,
 			},
 		})
 
@@ -136,7 +140,7 @@ export class OrderRepository {
 
 	async createOne(body: OrderCreateOneRequest) {
 		const order = await this.prisma.orderModel.create({
-			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate },
+			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate, staffId: body.staffId },
 		})
 		return order
 	}
@@ -144,7 +148,7 @@ export class OrderRepository {
 	async updateOne(query: OrderGetOneRequest, body: OrderUpdateOneRequest) {
 		const order = await this.prisma.orderModel.update({
 			where: { id: query.id },
-			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate, status: body.status },
+			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, staffId: body.staffId, deliveryDate: body.deliveryDate, status: body.status },
 		})
 
 		return order

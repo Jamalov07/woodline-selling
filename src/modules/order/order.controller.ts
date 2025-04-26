@@ -1,7 +1,14 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
-import { OrderCreateOneRequestDto, OrderDeleteOneRequestDto, OrderFindManyRequestDto, OrderFindOneRequestDto, OrderUpdateOneRequestDto } from './dtos/request.dtos'
+import {
+	OrderCreateOneRequestDto,
+	OrderCreateOneWithPaymentProductRequestDto,
+	OrderDeleteOneRequestDto,
+	OrderFindManyRequestDto,
+	OrderFindOneRequestDto,
+	OrderUpdateOneRequestDto,
+} from './dtos/request.dtos'
 import { OrderFindManyResponseDto, OrderFindOneResponseDto, OrderModifyResponseDto } from './dtos/response.dtos'
 
 @Controller('order')
@@ -30,6 +37,13 @@ export class OrderController {
 	@ApiOkResponse({ type: OrderModifyResponseDto })
 	async createOne(@Body() body: OrderCreateOneRequestDto): Promise<OrderModifyResponseDto> {
 		return this.orderService.createOne(body)
+	}
+
+	@Post('one-with-payment-product')
+	@ApiOperation({ summary: 'add one order with payment product' })
+	@ApiOkResponse({ type: OrderModifyResponseDto })
+	async createOneWithPaymentProduct(@Body() body: OrderCreateOneWithPaymentProductRequestDto): Promise<OrderModifyResponseDto> {
+		return this.orderService.createOneWithPaymentProduct(body)
 	}
 
 	@Patch('one')

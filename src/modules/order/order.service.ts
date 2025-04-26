@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { OrderRepository } from './order.repository'
 import {
 	OrderCreateOneRequest,
+	OrderCreateOneWithPaymentProductRequest,
 	OrderDeleteOneRequest,
 	OrderFindManyRequest,
 	OrderFindOneRequest,
@@ -12,14 +13,20 @@ import {
 import { createResponse } from '../../common'
 import { PartnerService } from '../partner'
 import { ClientPurchaseStatus, PartnerRoleEnum } from '@prisma/client'
+import { PaymentService } from '../payment'
+import { OrderProductService } from '../order-product'
 
 @Injectable()
 export class OrderService {
 	private readonly orderRepository: OrderRepository
 	private readonly partnerService: PartnerService
-	constructor(orderRepository: OrderRepository, partnerService: PartnerService) {
+	private readonly paymentService: PaymentService
+	private readonly orderProductService: OrderProductService
+	constructor(orderRepository: OrderRepository, partnerService: PartnerService, paymentService: PaymentService, orderProductService: OrderProductService) {
 		this.orderRepository = orderRepository
 		this.partnerService = partnerService
+		this.paymentService = paymentService
+		this.orderProductService = orderProductService
 	}
 
 	async findMany(query: OrderFindManyRequest) {
@@ -80,6 +87,21 @@ export class OrderService {
 		}
 
 		await this.orderRepository.createOne({ ...body, purchaseStatus: client.data.orders.length ? ClientPurchaseStatus.next : ClientPurchaseStatus.first })
+
+		return createResponse({ data: null, success: { messages: ['create one success'] } })
+	}
+
+	async createOneWithPaymentProduct(body: OrderCreateOneWithPaymentProductRequest) {
+		const client = await this.partnerService.getOne({ id: body.clientId })
+		const clientRole = client.data.roles.find((r) => r.name === PartnerRoleEnum.client)
+		if (!clientRole) {
+			throw new BadRequestException('client not found')
+		}
+
+		const order = await this.orderRepository.createOne({ ...body, purchaseStatus: client.data.orders.length ? ClientPurchaseStatus.next : ClientPurchaseStatus.first })
+
+		await this.orderProductService.createMany(body.products.map((orp) => ({ ...orp, orderId: order.id })))
+		await this.paymentService.createMany(body.payments.map((p) => ({ ...p, orderId: order.id })))
 
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}

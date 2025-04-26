@@ -71,7 +71,13 @@ export class OrderProductService {
 	async createOne(body: OrderProductCreateOneRequest) {
 		await this.orderProductRepository.createOne({ ...body })
 
-		return createResponse({ data: null, success: { messages: ['create success'] } })
+		return createResponse({ data: null, success: { messages: ['create one success'] } })
+	}
+
+	async createMany(body: OrderProductCreateOneRequest[]) {
+		await this.orderProductRepository.createMany({ ...body })
+
+		return createResponse({ data: null, success: { messages: ['create many success'] } })
 	}
 
 	async updateOne(query: OrderProductGetOneRequest, body: OrderProductUpdateOneRequest) {

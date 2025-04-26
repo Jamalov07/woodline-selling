@@ -20,6 +20,11 @@ export class OrderRequiredDto extends DefaultRequiredFieldsDto implements OrderR
 	@IsUUID('4')
 	clientId: string
 
+	@ApiProperty({ type: String })
+	@IsNotEmpty()
+	@IsUUID('4')
+	staffId: string
+
 	@ApiProperty({ enum: OrderStatusEnum })
 	@IsNotEmpty()
 	@IsEnum(OrderStatusEnum)
@@ -46,6 +51,11 @@ export class OrderOptionalDto extends DefaultOptionalFieldsDto implements OrderO
 	@IsOptional()
 	@IsUUID('4')
 	clientId?: string
+
+	@ApiPropertyOptional({ type: String })
+	@IsOptional()
+	@IsUUID('4')
+	staffId?: string
 
 	@ApiPropertyOptional({ enum: OrderStatusEnum })
 	@IsOptional()

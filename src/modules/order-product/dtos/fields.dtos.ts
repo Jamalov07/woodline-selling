@@ -49,11 +49,6 @@ export class OrderProductRequiredDto extends DefaultRequiredFieldsDto implements
 	@ApiProperty({ type: String })
 	@IsNotEmpty()
 	@IsUUID('4')
-	staffId: string
-
-	@ApiProperty({ type: String })
-	@IsNotEmpty()
-	@IsUUID('4')
 	orderId: string
 
 	@ApiProperty({ type: String })
@@ -108,11 +103,6 @@ export class OrderProductOptionalDto extends DefaultOptionalFieldsDto implements
 	@IsOptional()
 	@IsNumber()
 	sale?: number
-
-	@ApiPropertyOptional({ type: String })
-	@IsOptional()
-	@IsUUID('4')
-	staffId?: string
 
 	@ApiPropertyOptional({ type: String })
 	@IsOptional()
