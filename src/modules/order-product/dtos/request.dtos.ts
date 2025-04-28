@@ -1,7 +1,8 @@
-import { IntersectionType, PickType } from '@nestjs/swagger'
+import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
 import { OrderProductCreateOneRequest, OrderProductDeleteOneRequest, OrderProductFindManyRequest, OrderProductFindOneRequest, OrderProductUpdateOneRequest } from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '../../../common'
 import { OrderProductOptionalDto, OrderProductRequiredDto } from './fields.dtos'
+import { IsOptional, IsUUID } from 'class-validator'
 
 export class OrderProductFindManyRequestDto
 	extends IntersectionType(
@@ -9,7 +10,13 @@ export class OrderProductFindManyRequestDto
 		PickType(RequestOtherFieldsDto, ['ids', 'isDeleted']),
 		PickType(OrderProductOptionalDto, ['description', 'modelId', 'orderId', 'direction', 'publicId', 'tissue', 'totalSum']),
 	)
-	implements OrderProductFindManyRequest {}
+	implements OrderProductFindManyRequest
+{
+	@ApiProperty({ type: String })
+	@IsOptional()
+	@IsUUID('4')
+	modelProviderId?: string
+}
 
 export class OrderProductFindOneRequestDto extends PickType(OrderProductRequiredDto, ['id']) implements OrderProductFindOneRequest {}
 
@@ -31,6 +38,7 @@ export class OrderProductUpdateOneRequestDto
 		'totalSum',
 		'deletedAt',
 		'orderId',
+		'status',
 	])
 	implements OrderProductUpdateOneRequest {}
 

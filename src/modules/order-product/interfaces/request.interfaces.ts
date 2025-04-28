@@ -4,7 +4,9 @@ import { OrderProductOptional, OrderProductRequired } from './fields.interfaces'
 export declare interface OrderProductFindManyRequest
 	extends PaginationRequest,
 		Pick<OrderProductOptional, 'publicId' | 'description' | 'direction' | 'modelId' | 'tissue' | 'orderId'>,
-		Pick<RequestOtherFields, 'isDeleted'> {}
+		Pick<RequestOtherFields, 'isDeleted'> {
+	modelProviderId?: string
+}
 
 export declare interface OrderProductFindOneRequest extends Pick<OrderProductRequired, 'id'> {}
 
@@ -18,7 +20,7 @@ export declare interface OrderProductCreateOneRequest
 export declare interface OrderProductUpdateOneRequest
 	extends Pick<
 		OrderProductOptional,
-		'publicId' | 'description' | 'direction' | 'modelId' | 'price' | 'priceWithSale' | 'quantity' | 'sale' | 'tissue' | 'totalSum' | 'deletedAt' | 'orderId'
+		'publicId' | 'description' | 'direction' | 'modelId' | 'price' | 'priceWithSale' | 'quantity' | 'sale' | 'tissue' | 'totalSum' | 'deletedAt' | 'status' | 'orderId'
 	> {}
 
 export declare interface OrderProductDeleteOneRequest extends Pick<OrderProductOptional, 'id'>, Pick<RequestOtherFields, 'method'> {}

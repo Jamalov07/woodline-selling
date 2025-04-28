@@ -34,6 +34,7 @@ export class OrderProductRepository {
 				modelId: query.modelId,
 				orderId: query.orderId,
 				direction: query.direction,
+				model: { providerId: query.modelProviderId },
 			},
 			...paginationOptions,
 		})
@@ -61,6 +62,7 @@ export class OrderProductRepository {
 				modelId: query.modelId,
 				orderId: query.orderId,
 				direction: query.direction,
+				model: { providerId: query.modelProviderId },
 			},
 		})
 
@@ -173,6 +175,7 @@ export class OrderProductRepository {
 				priceWithSale: body.priceWithSale,
 				quantity: body.quantity,
 				modelId: body.modelId,
+				status: body.status,
 			},
 		})
 

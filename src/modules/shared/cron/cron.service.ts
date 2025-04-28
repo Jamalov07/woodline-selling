@@ -1,12 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { Cron } from '@nestjs/schedule'
+import { Cron, CronExpression } from '@nestjs/schedule'
+import { GoogleSheetService } from '../google-sheet'
 
 @Injectable()
 export class CronService {
 	private readonly logger = new Logger(CronService.name)
 
-	@Cron('* 1 * * *')
-	handleCron() {
-		this.logger.log("I'm alive!")
+	private readonly googleSheetService: GoogleSheetService
+	constructor(googleSheetService: GoogleSheetService) {
+		this.googleSheetService = googleSheetService
 	}
+
+	// @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+	// exportOrdersToGoogleSheets() {
+	// 	this.googleSheetService.exportOrdersToSheet()
+	// }
 }

@@ -1,11 +1,20 @@
-import { PickType, IntersectionType } from '@nestjs/swagger'
+import { PickType, IntersectionType, ApiProperty } from '@nestjs/swagger'
 import { PartnerCreateOneRequest, PartnerDeleteOneRequest, PartnerFindManyRequest, PartnerFindOneRequest, PartnerUpdateOneRequest } from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { PartnerOptionalDto, PartnerRequiredDto } from './fields.dtos'
+import { $Enums, PartnerRoleEnum } from '@prisma/client'
+import { IsArray, IsEnum, IsOptional } from 'class-validator'
 
 export class PartnerFindManyRequestDto
 	extends IntersectionType(PickType(PartnerOptionalDto, ['fullname', 'phone', 'whereFrom']), PaginationRequestDto)
-	implements PartnerFindManyRequest {}
+	implements PartnerFindManyRequest
+{
+	@ApiProperty({ enum: PartnerRoleEnum, isArray: true })
+	@IsOptional()
+	@IsArray()
+	@IsEnum(PartnerRoleEnum, { each: true })
+	roleNames?: $Enums.PartnerRoleEnum[]
+}
 
 export class PartnerFindOneRequestDto extends IntersectionType(PickType(PartnerRequiredDto, ['id'])) implements PartnerFindOneRequest {}
 

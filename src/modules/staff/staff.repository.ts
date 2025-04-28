@@ -26,8 +26,9 @@ export class StaffRepository implements OnModuleInit {
 
 		const staffs = await this.prisma.staffModel.findMany({
 			where: {
-				id: { in: query.ids },
 				fullname: query.fullname,
+				roles: { some: { name: { in: query.roleNames } } },
+				OR: [{ fullname: { contains: query.search, mode: 'insensitive' } }, { phone: { contains: query.search, mode: 'insensitive' } }],
 			},
 			select: {
 				id: true,
@@ -66,8 +67,9 @@ export class StaffRepository implements OnModuleInit {
 	async countFindMany(query: StaffFindManyRequest) {
 		const staffsCount = await this.prisma.staffModel.count({
 			where: {
-				id: { in: query.ids },
 				fullname: query.fullname,
+				roles: { some: { name: { in: query.roleNames } } },
+				OR: [{ fullname: { contains: query.search, mode: 'insensitive' } }, { phone: { contains: query.search, mode: 'insensitive' } }],
 			},
 		})
 

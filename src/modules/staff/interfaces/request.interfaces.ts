@@ -1,7 +1,10 @@
 import { PaginationRequest, RequestOtherFields } from '@common'
 import { StaffOptional, StaffRequired } from './fields.interfaces'
+import { StaffRoleEnum } from '@prisma/client'
 
-export declare interface StaffFindManyRequest extends Pick<StaffOptional, 'fullname' | 'phone'>, PaginationRequest, Pick<RequestOtherFields, 'ids' | 'isDeleted'> {}
+export declare interface StaffFindManyRequest extends Pick<StaffOptional, 'fullname' | 'phone'>, PaginationRequest, Pick<RequestOtherFields, 'isDeleted' | 'search'> {
+	roleNames?: StaffRoleEnum[]
+}
 
 export declare interface StaffFindOneRequest extends Pick<StaffOptional, 'id'> {}
 

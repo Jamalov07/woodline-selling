@@ -27,7 +27,7 @@ export class PartnerRepository implements OnModuleInit {
 
 		const partners = await this.prisma.partnerModel.findMany({
 			where: {
-				id: { in: query.ids },
+				roles: { some: { name: { in: query.roleNames } } },
 				fullname: query.fullname,
 			},
 			select: {
@@ -50,8 +50,6 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async findManyProvider(query: PartnerFindManyRequest) {
-		const partnerRole = await this.prisma.partnerRoleModel.findFirst({ where: { name: PartnerRoleEnum.provider } })
-
 		let paginationOptions = {}
 		if (query.pagination) {
 			paginationOptions = { take: query.pageSize, skip: (query.pageNumber - 1) * query.pageSize }
@@ -59,9 +57,8 @@ export class PartnerRepository implements OnModuleInit {
 
 		const partners = await this.prisma.partnerModel.findMany({
 			where: {
-				id: { in: query.ids },
 				fullname: query.fullname,
-				roles: { some: { id: partnerRole?.id } },
+				roles: { some: { name: PartnerRoleEnum.provider } },
 			},
 			select: {
 				id: true,
@@ -105,7 +102,7 @@ export class PartnerRepository implements OnModuleInit {
 	async countFindMany(query: PartnerFindManyRequest) {
 		const partnersCount = await this.prisma.partnerModel.count({
 			where: {
-				id: { in: query.ids },
+				roles: { some: { name: { in: query.roleNames } } },
 				fullname: query.fullname,
 			},
 		})
@@ -114,13 +111,10 @@ export class PartnerRepository implements OnModuleInit {
 	}
 
 	async countFindManyProvider(query: PartnerFindManyRequest) {
-		const partnerRole = await this.prisma.partnerRoleModel.findFirst({ where: { name: PartnerRoleEnum.provider } })
-
 		const partnersCount = await this.prisma.partnerModel.count({
 			where: {
-				id: { in: query.ids },
 				fullname: query.fullname,
-				roles: { some: { id: partnerRole.id } },
+				roles: { some: { name: PartnerRoleEnum.provider } },
 			},
 		})
 

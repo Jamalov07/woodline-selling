@@ -63,9 +63,16 @@ enum ProductDirectionEnum {
 }
 
 enum OrderStatusEnum {
-  new  @map("new")
-  cancelled   @map("cancelled")
-  closed   @map("closed") 
+  new        @map("new")
+  cancelled  @map("cancelled")
+  closed     @map("closed") 
+}
+
+
+enum OrderProductStatusEnum {
+  new        @map("new")
+  cancelled  @map("cancelled") 
+  received   @map("received")
 }
 
 enum ClientPurchaseStatus {
@@ -260,6 +267,7 @@ model OrderProductModel {
   priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
   totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
   description    String                @map("decsription")        @db.VarChar()  @default("")
+  status         OrderProductStatusEnum                                          @default(new)
   modelId        String                @map("furniture_type_id")  @db.Uuid 
   orderId        String                @map("order_id")           @db.Uuid
 

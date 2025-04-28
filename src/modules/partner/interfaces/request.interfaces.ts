@@ -1,10 +1,13 @@
 import { PaginationRequest, RequestOtherFields } from '@common'
 import { PartnerOptional, PartnerRequired } from './fields.interfaces'
+import { PartnerRoleEnum } from '@prisma/client'
 
 export declare interface PartnerFindManyRequest
 	extends Pick<PartnerOptional, 'fullname' | 'phone' | 'whereFrom'>,
 		PaginationRequest,
-		Pick<RequestOtherFields, 'ids' | 'isDeleted'> {}
+		Pick<RequestOtherFields, 'ids' | 'isDeleted'> {
+	roleNames?: PartnerRoleEnum[]
+}
 
 export declare interface PartnerFindOneRequest extends Pick<PartnerOptional, 'id'> {}
 
