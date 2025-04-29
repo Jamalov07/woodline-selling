@@ -17,8 +17,8 @@ export declare interface OrderGetOneRequest extends OrderOptional {}
 export declare interface OrderCreateOneRequest extends Pick<OrderRequired, 'clientId' | 'deliveryAddress' | 'deliveryDate' | 'staffId'>, Pick<OrderOptional, 'purchaseStatus'> {}
 
 export declare interface OrderCreateOneWithPaymentProductRequest
-	extends Pick<OrderRequired, 'clientId' | 'deliveryAddress' | 'deliveryDate' | 'staffId'>,
-		Pick<OrderOptional, 'purchaseStatus'> {
+	extends Pick<OrderRequired, 'clientId' | 'deliveryAddress' | 'deliveryDate'>,
+		Pick<OrderOptional, 'staffId' | 'purchaseStatus'> {
 	products: Omit<OrderProductCreateOneRequest, 'orderId'>[]
 	payments: Omit<PaymentCreateOneRequest, 'orderId'>[]
 }

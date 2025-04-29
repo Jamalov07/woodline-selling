@@ -13,7 +13,8 @@ export declare interface CartGetManyRequest extends PaginationRequest, CartOptio
 export declare interface CartGetOneRequest extends CartOptional {}
 
 export declare interface CartCreateOneRequest
-	extends Pick<CartRequired, 'publicId' | 'description' | 'direction' | 'modelId' | 'price' | 'priceWithSale' | 'quantity' | 'sale' | 'staffId' | 'tissue' | 'totalSum'> {}
+	extends Pick<CartRequired, 'publicId' | 'description' | 'direction' | 'modelId' | 'price' | 'priceWithSale' | 'quantity' | 'sale' | 'tissue' | 'totalSum'>,
+		Pick<CartOptional, 'staffId'> {}
 
 export declare interface CartUpdateOneRequest
 	extends Pick<

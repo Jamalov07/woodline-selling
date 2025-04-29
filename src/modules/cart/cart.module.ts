@@ -3,9 +3,10 @@ import { PrismaModule } from '../shared'
 import { CartController } from './cart.controller'
 import { CartService } from './cart.service'
 import { CartRepository } from './cart.repository'
+import { StaffModule } from '../staff'
 
 @Module({
-	imports: [PrismaModule],
+	imports: [PrismaModule, StaffModule],
 	controllers: [CartController],
 	providers: [CartService, CartRepository],
 	exports: [CartService, CartRepository],

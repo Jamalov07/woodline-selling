@@ -140,7 +140,7 @@ export class OrderRepository {
 
 	async createOne(body: OrderCreateOneRequest) {
 		const order = await this.prisma.orderModel.create({
-			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: body.deliveryDate, staffId: body.staffId },
+			data: { deliveryAddress: body.deliveryAddress, clientId: body.clientId, deliveryDate: new Date(body.deliveryDate), staffId: body.staffId },
 		})
 		return order
 	}

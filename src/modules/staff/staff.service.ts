@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { StaffRepository } from './staff.repository'
 import * as bcrypt from 'bcryptjs'
-import { createResponse } from '@common'
+import { createResponse, DeleteMethodEnum } from '@common'
 import {
 	StaffGetOneRequest,
 	StaffCreateOneRequest,
@@ -101,7 +101,7 @@ export class StaffService {
 
 	async deleteOne(query: StaffDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.staffRepository.deleteOne(query)
 		} else {
 			await this.staffRepository.updateOne(query, { deletedAt: new Date() })

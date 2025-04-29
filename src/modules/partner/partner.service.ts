@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { PartnerRepository } from './partner.repository'
 import * as bcrypt from 'bcryptjs'
-import { createResponse } from '@common'
+import { createResponse, DeleteMethodEnum } from '@common'
 import {
 	PartnerGetOneRequest,
 	PartnerCreateOneRequest,
@@ -118,7 +118,7 @@ export class PartnerService {
 
 	async deleteOne(query: PartnerDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.partnerRepository.deleteOne(query)
 		} else {
 			await this.partnerRepository.updateOne(query, { deletedAt: new Date() })

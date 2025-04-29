@@ -4,7 +4,7 @@ import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } fro
 import { PartnerRequiredDto } from './fields.dtos'
 import { PartnerRoleFindOneData, PartnerRoleFindOneDataDto } from '../../role'
 
-export class PartnerFindOneDataDto extends PickType(PartnerRequiredDto, ['id', 'fullname', 'createdAt']) implements PartnerFindOneData {
+export class PartnerFindOneDataDto extends PickType(PartnerRequiredDto, ['id', 'fullname', 'createdAt', 'phone', 'whereFrom']) implements PartnerFindOneData {
 	@ApiProperty({ type: String, isArray: true })
 	actionIds?: string[]
 

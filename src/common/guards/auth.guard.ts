@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
 		const isAuthRequired = authOptions?.isAuthRequired
 		const isStaffRequired = authOptions?.isStaffRequired
 
-		const request = context.switchToHttp().getRequest()
+		const request = context.switchToHttp().getRequest<Request>()
 
 		const token = this.extractTokenFromHeader(request, isAuthRequired)
 

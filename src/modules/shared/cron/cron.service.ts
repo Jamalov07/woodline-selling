@@ -10,9 +10,4 @@ export class CronService {
 	constructor(googleSheetService: GoogleSheetService) {
 		this.googleSheetService = googleSheetService
 	}
-
-	// @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-	// exportOrdersToGoogleSheets() {
-	// 	this.googleSheetService.exportOrdersToSheet()
-	// }
 }

@@ -1,13 +1,15 @@
 import { BadRequestException, CanActivate, ExecutionContext, Injectable, NotFoundException, RequestMethod, UnauthorizedException } from '@nestjs/common'
 import { PrismaService } from '../../modules/shared'
 import { ActionMethodEnum } from '@prisma/client'
+import { Request } from 'express'
+import { CRequest } from '../interfaces'
 
 @Injectable()
 export class CheckPermissionGuard implements CanActivate {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		const request = context.switchToHttp().getRequest()
+		const request = context.switchToHttp().getRequest<CRequest>()
 
 		if (!request.user) {
 			throw new UnauthorizedException('check permission guard: user not found')
@@ -45,4 +47,3 @@ export class CheckPermissionGuard implements CanActivate {
 		return true
 	}
 }
-

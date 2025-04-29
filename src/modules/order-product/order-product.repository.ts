@@ -140,7 +140,7 @@ export class OrderProductRepository {
 	}
 
 	async createMany(body: OrderProductCreateOneRequest[]) {
-		const orderProducts = await this.prisma.orderProductModel.createMany({
+		const orderProducts = await this.prisma.orderProductModel.createManyAndReturn({
 			data: body.map((orp) => {
 				return {
 					description: orp.description,

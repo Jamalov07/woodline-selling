@@ -9,7 +9,7 @@ import {
 	FurnitureTypeGetOneRequest,
 	FurnitureTypeUpdateOneRequest,
 } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, DeleteMethodEnum } from '../../common'
 
 @Injectable()
 export class FurnitureTypeService {
@@ -96,7 +96,7 @@ export class FurnitureTypeService {
 
 	async deleteOne(query: FurnitureTypeDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.furnitureTypeRepository.deleteOne(query)
 		} else {
 			await this.furnitureTypeRepository.updateOne(query, { deletedAt: new Date() })

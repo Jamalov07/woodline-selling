@@ -10,11 +10,13 @@ import {
 	OrderGetOneRequest,
 	OrderUpdateOneRequest,
 } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, CRequest, DeleteMethodEnum } from '../../common'
 import { PartnerService } from '../partner'
 import { ClientPurchaseStatus, PartnerRoleEnum } from '@prisma/client'
 import { PaymentService } from '../payment'
 import { OrderProductService } from '../order-product'
+import { GoogleSheetService } from '../shared'
+import { CartService } from '../cart'
 
 @Injectable()
 export class OrderService {
@@ -22,11 +24,22 @@ export class OrderService {
 	private readonly partnerService: PartnerService
 	private readonly paymentService: PaymentService
 	private readonly orderProductService: OrderProductService
-	constructor(orderRepository: OrderRepository, partnerService: PartnerService, paymentService: PaymentService, orderProductService: OrderProductService) {
+	private readonly cartService: CartService
+	private readonly googleSheetService: GoogleSheetService
+	constructor(
+		orderRepository: OrderRepository,
+		partnerService: PartnerService,
+		paymentService: PaymentService,
+		orderProductService: OrderProductService,
+		googleSheetService: GoogleSheetService,
+		cartService: CartService,
+	) {
 		this.orderRepository = orderRepository
 		this.partnerService = partnerService
 		this.paymentService = paymentService
 		this.orderProductService = orderProductService
+		this.googleSheetService = googleSheetService
+		this.cartService = cartService
 	}
 
 	async findMany(query: OrderFindManyRequest) {
@@ -91,17 +104,26 @@ export class OrderService {
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
-	async createOneWithPaymentProduct(body: OrderCreateOneWithPaymentProductRequest) {
+	async createOneWithPaymentProduct(request: CRequest, body: OrderCreateOneWithPaymentProductRequest) {
 		const client = await this.partnerService.getOne({ id: body.clientId })
 		const clientRole = client.data.roles.find((r) => r.name === PartnerRoleEnum.client)
 		if (!clientRole) {
 			throw new BadRequestException('client not found')
 		}
 
-		const order = await this.orderRepository.createOne({ ...body, purchaseStatus: client.data.orders.length ? ClientPurchaseStatus.next : ClientPurchaseStatus.first })
+		const order = await this.orderRepository.createOne({
+			...body,
+			staffId: request.user.id,
+			purchaseStatus: client.data.orders.length ? ClientPurchaseStatus.next : ClientPurchaseStatus.first,
+		})
 
-		await this.orderProductService.createMany(body.products.map((orp) => ({ ...orp, orderId: order.id })))
-		await this.paymentService.createMany(body.payments.map((p) => ({ ...p, orderId: order.id })))
+		const orderProducts = await this.orderProductService.createMany(body.products.map((p) => ({ id: undefined, ...p, orderId: order.id })))
+		const payments = await this.paymentService.createMany(body.payments.map((p) => ({ ...p, orderId: order.id })))
+
+		const staffCarts = await this.cartService.getMany({ staffId: request.user.id, pagination: false })
+		await this.cartService.deleteMany(staffCarts.data.data)
+
+		// await this.googleSheetService.addOrderToSheet(order, orderProducts.data, payments.data)
 
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
@@ -124,7 +146,7 @@ export class OrderService {
 
 	async deleteOne(query: OrderDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.orderRepository.deleteOne(query)
 		} else {
 			await this.orderRepository.updateOne(query, { deletedAt: new Date() })

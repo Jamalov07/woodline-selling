@@ -51,7 +51,6 @@ export class ModelRepository {
 	async countFindMany(query: ModelFindManyRequest) {
 		const modelCount = await this.prisma.modelModel.count({
 			where: {
-				id: { in: query.ids },
 				deletedAt: deletedAtConverter(query.isDeleted),
 				name: { contains: query.name, mode: 'insensitive' },
 			},

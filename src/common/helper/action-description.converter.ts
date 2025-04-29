@@ -43,6 +43,6 @@ const ACTION_DESCRIPTIONS = {
 	'model/one-deleteOne-delete': `Modelni o'chirish`,
 }
 
-export function actionDescriptionConverter(action: string) {
+export function actionDescriptionConverter(action: string): string {
 	return ACTION_DESCRIPTIONS[action] ?? `Noma'lum harakat`
 }

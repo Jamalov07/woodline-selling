@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req } from '@nestjs/common'
 import { CartService } from './cart.service'
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import { CartCreateOneRequestDto, CartDeleteOneRequestDto, CartFindManyRequestDto, CartFindOneRequestDto, CartUpdateOneRequestDto } from './dtos/request.dtos'
 import { CartFindManyResponseDto, CartFindOneResponseDto, CartModifyResponseDto } from './dtos/response.dtos'
+import { AuthOptions, CRequest } from '../../common'
 
 @Controller('cart')
 export class CartController {
@@ -26,10 +27,11 @@ export class CartController {
 	}
 
 	@Post('one')
+	@AuthOptions(true, true)
 	@ApiOperation({ summary: 'add one cart' })
 	@ApiOkResponse({ type: CartModifyResponseDto })
-	async createOne(@Body() body: CartCreateOneRequestDto): Promise<CartModifyResponseDto> {
-		return this.cartService.createOne(body)
+	async createOne(@Req() request: CRequest, @Body() body: CartCreateOneRequestDto): Promise<CartModifyResponseDto> {
+		return this.cartService.createOne(request, body)
 	}
 
 	@Patch('one')

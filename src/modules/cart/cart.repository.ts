@@ -157,6 +157,13 @@ export class CartRepository {
 		return cart
 	}
 
+	async deleteMany(query: CartDeleteOneRequest[]) {
+		const cart = await this.prisma.cartModel.deleteMany({
+			where: { id: { in: query.map((q) => q.id) } },
+		})
+		return cart
+	}
+
 	async onModuleInit() {
 		await this.prisma.createActionMethods(CartController)
 	}

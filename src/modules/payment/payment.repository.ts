@@ -114,7 +114,7 @@ export class PaymentRepository {
 	}
 
 	async createMany(body: PaymentCreateOneRequest[]) {
-		const payments = await this.prisma.paymentModel.createMany({
+		const payments = await this.prisma.paymentModel.createManyAndReturn({
 			data: body.map((p) => {
 				return {
 					description: p.description,

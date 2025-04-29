@@ -6,7 +6,10 @@ import { OrderProductFindOneData, OrderProductFindOneDataDto } from '../../order
 import { PartnerFindOneData, PartnerFindOneDataDto } from '../../partner'
 import { PaymentFindOneData, PaymentFindOneDataDto } from '../../payment'
 
-export class OrderFindOneDataDto extends PickType(OrderRequiredDto, ['id', 'deliveryAddress', 'purchaseStatus', 'deliveryDate', 'createdAt']) implements OrderFindOneData {
+export class OrderFindOneDataDto
+	extends PickType(OrderRequiredDto, ['id', 'deliveryAddress', 'purchaseStatus', 'deliveryDate', 'createdAt', 'purchaseStatus', 'status'])
+	implements OrderFindOneData
+{
 	@ApiProperty({ type: PartnerFindOneDataDto })
 	client?: PartnerFindOneData
 

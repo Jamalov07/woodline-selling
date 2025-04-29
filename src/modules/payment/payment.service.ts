@@ -9,7 +9,7 @@ import {
 	PaymentGetOneRequest,
 	PaymentUpdateOneRequest,
 } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, DeleteMethodEnum } from '../../common'
 
 @Injectable()
 export class PaymentService {
@@ -75,9 +75,9 @@ export class PaymentService {
 	}
 
 	async createMany(body: PaymentCreateOneRequest[]) {
-		await this.paymentRepository.createMany({ ...body })
+		const payments = await this.paymentRepository.createMany(body)
 
-		return createResponse({ data: null, success: { messages: ['create many success'] } })
+		return createResponse({ data: payments, success: { messages: ['create many success'] } })
 	}
 
 	async updateOne(query: PaymentGetOneRequest, body: PaymentUpdateOneRequest) {
@@ -90,7 +90,7 @@ export class PaymentService {
 
 	async deleteOne(query: PaymentDeleteOneRequest) {
 		await this.getOne({ id: query.id })
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.paymentRepository.deleteOne(query)
 		} else {
 			await this.paymentRepository.updateOne({ id: query.id }, { deletedAt: new Date() })

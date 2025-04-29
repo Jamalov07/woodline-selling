@@ -26,7 +26,7 @@ export class OrderFindOneRequestDto extends PickType(OrderRequiredDto, ['id']) i
 export class OrderCreateOneRequestDto extends PickType(OrderRequiredDto, ['clientId', 'staffId', 'deliveryAddress', 'deliveryDate']) implements OrderCreateOneRequest {}
 
 export class OrderCreateOneWithPaymentProductRequestDto
-	extends PickType(OrderRequiredDto, ['clientId', 'staffId', 'deliveryAddress', 'deliveryDate'])
+	extends PickType(OrderRequiredDto, ['clientId', 'deliveryAddress', 'deliveryDate'])
 	implements OrderCreateOneWithPaymentProductRequest
 {
 	@ApiProperty({ type: OmitType(PaymentCreateOneRequestDto, ['orderId']), isArray: true })

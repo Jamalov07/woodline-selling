@@ -1,13 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { CartRepository } from './cart.repository'
 import { CartCreateOneRequest, CartDeleteOneRequest, CartFindManyRequest, CartFindOneRequest, CartGetManyRequest, CartGetOneRequest, CartUpdateOneRequest } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, CRequest, DeleteMethodEnum } from '../../common'
+import { StaffService } from '../staff'
+import { StaffRoleEnum } from '@prisma/client'
 
 @Injectable()
 export class CartService {
 	private readonly cartRepository: CartRepository
-	constructor(cartRepository: CartRepository) {
+	private readonly staffService: StaffService
+	constructor(cartRepository: CartRepository, staffService: StaffService) {
 		this.cartRepository = cartRepository
+		this.staffService = staffService
 	}
 
 	async findMany(query: CartFindManyRequest) {
@@ -60,10 +64,16 @@ export class CartService {
 		return createResponse({ data: cart, success: { messages: ['get one success'] } })
 	}
 
-	async createOne(body: CartCreateOneRequest) {
-		await this.cartRepository.createOne({ ...body })
+	async createOne(request: CRequest, body: CartCreateOneRequest) {
+		const seller = await this.staffService.getOne({ id: request.user.id })
+		const sellerRole = seller.data.roles.find((r) => r.name === StaffRoleEnum.seller)
+		if (!sellerRole) {
+			throw new BadRequestException('seller not found')
+		}
 
-		return createResponse({ data: null, success: { messages: ['create success'] } })
+		await this.cartRepository.createOne({ ...body, staffId: request.user.id })
+
+		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
 	async updateOne(query: CartGetOneRequest, body: CartUpdateOneRequest) {
@@ -76,11 +86,17 @@ export class CartService {
 
 	async deleteOne(query: CartDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.cartRepository.deleteOne(query)
 		} else {
 			await this.cartRepository.updateOne(query, { deletedAt: new Date() })
 		}
 		return createResponse({ data: null, success: { messages: ['delete one success'] } })
+	}
+
+	async deleteMany(query: CartDeleteOneRequest[]) {
+		await this.cartRepository.deleteMany(query)
+
+		return createResponse({ data: null, success: { messages: ['delete many success'] } })
 	}
 }

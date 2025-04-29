@@ -4,7 +4,7 @@ import { PartnerRoleFindOneData } from '../../role'
 
 export declare interface PartnerFindManyData extends PaginationResponse<PartnerFindOneData> {}
 
-export declare interface PartnerFindOneData extends Pick<PartnerRequired, 'id' | 'fullname' | 'createdAt'> {
+export declare interface PartnerFindOneData extends Pick<PartnerRequired, 'id' | 'fullname' | 'createdAt' | 'phone' | 'whereFrom'> {
 	actionIds?: string[]
 	roles?: PartnerRoleFindOneData[]
 }

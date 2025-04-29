@@ -10,7 +10,7 @@ export declare interface OrderFindManyResponse extends GlobalResponse {
 	data: OrderFindManyData
 }
 
-export declare interface OrderFindOneData extends Pick<OrderRequired, 'id' | 'deliveryAddress' | 'deliveryDate' | 'createdAt'> {
+export declare interface OrderFindOneData extends Pick<OrderRequired, 'id' | 'deliveryAddress' | 'deliveryDate' | 'createdAt' | 'purchaseStatus' | 'status'> {
 	client?: PartnerFindOneData
 	payments?: PaymentFindOneData[]
 	products?: OrderProductFindOneData[]

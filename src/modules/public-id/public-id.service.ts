@@ -45,7 +45,7 @@ export class PublicIdService {
 	}
 
 	async generatingNewPublicId(): Promise<string> {
-		let lastRecord = await this.prisma.publicIdModel.findFirst({
+		const lastRecord = await this.prisma.publicIdModel.findFirst({
 			orderBy: { createdAt: 'desc' },
 		})
 
@@ -61,7 +61,7 @@ export class PublicIdService {
 		}
 
 		// bazaga yozamiz
-		await this.prisma.publicIdModel.create({ data: { id: newId } }).catch((undefined) => undefined)
+		await this.prisma.publicIdModel.create({ data: { id: newId } }).catch((undefined): undefined => undefined)
 		return newId
 	}
 

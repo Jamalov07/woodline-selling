@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config'
 import { Observable } from 'rxjs'
 import { isJWT } from 'class-validator'
 import * as colors from 'colors'
-import { PartnerOptional, StaffOptional } from '../../modules'
 
 @Injectable()
 export class RefreshTokenInterceptor implements NestInterceptor {
@@ -45,8 +44,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
 			if (!payload || !payload?.id) {
 				throw new UnauthorizedException('Invalid token payload')
 			}
-			let user: Partial<StaffOptional> & Partial<PartnerOptional>
-			user =
+			const user =
 				(await this.prismaService.staffModel.findFirst({
 					where: { id: payload?.id, token: token },
 				})) ??

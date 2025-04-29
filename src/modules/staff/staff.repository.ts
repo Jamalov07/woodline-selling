@@ -93,6 +93,7 @@ export class StaffRepository implements OnModuleInit {
 	async getOne(query: StaffGetOneRequest) {
 		const staff = await this.prisma.staffModel.findFirst({
 			where: { id: query.id, fullname: query.fullname, phone: query.phone },
+			select: { id: true, fullname: true, phone: true, createdAt: true, deletedAt: true, roles: true, password: true, token: true },
 		})
 
 		return staff

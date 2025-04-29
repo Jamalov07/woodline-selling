@@ -9,7 +9,7 @@ import {
 	OrderProductGetOneRequest,
 	OrderProductUpdateOneRequest,
 } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, DeleteMethodEnum } from '../../common'
 
 @Injectable()
 export class OrderProductService {
@@ -75,7 +75,7 @@ export class OrderProductService {
 	}
 
 	async createMany(body: OrderProductCreateOneRequest[]) {
-		await this.orderProductRepository.createMany({ ...body })
+		const orderProducts = await this.orderProductRepository.createMany(body)
 
 		return createResponse({ data: null, success: { messages: ['create many success'] } })
 	}
@@ -90,7 +90,7 @@ export class OrderProductService {
 
 	async deleteOne(query: OrderProductDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.orderProductRepository.deleteOne(query)
 		} else {
 			await this.orderProductRepository.updateOne(query, { deletedAt: new Date() })

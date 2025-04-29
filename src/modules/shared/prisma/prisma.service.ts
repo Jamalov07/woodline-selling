@@ -20,7 +20,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 					params.args.orderBy = [{ createdAt: 'desc' }]
 				} else {
 					if (!['PublicIdModel'].includes(params.model)) {
-						params.args.orderBy.push({ createdAt: 'desc' })
+						if (Array.isArray(params.args.orderBy)) {
+							params.args.orderBy.push({ createdAt: 'desc' })
+						} else {
+							params.args.orderBy = { createdAt: 'desc' }
+						}
 					}
 				}
 				// if (!params.args.where.deletedAt) {

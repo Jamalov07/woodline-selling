@@ -9,7 +9,7 @@ import {
 	ModelGetOneRequest,
 	ModelUpdateOneRequest,
 } from './interfaces'
-import { createResponse } from '../../common'
+import { createResponse, DeleteMethodEnum } from '../../common'
 import { PartnerService } from '../partner'
 import { PartnerRoleEnum } from '@prisma/client'
 
@@ -114,7 +114,7 @@ export class ModelService {
 
 	async deleteOne(query: ModelDeleteOneRequest) {
 		await this.getOne(query)
-		if (query.method === 'hard') {
+		if (query.method === DeleteMethodEnum.hard) {
 			await this.modelRepository.deleteOne(query)
 		} else {
 			await this.modelRepository.updateOne(query, { deletedAt: new Date() })

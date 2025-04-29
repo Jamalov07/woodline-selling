@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger'
 import {
@@ -10,6 +10,7 @@ import {
 	OrderUpdateOneRequestDto,
 } from './dtos/request.dtos'
 import { OrderFindManyResponseDto, OrderFindOneResponseDto, OrderModifyResponseDto } from './dtos/response.dtos'
+import { AuthOptions, CRequest } from '../../common'
 
 @Controller('order')
 export class OrderController {
@@ -40,10 +41,11 @@ export class OrderController {
 	}
 
 	@Post('one-with-payment-product')
+	@AuthOptions(true, true)
 	@ApiOperation({ summary: 'add one order with payment product' })
 	@ApiOkResponse({ type: OrderModifyResponseDto })
-	async createOneWithPaymentProduct(@Body() body: OrderCreateOneWithPaymentProductRequestDto): Promise<OrderModifyResponseDto> {
-		return this.orderService.createOneWithPaymentProduct(body)
+	async createOneWithPaymentProduct(@Req() user: CRequest, @Body() body: OrderCreateOneWithPaymentProductRequestDto): Promise<OrderModifyResponseDto> {
+		return this.orderService.createOneWithPaymentProduct(user, body)
 	}
 
 	@Patch('one')
