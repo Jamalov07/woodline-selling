@@ -3,6 +3,7 @@ import { PartnerFindOneData } from '../../partner'
 import { OrderRequired } from './fields.interfaces'
 import { PaymentFindOneData } from '../../payment'
 import { OrderProductFindOneData } from '../../order-product'
+import { StaffFindOneData } from '../../staff'
 
 export declare interface OrderFindManyData extends PaginationResponse<OrderFindOneData> {}
 
@@ -14,6 +15,7 @@ export declare interface OrderFindOneData extends Pick<OrderRequired, 'id' | 'de
 	client?: PartnerFindOneData
 	payments?: PaymentFindOneData[]
 	products?: OrderProductFindOneData[]
+	staff?: StaffFindOneData
 }
 
 export declare interface OrderFindOneResponse extends GlobalResponse {

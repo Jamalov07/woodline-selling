@@ -4,7 +4,7 @@ import { StaffRoleFindOneData } from '../../role'
 
 export declare interface StaffFindManyData extends PaginationResponse<StaffFindOneData> {}
 
-export declare interface StaffFindOneData extends Pick<StaffRequired, 'id' | 'fullname' | 'createdAt'> {
+export declare interface StaffFindOneData extends Pick<StaffRequired, 'id' | 'fullname' | 'createdAt' | 'phone'> {
 	actionIds?: string[]
 	roles?: StaffRoleFindOneData[]
 }

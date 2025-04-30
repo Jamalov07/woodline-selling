@@ -126,6 +126,7 @@ export class PaymentRepository {
 					totalSum: p.totalSum,
 				}
 			}),
+			select: { id: true, createdAt: true, exchangeRate: true, deletedAt: true, fromCurrency: true, toCurrency: true, description: true, method: true, sum: true, totalSum: true },
 		})
 		return payments
 	}

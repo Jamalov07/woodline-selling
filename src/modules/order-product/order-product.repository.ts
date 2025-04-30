@@ -156,6 +156,21 @@ export class OrderProductRepository {
 					modelId: orp.modelId,
 				}
 			}),
+			select: {
+				id: true,
+				createdAt: true,
+				description: true,
+				direction: true,
+				model: { select: { name: true, furnitureType: { select: { name: true } } } },
+				price: true,
+				priceWithSale: true,
+				quantity: true,
+				sale: true,
+				publicId: true,
+				tissue: true,
+				totalSum: true,
+				status: true,
+			},
 		})
 		return orderProducts
 	}

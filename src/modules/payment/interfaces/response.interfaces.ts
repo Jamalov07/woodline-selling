@@ -7,7 +7,8 @@ export declare interface PaymentFindManyResponse extends GlobalResponse {
 	data: PaymentFindManyData
 }
 
-export declare interface PaymentFindOneData extends Pick<PaymentRequired, 'id' | 'sum' | 'createdAt'> {}
+export declare interface PaymentFindOneData
+	extends Pick<PaymentRequired, 'id' | 'sum' | 'createdAt' | 'exchangeRate' | 'description' | 'fromCurrency' | 'method' | 'toCurrency' | 'totalSum'> {}
 
 export declare interface PaymentFindOneResponse extends GlobalResponse {
 	data: PaymentFindOneData
