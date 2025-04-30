@@ -94,7 +94,7 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0(@swc/core@1.11.21)(chokidar@4.0.3)
       '@swc/core':
-        specifier: ^1.10.7
+        specifier: ^1.11.21
         version: 1.11.21
       '@types/bcrypt':
         specifier: ^5.0.2

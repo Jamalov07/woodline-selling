@@ -3,6 +3,22 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "builder": "swc",
+    "swcOptions": {
+      "jsc": {
+        "target": "es2021",
+        "parser": {
+          "syntax": "typescript",
+          "decorators": true
+        },
+        "transform": {
+          "decoratorMetadata": true
+        }
+      },
+      "module": {
+        "type": "commonjs"
+      }
+    }
   }
 }
