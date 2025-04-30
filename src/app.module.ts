@@ -18,14 +18,14 @@ import {
 	RoleModule,
 	StaffModule,
 } from '@module'
-import { appConfig, databaseConfig, googleCredentialConfig, jwtConfig } from '@config'
+import { appConfig, databaseConfig, jwtConfig } from '@config'
 import { AuthGuard, CheckPermissionGuard } from '@common'
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [appConfig, databaseConfig, jwtConfig, googleCredentialConfig],
+			load: [appConfig, databaseConfig, jwtConfig],
 		}),
 		PrismaModule,
 		ActionModule,

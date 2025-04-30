@@ -110,7 +110,6 @@ export class OrderService {
 		if (!clientRole) {
 			throw new BadRequestException('client not found')
 		}
-
 		const order = await this.orderRepository.createOne({
 			...body,
 			staffId: request.user.id,
@@ -123,7 +122,7 @@ export class OrderService {
 		const staffCarts = await this.cartService.getMany({ staffId: request.user.id, pagination: false })
 		await this.cartService.deleteMany(staffCarts.data.data)
 
-		// await this.googleSheetService.addOrderToSheet(order, orderProducts.data, payments.data)
+		await this.googleSheetService.addOrderToSheet(order, orderProducts.data, payments.data)
 
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}

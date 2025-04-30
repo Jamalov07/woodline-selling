@@ -19,6 +19,14 @@ export class CartController {
 		return this.cartService.findMany(query)
 	}
 
+	@Get('my/many')
+	@AuthOptions(true, true)
+	@ApiOkResponse({ type: CartFindManyResponseDto })
+	@ApiOperation({ summary: 'get all my carts' })
+	async myCartFindMany(@Req() request: CRequest, @Query() query: CartFindManyRequestDto): Promise<CartFindManyResponseDto> {
+		return this.cartService.findMany({ ...query, staffId: request.user.id })
+	}
+
 	@Get('one')
 	@ApiOperation({ summary: 'find one cart' })
 	@ApiOkResponse({ type: CartFindOneResponseDto })
