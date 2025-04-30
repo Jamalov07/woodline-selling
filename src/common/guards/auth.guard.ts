@@ -5,8 +5,8 @@ import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
 import { Reflector } from '@nestjs/core'
-import * as colors from 'colors'
 import { PartnerOptional } from '../../modules'
+import { cyan } from 'colors'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
 			} else {
 				const user = await this.parseTokenWithJwt(token, isStaffRequired)
 				request['user'] = user
-				this.logger.debug(colors.cyan(request['user']))
+				this.logger.debug(cyan(request['user']))
 
 				return true
 			}
@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate {
 				if (Object.keys(user).length) {
 					request['user'] = user
 				}
-				this.logger.debug(colors.cyan(request['user']))
+				this.logger.debug(cyan(request['user']))
 
 				return true
 			}

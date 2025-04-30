@@ -4,7 +4,7 @@ import { PrismaService } from '../../modules/shared'
 import { ConfigService } from '@nestjs/config'
 import { Observable } from 'rxjs'
 import { isJWT } from 'class-validator'
-import * as colors from 'colors'
+import { magenta } from 'colors'
 
 @Injectable()
 export class RefreshTokenInterceptor implements NestInterceptor {
@@ -62,7 +62,7 @@ export class RefreshTokenInterceptor implements NestInterceptor {
 
 			request['user'] = { id: user.id, token: token }
 
-			this.logger.debug(colors.magenta({ ...request['user'] }))
+			this.logger.debug(magenta({ ...request['user'] }))
 
 			return next.handle()
 		} catch (e) {

@@ -1,7 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
-import * as colors from 'colors'
+import { magenta } from 'colors'
 
 @Injectable()
 export class RequestResponseInterceptor implements NestInterceptor {
@@ -26,7 +26,7 @@ export class RequestResponseInterceptor implements NestInterceptor {
 							error: data?.error?.is ?? false,
 						},
 					}
-					this.logger.debug(colors.magenta({ ...requestInfo, ...responseInfo }))
+					this.logger.debug(magenta({ ...requestInfo, ...responseInfo }))
 				},
 				error: (error) => {
 					const responseTime = Date.now() - startTime
@@ -35,8 +35,8 @@ export class RequestResponseInterceptor implements NestInterceptor {
 						responseTime: responseTime + ` ms`,
 						result: { success: false, warning: false, error: true },
 					}
-					this.logger.debug(colors.magenta({ ...requestInfo, ...responseInfo }))
-					this.logger.error(colors.magenta(error?.response?.message))
+					this.logger.debug(magenta({ ...requestInfo, ...responseInfo }))
+					this.logger.error(magenta(error?.response?.message))
 				},
 			}),
 		)
