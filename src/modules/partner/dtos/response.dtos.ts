@@ -1,5 +1,12 @@
 import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
-import { PartnerFindManyData, PartnerFindManyResponse, PartnerFindOneData, PartnerFindOneResponse, PartnerModifyResposne } from '../interfaces'
+import {
+	PartnerCreateOneWithReturningResponse,
+	PartnerFindManyData,
+	PartnerFindManyResponse,
+	PartnerFindOneData,
+	PartnerFindOneResponse,
+	PartnerModifyResposne,
+} from '../interfaces'
 import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } from '@common'
 import { PartnerRequiredDto } from './fields.dtos'
 import { PartnerRoleFindOneData, PartnerRoleFindOneDataDto } from '../../role'
@@ -23,6 +30,11 @@ export class PartnerFindManyResponseDto extends GlobalResponseDto implements Par
 }
 
 export class PartnerFindOneResponseDto extends GlobalResponseDto implements PartnerFindOneResponse {
+	@ApiProperty({ type: PartnerFindOneDataDto })
+	data: PartnerFindOneData
+}
+
+export class PartnerCreateOneWithReturningResponseDto extends GlobalResponseDto implements PartnerCreateOneWithReturningResponse {
 	@ApiProperty({ type: PartnerFindOneDataDto })
 	data: PartnerFindOneData
 }

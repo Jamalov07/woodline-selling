@@ -10,6 +10,7 @@ import {
 	PartnerUpdateOneRequestDto,
 	PartnerDeleteOneRequestDto,
 	PartnerCreateOneRequestDto,
+	PartnerCreateOneWithReturningResponseDto,
 } from './dtos'
 
 @ApiTags('Partner')
@@ -47,6 +48,13 @@ export class PartnerController {
 	@ApiOkResponse({ type: PartnerModifyResponseDto })
 	async createOne(@Body() body: PartnerCreateOneRequestDto): Promise<PartnerModifyResponseDto> {
 		return this.partnerService.createOne(body)
+	}
+
+	@Post('one-return')
+	@ApiOperation({ summary: 'create one with returning partner' })
+	@ApiOkResponse({ type: PartnerCreateOneWithReturningResponseDto })
+	async createOneWithReturning(@Body() body: PartnerCreateOneRequestDto): Promise<PartnerCreateOneWithReturningResponseDto> {
+		return this.partnerService.createOneWithReturning(body)
 	}
 
 	@Patch('one')

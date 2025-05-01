@@ -101,6 +101,20 @@ export class PartnerService {
 		return createResponse({ data: null, success: { messages: ['create one success'] } })
 	}
 
+	async createOneWithReturning(body: PartnerCreateOneRequest) {
+		const candidate = await this.partnerRepository.getOne({ phone: body.phone })
+
+		if (candidate) {
+			throw new BadRequestException('phone already exists')
+		}
+
+		const password = await bcrypt.hash(body.password, 7)
+
+		const partner = await this.partnerRepository.createOne({ ...body, password: password })
+
+		return createResponse({ data: partner, success: { messages: ['create one with returning success'] } })
+	}
+
 	async updateOne(query: PartnerGetOneRequest, body: PartnerUpdateOneRequest) {
 		await this.getOne(query)
 

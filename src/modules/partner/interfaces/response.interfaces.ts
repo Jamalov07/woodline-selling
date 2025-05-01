@@ -17,6 +17,10 @@ export declare interface PartnerFindOneResponse extends GlobalResponse {
 	data: PartnerFindOneData
 }
 
+export declare interface PartnerCreateOneWithReturningResponse extends GlobalResponse {
+	data: PartnerFindOneData
+}
+
 export declare interface PartnerModifyResposne extends GlobalResponse {
 	data: null
 }

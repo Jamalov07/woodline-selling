@@ -162,6 +162,7 @@ export class PartnerRepository implements OnModuleInit {
 				roles: { connect: body.rolesToConnect.map((r) => ({ id: r })) },
 				actions: { connect: body.actionsToConnect.map((r) => ({ id: r })) },
 			},
+			select: { id: true, balance: true, createdAt: true, fullname: true, phone: true, roles: true, token: true, orders: true, whereFrom: true },
 		})
 		return partner
 	}
