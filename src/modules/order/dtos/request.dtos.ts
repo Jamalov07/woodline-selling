@@ -25,21 +25,24 @@ export class OrderFindOneRequestDto extends PickType(OrderRequiredDto, ['id']) i
 
 export class OrderCreateOneRequestDto extends PickType(OrderRequiredDto, ['clientId', 'staffId', 'deliveryAddress', 'deliveryDate']) implements OrderCreateOneRequest {}
 
+class OrderProductWithoutOrderIdDto extends OmitType(OrderProductCreateOneRequestDto, ['orderId']) {}
+
+class PaymentWithoutOrderIdDto extends OmitType(PaymentCreateOneRequestDto, ['orderId']) {}
 export class OrderCreateOneWithPaymentProductRequestDto
 	extends PickType(OrderRequiredDto, ['clientId', 'deliveryAddress', 'deliveryDate'])
 	implements OrderCreateOneWithPaymentProductRequest
 {
-	@ApiProperty({ type: OmitType(PaymentCreateOneRequestDto, ['orderId']), isArray: true })
-	@IsNotEmpty()
-	@IsArray()
-	@IsObject({ each: true })
-	payments: Omit<PaymentCreateOneRequest, 'orderId'>[]
-
-	@ApiProperty({ type: OmitType(OrderProductCreateOneRequestDto, ['orderId']), isArray: true })
+	@ApiProperty({ type: OrderProductWithoutOrderIdDto, isArray: true })
 	@IsNotEmpty()
 	@IsArray()
 	@IsObject({ each: true })
 	products: Omit<OrderProductCreateOneRequest, 'orderId'>[]
+
+	@ApiProperty({ type: PaymentWithoutOrderIdDto, isArray: true })
+	@IsNotEmpty()
+	@IsArray()
+	@IsObject({ each: true })
+	payments: Omit<PaymentCreateOneRequest, 'orderId'>[]
 }
 
 export class OrderUpdateOneRequestDto extends PickType(OrderOptionalDto, ['clientId', 'status', 'deliveryAddress', 'deliveryDate', 'deletedAt']) implements OrderUpdateOneRequest {}
