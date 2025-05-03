@@ -117,6 +117,7 @@ export class OrderService {
 		})
 
 		const orderProducts = await this.orderProductService.createMany(body.products.map((p) => ({ id: undefined, ...p, orderId: order.id })))
+
 		const payments = await this.paymentService.createMany(body.payments.map((p) => ({ ...p, orderId: order.id })))
 
 		const staffCarts = await this.cartService.getMany({ staffId: request.user.id, pagination: false })

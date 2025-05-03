@@ -161,7 +161,7 @@ export class OrderProductRepository {
 				createdAt: true,
 				description: true,
 				direction: true,
-				model: { select: { name: true, furnitureType: { select: { name: true } } } },
+				model: { select: { id: true, createdAt: true, name: true, furnitureType: { select: { name: true, id: true, createdAt: true } } } },
 				price: true,
 				priceWithSale: true,
 				quantity: true,

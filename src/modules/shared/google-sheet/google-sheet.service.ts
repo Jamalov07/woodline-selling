@@ -35,6 +35,7 @@ export class GoogleSheetService {
 
 		const clientInfos = [order.client.fullname, order.client.phone, order.client.whereFrom, order.purchaseStatus]
 		const numRows = existing.data.values?.length || 0
+
 		const maxLength = Math.max(orderProducts.length, payments.length)
 		const rowsToAdd: any[][] = []
 
@@ -51,13 +52,15 @@ export class GoogleSheetService {
 						orderProduct.tissue,
 						order.deliveryDate,
 						orderProduct.description,
-						orderProduct.price,
+						orderProduct.price.toString(),
 						orderProduct.sale,
 						orderProduct.quantity,
-						orderProduct.totalSum,
+						orderProduct.totalSum.toString(),
 					]
 				: []
-			const paymentInfos = payment ? [payment.method, payment.sum, payment.fromCurrency, payment.exchangeRate, `${payment.totalSum} ${payment.toCurrency}`] : []
+			const paymentInfos = payment
+				? [payment.method, payment.sum.toString(), payment.fromCurrency, payment.exchangeRate.toString(), `${payment.totalSum.toString()} ${payment.toCurrency}`]
+				: []
 			const row = [order.createdAt, ...clientInfos, ...productInfos, ...paymentInfos]
 
 			rowsToAdd.push(row)
