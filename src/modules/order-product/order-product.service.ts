@@ -77,7 +77,7 @@ export class OrderProductService {
 	async createMany(body: OrderProductCreateOneRequest[]) {
 		const orderProducts = await this.orderProductRepository.createMany(body)
 
-		return createResponse({ data: null, success: { messages: ['create many success'] } })
+		return createResponse({ data: orderProducts, success: { messages: ['create many success'] } })
 	}
 
 	async updateOne(query: OrderProductGetOneRequest, body: OrderProductUpdateOneRequest) {
