@@ -27,6 +27,21 @@ export class CartRepository {
 				modelId: query.modelId,
 				direction: query.direction,
 			},
+			select: {
+				id: true,
+				publicId: true,
+				sale: true,
+				staff: true,
+				description: true,
+				direction: true,
+				model: true,
+				price: true,
+				priceWithSale: true,
+				quantity: true,
+				tissue: true,
+				totalSum: true,
+				createdAt: true,
+			},
 			...paginationOptions,
 		})
 
@@ -37,6 +52,21 @@ export class CartRepository {
 		const staff = await this.prisma.cartModel.findFirst({
 			where: {
 				id: query.id,
+			},
+			select: {
+				id: true,
+				publicId: true,
+				sale: true,
+				staff: true,
+				description: true,
+				direction: true,
+				model: true,
+				price: true,
+				priceWithSale: true,
+				quantity: true,
+				tissue: true,
+				totalSum: true,
+				createdAt: true,
 			},
 		})
 
