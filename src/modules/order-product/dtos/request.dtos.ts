@@ -1,4 +1,4 @@
-import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional, IntersectionType, PickType } from '@nestjs/swagger'
 import { OrderProductCreateOneRequest, OrderProductDeleteOneRequest, OrderProductFindManyRequest, OrderProductFindOneRequest, OrderProductUpdateOneRequest } from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '../../../common'
 import { OrderProductOptionalDto, OrderProductRequiredDto } from './fields.dtos'
@@ -12,7 +12,7 @@ export class OrderProductFindManyRequestDto
 	)
 	implements OrderProductFindManyRequest
 {
-	@ApiProperty({ type: String })
+	@ApiPropertyOptional({ type: String })
 	@IsOptional()
 	@IsUUID('4')
 	modelProviderId?: string

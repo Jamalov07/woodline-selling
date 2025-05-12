@@ -36,6 +36,21 @@ export class OrderProductRepository {
 				direction: query.direction,
 				model: { providerId: query.modelProviderId },
 			},
+			select: {
+				id: true,
+				createdAt: true,
+				description: true,
+				direction: true,
+				model: { select: { id: true, createdAt: true, name: true, furnitureType: { select: { name: true, id: true, createdAt: true } } } },
+				price: true,
+				priceWithSale: true,
+				quantity: true,
+				sale: true,
+				publicId: true,
+				tissue: true,
+				totalSum: true,
+				status: true,
+			},
 			...paginationOptions,
 		})
 
@@ -46,6 +61,21 @@ export class OrderProductRepository {
 		const staff = await this.prisma.orderProductModel.findFirst({
 			where: {
 				id: query.id,
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				description: true,
+				direction: true,
+				model: { select: { id: true, createdAt: true, name: true, furnitureType: { select: { name: true, id: true, createdAt: true } } } },
+				price: true,
+				priceWithSale: true,
+				quantity: true,
+				sale: true,
+				publicId: true,
+				tissue: true,
+				totalSum: true,
+				status: true,
 			},
 		})
 
