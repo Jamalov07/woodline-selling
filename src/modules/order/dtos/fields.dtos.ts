@@ -2,7 +2,7 @@ import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from '
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '@common'
 import { OrderOptional, OrderRequired } from '../interfaces'
-import { $Enums, ClientPurchaseStatus, OrderStatusEnum } from '@prisma/client'
+import { $Enums, ClientPurchaseStatusEnum, OrderStatusEnum } from '@prisma/client'
 
 export class OrderRequiredDto extends DefaultRequiredFieldsDto implements OrderRequired {
 	@ApiProperty({ type: String })
@@ -30,10 +30,10 @@ export class OrderRequiredDto extends DefaultRequiredFieldsDto implements OrderR
 	@IsEnum(OrderStatusEnum)
 	status: $Enums.OrderStatusEnum
 
-	@ApiProperty({ enum: ClientPurchaseStatus })
+	@ApiProperty({ enum: ClientPurchaseStatusEnum })
 	@IsNotEmpty()
-	@IsEnum(ClientPurchaseStatus)
-	purchaseStatus: $Enums.ClientPurchaseStatus
+	@IsEnum(ClientPurchaseStatusEnum)
+	purchaseStatus: $Enums.ClientPurchaseStatusEnum
 }
 
 export class OrderOptionalDto extends DefaultOptionalFieldsDto implements OrderOptional {
@@ -62,8 +62,8 @@ export class OrderOptionalDto extends DefaultOptionalFieldsDto implements OrderO
 	@IsEnum(OrderStatusEnum)
 	status?: $Enums.OrderStatusEnum
 
-	@ApiPropertyOptional({ enum: ClientPurchaseStatus })
+	@ApiPropertyOptional({ enum: ClientPurchaseStatusEnum })
 	@IsOptional()
-	@IsEnum(ClientPurchaseStatus)
-	purchaseStatus?: $Enums.ClientPurchaseStatus
+	@IsEnum(ClientPurchaseStatusEnum)
+	purchaseStatus?: $Enums.ClientPurchaseStatusEnum
 }

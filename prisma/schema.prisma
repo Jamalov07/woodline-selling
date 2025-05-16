@@ -19,8 +19,8 @@ enum ActionMethodEnum {
 }
 
 enum PartnerRoleEnum {
-  provider     @map("provider")
-  client       @map("client")
+  client    @map("client")
+  provider  @map("provider")
 
   @@map("partner_role_name")
 }
@@ -33,17 +33,25 @@ enum StaffRoleEnum {
   @@map("staff_role_name")
 }
 
+
+enum StorehouseTypeEnum {
+  showroom   @map("showroom")
+  warehouse  @map("warehouse")
+
+  @@map("storehouse_type")
+}
+
 enum PaymentMethodEnum {
-  cash_with_receipt  // Наличный с чеком
-  cash_without_receipt  // Наличный без чека
-  card_payme  // С карты PayMe
-  card_uzum  // С карты Uzum
-  card_anor  // С карты Anor
-  card_solfy  // С карты Solfy
-  card_zoodpay  // С карты ZoodPay
-  card_to_card  // С карты на карту
-  transfer  // Перечисление
-  terminal  // Терминал
+  cash_with_receipt     @map("cash_with_receipt")    // Наличный с чеком
+  cash_without_receipt  @map("cash_without_receipt")   // Наличный без чека
+  card_payme            @map("card_payme")   // С карты PayMe
+  card_uzum             @map("card_uzum")   // С карты Uzum
+  card_anor             @map("card_anor")   // С карты Anor
+  card_solfy            @map("card_solfy")   // С карты Solfy
+  card_zoodpay          @map("card_zoodpay")   // С карты ZoodPay
+  card_to_card          @map("card_to_card")   // С карты на карту
+  transfer              @map("transfer")   // Перечисление
+  terminal              @map("terminal")   // Терминал
 
   @@map("payment_method")
 }
@@ -66,6 +74,8 @@ enum OrderStatusEnum {
   new        @map("new")
   cancelled  @map("cancelled")
   closed     @map("closed") 
+
+  @@map("order_status")
 }
 
 
@@ -73,18 +83,39 @@ enum OrderProductStatusEnum {
   new        @map("new")
   cancelled  @map("cancelled") 
   received   @map("received")
+
+  @@map("order_product_status")
 }
 
-enum ClientPurchaseStatus {
+enum ClientPurchaseStatusEnum {
   first  @map("first")
   next   @map("next")
+
+  @@map("client_purchase_status")
 }
+
+enum InventoryTypeEnum {
+  transfer  @map("transfer")
+  purchase  @map("purchase")
+  selling   @map("selling")
+
+  @@map("inventory_type")
+}
+
+enum InventoryStatusEnum {
+  new        @map("new")
+  accepted   @map("accepted")
+  cancelled  @map("cancelled")
+
+  @@map("inventory_status")
+}
+
 
 model ActionModel {
   id           String            @map("id")           @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   url          String            @map("url")          @db.VarChar()
   name         String            @map("name")         @db.VarChar()
-  method       ActionMethodEnum  
+  method       ActionMethodEnum  @map("method")
   description  String            @map("description")  @db.VarChar()  @default("")
 
   staffs        StaffModel[]
@@ -128,21 +159,22 @@ model StaffRoleModel {
 
 model PartnerModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  phone      String     @map("phone")       @db.VarChar()                                                @unique 
   fullname   String     @map("fullname")    @db.VarChar()
   password   String     @map("password")    @db.VarChar()  
   token      String?    @map("token")       @db.VarChar()  
-  balance    BigInt     @map("balance")     @db.BigInt     @default(0)
-  whereFrom  String     @map("where_from")  @db.VarChar()  @default("")
+  balance    BigInt     @map("balance")     @db.BigInt       @default(0)
+  whereFrom  String     @map("where_from")  @db.VarChar()    @default("")
 
   createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  roles    PartnerRoleModel[]
-  actions  ActionModel[]
-  models   ModelModel[]
-  orders   OrderModel[]
+  roles        PartnerRoleModel[]
+  actions      ActionModel[]
+  models       ModelModel[]
+  orders       OrderModel[]
+  inventories  InventoryModel[]
 
   @@id([ id ])
   @@index([ id ])
@@ -151,7 +183,7 @@ model PartnerModel {
 
 model StaffModel {
   id         String     @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  phone      String     @map("phone")       @db.VarChar()                                    @unique 
+  phone      String     @map("phone")       @db.VarChar()                                                @unique 
   fullname   String     @map("fullname")    @db.VarChar()
   password   String     @map("password")    @db.VarChar()  
   token      String?    @map("token")       @db.VarChar()  
@@ -160,10 +192,14 @@ model StaffModel {
   updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
   deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
 
-  carts    CartModel[]
-  roles    StaffRoleModel[]
-  actions  ActionModel[]
-  orders   OrderModel[]
+  carts      CartModel[]
+  roles      StaffRoleModel[]
+  actions    ActionModel[]
+  orders     OrderModel[]
+  bookings   StorehouseProductStatus[]
+  incomings  InventoryModel[]  @relation(name: "in")
+  outgoings  InventoryModel[]  @relation(name: "out")
+ 
 
   @@id([ id ])
   @@index([ id ])
@@ -192,14 +228,15 @@ model ModelModel {
   providerId       String     @map("provider_id")        @db.Uuid  
   furnitureTypeId  String     @map("furniture_type_id")  @db.Uuid  
  
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  createdAt        DateTime   @map("created_at")         @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt        DateTime   @map("updated_at")         @db.Timestamptz  @updatedAt
+  deletedAt        DateTime?  @map("deleted_at")         @db.Timestamptz
 
   provider       PartnerModel        @relation(fields: [ providerId      ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   furnitureType  FurnitureTypeModel  @relation(fields: [ furnitureTypeId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
   carts          CartModel[]
+  products       ProductModel[]
   orderProducts  OrderProductModel[]
 
   @@id([ id ])
@@ -209,20 +246,19 @@ model ModelModel {
 }
 
 model PaymentModel {
-  id            String               @map("id")             @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
-  sum           BigInt               @map("sum")            @db.BigInt     @default(0)
-  method        PaymentMethodEnum    @map("method")                        @default(cash_with_receipt)
-  fromCurrency  PaymentCurrencyEnum  @map("from_currency")                 @default(uzs)
-  exchangeRate  BigInt               @map("exchange_rate")  @db.BigInt     @default(1)
-  toCurrency    PaymentCurrencyEnum  @map("to_currency")                   @default(uzs)
-  totalSum      BigInt               @map("total_sum")      @db.BigInt     @default(0)
-  description   String               @map("description")    @db.VarChar()  @default("")
-  
+  id            String               @map("id")             @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  sum           BigInt               @map("sum")            @db.BigInt       @default(0)
+  method        PaymentMethodEnum    @map("method")                          @default(cash_with_receipt)
+  fromCurrency  PaymentCurrencyEnum  @map("from_currency")                   @default(uzs)
+  exchangeRate  BigInt               @map("exchange_rate")  @db.BigInt       @default(1)
+  toCurrency    PaymentCurrencyEnum  @map("to_currency")                     @default(uzs)
+  totalSum      BigInt               @map("total_sum")      @db.BigInt       @default(0)
+  description   String               @map("description")    @db.VarChar()    @default("")
   orderId       String               @map("order_id")       @db.Uuid
 
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  createdAt     DateTime             @map("created_at")     @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt     DateTime             @map("updated_at")     @db.Timestamptz  @updatedAt
+  deletedAt     DateTime?            @map("deleted_at")     @db.Timestamptz
 
   order  OrderModel  @relation(fields: [ orderId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
@@ -232,18 +268,17 @@ model PaymentModel {
 }
 
 model OrderModel {
-  id               String           @map("id")                @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
-  clientId         String           @map("client_id")         @db.Uuid
-  deliveryDate     DateTime         @map("delivery_date")     @db.Timestamptz()  @default(dbgenerated("NOW()"))
-  deliveryAddress  String           @map("delivery_address")  @db.VarChar()
-  status           OrderStatusEnum                                               @default(new)      
-  purchaseStatus   ClientPurchaseStatus                                          @default(first)
-  staffId          String           @map("staff_id")          @db.Uuid    
+  id               String                    @map("id")                      @db.Uuid           @default(dbgenerated("GEN_RANDOM_UUID()"))
+  clientId         String                    @map("client_id")               @db.Uuid
+  staffId          String                    @map("staff_id")                @db.Uuid    
+  status           OrderStatusEnum           @map("status")                                     @default(new)      
+  deliveryDate     DateTime                  @map("delivery_date")           @db.Timestamptz()  @default(dbgenerated("NOW()"))
+  purchaseStatus   ClientPurchaseStatusEnum  @map("client_purchase_status")                     @default(first)
+  deliveryAddress  String                    @map("delivery_address")        @db.VarChar()
 
-
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  createdAt        DateTime                  @map("created_at")              @db.Timestamptz    @default(dbgenerated("NOW()"))
+  updatedAt        DateTime                  @map("updated_at")              @db.Timestamptz    @updatedAt
+  deletedAt        DateTime?                 @map("deleted_at")              @db.Timestamptz  
 
   staff   StaffModel    @relation(fields: [ staffId  ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   client  PartnerModel  @relation(fields: [ clientId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
@@ -257,23 +292,23 @@ model OrderModel {
 }
 
 model OrderProductModel {
-  id             String                @map("id")                 @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
-  publicId       String                @map("public_id")          @db.VarChar()
-  tissue         String                @map("tissue")             @db.VarChar()
-  direction      ProductDirectionEnum  @map("direction")
-  quantity       Int                   @map("quantity")           @db.Integer    @default(1)
-  sale           Int                   @map("sale")               @db.Integer    @default(0)
-  price          BigInt                @map("price")              @db.BigInt     @default(0)
-  priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
-  totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
-  description    String                @map("decsription")        @db.VarChar()  @default("")
-  status         OrderProductStatusEnum                                          @default(new)
-  modelId        String                @map("furniture_type_id")  @db.Uuid 
-  orderId        String                @map("order_id")           @db.Uuid
+  id             String                  @map("id")               @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  publicId       String                  @map("public_id")        @db.VarChar()
+  tissue         String                  @map("tissue")           @db.VarChar()
+  direction      ProductDirectionEnum    @map("direction")
+  quantity       Int                     @map("quantity")         @db.Integer      @default(1)
+  sale           Int                     @map("sale")             @db.Integer      @default(0)
+  price          BigInt                  @map("price")            @db.BigInt       @default(0)
+  priceWithSale  BigInt                  @map("price_with_sale")  @db.BigInt       @default(0)
+  totalSum       BigInt                  @map("total_sum")        @db.BigInt       @default(0)
+  description    String                  @map("decsription")      @db.VarChar()    @default("")
+  status         OrderProductStatusEnum  @map("status")                            @default(new)
+  modelId        String                  @map("model_id")         @db.Uuid 
+  orderId        String                  @map("order_id")         @db.Uuid
 
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  createdAt      DateTime                @map("created_at")       @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt      DateTime                @map("updated_at")       @db.Timestamptz  @updatedAt
+  deletedAt      DateTime?               @map("deleted_at")       @db.Timestamptz
 
   order  OrderModel  @relation(fields: [ orderId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   model  ModelModel  @relation(fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
@@ -284,22 +319,22 @@ model OrderProductModel {
 }
 
 model CartModel {
-  id             String                @map("id")                 @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
-  publicId       String                @map("public_id")          @db.VarChar()
-  tissue         String                @map("tissue")             @db.VarChar()
-  direction      ProductDirectionEnum  @map("direction")
-  quantity       Int                   @map("quantity")           @db.Integer    @default(1)
-  sale           Int                   @map("sale")               @db.Integer    @default(0)
-  price          BigInt                @map("price")              @db.BigInt     @default(0)
-  priceWithSale  BigInt                @map("price_with_sale")    @db.BigInt     @default(0)
-  totalSum       BigInt                @map("total_sum")          @db.BigInt     @default(0)
-  description    String                @map("decsription")        @db.VarChar()  @default("")
-  modelId        String                @map("furniture_type_id")  @db.Uuid 
-  staffId        String                @map("staff_id")           @db.Uuid    
+  id             String                @map("id")               @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  publicId       String                @map("public_id")        @db.VarChar()
+  tissue         String                @map("tissue")           @db.VarChar()
+  direction      ProductDirectionEnum  @map("direction")            
+  quantity       Int                   @map("quantity")         @db.Integer      @default(1)
+  sale           Int                   @map("sale")             @db.Integer      @default(0)
+  price          BigInt                @map("price")            @db.BigInt       @default(0)
+  priceWithSale  BigInt                @map("price_with_sale")  @db.BigInt       @default(0)
+  totalSum       BigInt                @map("total_sum")        @db.BigInt       @default(0)
+  description    String                @map("decsription")      @db.VarChar()    @default("")
+  modelId        String                @map("model_id")         @db.Uuid 
+  staffId        String                @map("staff_id")         @db.Uuid    
 
-  createdAt  DateTime   @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt  DateTime   @map("updated_at")  @db.Timestamptz  @updatedAt
-  deletedAt  DateTime?  @map("deleted_at")  @db.Timestamptz
+  createdAt      DateTime              @map("created_at")       @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt      DateTime              @map("updated_at")       @db.Timestamptz  @updatedAt
+  deletedAt      DateTime?             @map("deleted_at")       @db.Timestamptz
 
   model  ModelModel  @relation(fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   staff  StaffModel  @relation(fields: [ staffId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
@@ -315,4 +350,153 @@ model PublicIdModel {
 
   @@index([ id ])
   @@map("public_id")
+}
+
+//2-version
+
+model ProductModel {
+  id           String                @map("id")           @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  publicId     String                @map("public_id")    @db.VarChar()
+  modelId      String                @map("model_id")     @db.Uuid 
+  tissue       String                @map("tissue")       @db.VarChar()
+  quantity     Int                   @map("quantity")     @db.Integer      @default(1)
+  direction    ProductDirectionEnum  @map("direction")
+  description  String                @map("decsription")  @db.VarChar()    @default("")
+
+  createdAt    DateTime              @map("created_at")   @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt    DateTime              @map("updated_at")   @db.Timestamptz  @updatedAt
+  deletedAt    DateTime?             @map("deleted_at")   @db.Timestamptz
+
+  model  ModelModel  @relation(fields: [ modelId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  storehouses  StorehouseProduct[]
+  inventories  InventoryProductModel[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("product")
+}
+
+
+model StorehouseModel {
+  id         String              @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  name       String              @map("name")        @db.VarChar()  
+  type       StorehouseTypeEnum  @map("type")
+
+  createdAt  DateTime            @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime            @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?           @map("deleted_at")  @db.Timestamptz
+
+  products   StorehouseProduct[]
+  incomings  InventoryModel[]  @relation(name: "in")
+  outgoings  InventoryModel[]  @relation(name: "out")
+  
+  @@id([ id ])
+  @@index([ id ])
+  @@unique([ name ])
+  @@map("storehouse")
+}
+
+model StorehouseProduct {
+  id            String     @map("id")             @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  storehouseId  String     @map("storehouse_id")  @db.Uuid 
+  productId     String     @map("product_id")     @db.Uuid 
+
+  createdAt     DateTime   @map("created_at")     @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt     DateTime   @map("updated_at")     @db.Timestamptz  @updatedAt
+  deletedAt     DateTime?  @map("deleted_at")     @db.Timestamptz
+
+  product     ProductModel     @relation(fields: [ productId    ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  storehouse  StorehouseModel  @relation(fields: [ storehouseId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  statuses  StorehouseProductStatus[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("storehouse_product")
+}
+
+model StorehouseProductStatus {
+  id                   String     @map("id")                     @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  isBooked             Boolean    @map("is_booked")              @db.Boolean      @default(false)
+  storehouseProductId  String     @map("storehouse_product_id")  @db.Uuid 
+  bookedStorekeeperId  String?    @map("booked_storekeeper_id")  @db.Uuid
+  status               String     @map("status")    // enum
+
+  createdAt            DateTime   @map("created_at")             @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt            DateTime   @map("updated_at")             @db.Timestamptz  @updatedAt
+  deletedAt            DateTime?  @map("deleted_at")             @db.Timestamptz
+
+  bookedStorekeeper  StaffModel?        @relation(fields: [ bookedStorekeeperId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  storehouseProduct  StorehouseProduct  @relation(fields: [ storehouseProductId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("storehouse_product_status")
+}
+
+model InventoryModel {
+  id                 String                @map("id")                   @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  // purchase  toWarehouseId toStorekeeperId
+  // selling  fromWarehouseId fromStorekeeperId
+  // transfer to && from 
+  type               InventoryTypeEnum     @map("type")
+  providerId         String?               @map("provider_id")          @db.Uuid 
+  toWarehouseId      String?               @map("to_warehouse_id")      @db.Uuid 
+  fromWarehouseId    String?               @map("from_warehouse_id")    @db.Uuid 
+  toStorekeeperId    String?               @map("to_storekeeper_id")    @db.Uuid 
+  fromStorekeeperId  String?               @map("from_storekeeper_id")  @db.Uuid 
+  status             InventoryStatusEnum   @map("status")   
+
+  createdAt          DateTime              @map("created_at")           @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt          DateTime              @map("updated_at")           @db.Timestamptz  @updatedAt
+  deletedAt          DateTime?             @map("deleted_at")           @db.Timestamptz
+
+  provider         PartnerModel?     @relation(             fields: [ providerId           ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  toWarehouse      StorehouseModel?  @relation(name: "in",  fields: [ toWarehouseId        ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  fromWarehouse    StorehouseModel?  @relation(name: "out", fields: [ fromWarehouseId      ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  toStorekeeper    StaffModel?       @relation(name: "in",  fields: [ toStorekeeperId      ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  fromStorekeeper  StaffModel?       @relation(name: "out", fields: [ fromStorekeeperId    ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+
+  products  InventoryProductModel[]
+  
+  @@id([ id ])
+  @@index([ id ])
+  @@map("inventory")
+}
+
+model InventoryProductModel {
+  id           String     @map("id")            @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  inventoryId  String     @map("inventory_id")  @db.Uuid 
+  productId    String     @map("product_id")    @db.Uuid 
+
+  createdAt    DateTime   @map("created_at")    @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt    DateTime   @map("updated_at")    @db.Timestamptz  @updatedAt
+  deletedAt    DateTime?  @map("deleted_at")    @db.Timestamptz
+
+  product    ProductModel    @relation(fields: [ productId   ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  inventory  InventoryModel  @relation(fields: [ inventoryId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  statuses  InventoryProductStatus[]
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("inventory_product")
+}
+
+model InventoryProductStatus {
+  id                  String     @map("id")                    @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  inventoryProductId  String     @map("inventory_product_id")  @db.Uuid 
+  status              String     @map("status")    //enum
+
+  createdAt           DateTime   @map("created_at")            @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt           DateTime   @map("updated_at")            @db.Timestamptz  @updatedAt
+  deletedAt           DateTime?  @map("deleted_at")            @db.Timestamptz
+
+  inventoryProduct  InventoryProductModel  @relation(fields: [ inventoryProductId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  
+  @@id([ id ])
+  @@index([ id ])
+  @@map("inventory_product_status")
 }
