@@ -14,9 +14,11 @@ import {
 	PartnerModule,
 	PaymentModule,
 	PrismaModule,
+	ProductModule,
 	PublicIdModule,
 	RoleModule,
 	StaffModule,
+	StorehouseModule,
 } from '@module'
 import { appConfig, databaseConfig, jwtConfig } from '@config'
 import { AuthGuard, CheckPermissionGuard } from '@common'
@@ -43,6 +45,9 @@ import { AuthGuard, CheckPermissionGuard } from '@common'
 		CronModule,
 		ExcelModule,
 		GoogleSheetModule,
+		//2-version
+		StorehouseModule,
+		ProductModule,
 	],
 	controllers: [],
 	providers: [AuthGuard, CheckPermissionGuard],

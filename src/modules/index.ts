@@ -11,3 +11,6 @@ export * from './order'
 export * from './payment'
 export * from './order-product'
 export * from './public-id'
+//2-version
+export * from './storehouse'
+export * from './product'

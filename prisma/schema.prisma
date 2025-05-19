@@ -87,6 +87,13 @@ enum OrderProductStatusEnum {
   @@map("order_product_status")
 }
 
+enum ProductStatusEnum {
+  ready     @map("ready")
+  defected  @map("defected") 
+
+  @@map("product_status")
+}
+
 enum ClientPurchaseStatusEnum {
   first  @map("first")
   next   @map("next")
@@ -417,15 +424,15 @@ model StorehouseProduct {
 }
 
 model StorehouseProductStatus {
-  id                   String     @map("id")                     @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  isBooked             Boolean    @map("is_booked")              @db.Boolean      @default(false)
-  storehouseProductId  String     @map("storehouse_product_id")  @db.Uuid 
-  bookedStorekeeperId  String?    @map("booked_storekeeper_id")  @db.Uuid
-  status               String     @map("status")    // enum
+  id                   String             @map("id")                     @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  isBooked             Boolean            @map("is_booked")              @db.Boolean      @default(false)
+  storehouseProductId  String             @map("storehouse_product_id")  @db.Uuid 
+  bookedStorekeeperId  String?            @map("booked_storekeeper_id")  @db.Uuid
+  status               ProductStatusEnum  @map("status") 
 
-  createdAt            DateTime   @map("created_at")             @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt            DateTime   @map("updated_at")             @db.Timestamptz  @updatedAt
-  deletedAt            DateTime?  @map("deleted_at")             @db.Timestamptz
+  createdAt            DateTime           @map("created_at")             @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt            DateTime           @map("updated_at")             @db.Timestamptz  @updatedAt
+  deletedAt            DateTime?          @map("deleted_at")             @db.Timestamptz
 
   bookedStorekeeper  StaffModel?        @relation(fields: [ bookedStorekeeperId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   storehouseProduct  StorehouseProduct  @relation(fields: [ storehouseProductId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
@@ -486,13 +493,13 @@ model InventoryProductModel {
 }
 
 model InventoryProductStatus {
-  id                  String     @map("id")                    @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  inventoryProductId  String     @map("inventory_product_id")  @db.Uuid 
-  status              String     @map("status")    //enum
+  id                  String             @map("id")                    @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  inventoryProductId  String             @map("inventory_product_id")  @db.Uuid 
+  status              ProductStatusEnum  @map("status") 
 
-  createdAt           DateTime   @map("created_at")            @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt           DateTime   @map("updated_at")            @db.Timestamptz  @updatedAt
-  deletedAt           DateTime?  @map("deleted_at")            @db.Timestamptz
+  createdAt           DateTime           @map("created_at")            @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt           DateTime           @map("updated_at")            @db.Timestamptz  @updatedAt
+  deletedAt           DateTime?          @map("deleted_at")            @db.Timestamptz
 
   inventoryProduct  InventoryProductModel  @relation(fields: [ inventoryProductId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
   
