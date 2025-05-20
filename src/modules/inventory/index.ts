@@ -1,0 +1,6 @@
+export * from './inventory.controller'
+export * from './inventory.module'
+export * from './inventory.repository'
+export * from './inventory.service'
+export * from './dtos'
+export * from './interfaces'

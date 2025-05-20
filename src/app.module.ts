@@ -4,6 +4,7 @@ import {
 	ActionModule,
 	AuthModule,
 	CartModule,
+	CartSPStatusModule,
 	CronModule,
 	ExcelModule,
 	FurnitureTypeModule,
@@ -11,6 +12,7 @@ import {
 	ModelModule,
 	OrderModule,
 	OrderProductModule,
+	OrderSPStatusModule,
 	PartnerModule,
 	PaymentModule,
 	PrismaModule,
@@ -19,6 +21,7 @@ import {
 	RoleModule,
 	StaffModule,
 	StorehouseModule,
+	StorehouseProductModule,
 } from '@module'
 import { appConfig, databaseConfig, jwtConfig } from '@config'
 import { AuthGuard, CheckPermissionGuard } from '@common'
@@ -48,6 +51,9 @@ import { AuthGuard, CheckPermissionGuard } from '@common'
 		//2-version
 		StorehouseModule,
 		ProductModule,
+		StorehouseProductModule,
+		CartSPStatusModule,
+		OrderSPStatusModule,
 	],
 	controllers: [],
 	providers: [AuthGuard, CheckPermissionGuard],

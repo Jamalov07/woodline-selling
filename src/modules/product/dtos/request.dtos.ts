@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, IntersectionType, PickType } from '@nestjs/swagger'
+import { ApiPropertyOptional, IntersectionType, PickType } from '@nestjs/swagger'
 import { ProductCreateOneRequest, ProductDeleteOneRequest, ProductFindManyRequest, ProductFindOneRequest, ProductUpdateOneRequest } from '../interfaces'
 import { PaginationRequestDto, RequestOtherFieldsDto } from '../../../common'
 import { ProductOptionalDto, ProductRequiredDto } from './fields.dtos'
@@ -14,7 +14,7 @@ export class ProductFindManyRequestDto
 	)
 	implements ProductFindManyRequest
 {
-	@ApiProperty({ enum: ProductStatusEnum, isArray: true })
+	@ApiPropertyOptional({ enum: ProductStatusEnum, isArray: true })
 	@IsOptional()
 	@IsArray()
 	@IsEnum(ProductStatusEnum, { each: true })

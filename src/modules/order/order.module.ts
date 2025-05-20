@@ -7,9 +7,11 @@ import { PartnerModule } from '../partner'
 import { OrderProductModule } from '../order-product'
 import { PaymentModule } from '../payment'
 import { CartModule } from '../cart'
+import { CartSPStatusModule } from '../cart-sp-status'
+import { OrderSPStatusModule } from '../order-sp-status'
 
 @Module({
-	imports: [PrismaModule, GoogleSheetModule, PartnerModule, OrderProductModule, PaymentModule, CartModule],
+	imports: [PrismaModule, GoogleSheetModule, PartnerModule, OrderProductModule, PaymentModule, CartModule, CartSPStatusModule, OrderSPStatusModule],
 	controllers: [OrderController],
 	providers: [OrderService, OrderRepository],
 	exports: [OrderService, OrderRepository],

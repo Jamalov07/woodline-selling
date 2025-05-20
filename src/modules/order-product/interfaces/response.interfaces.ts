@@ -1,3 +1,4 @@
+import { OrderProductStatusEnum, ProductStatusEnum } from '@prisma/client'
 import { GlobalResponse, PaginationResponse } from '../../../common'
 import { ModelFindOneData } from '../../model'
 import { OrderProductRequired } from './fields.interfaces'
@@ -9,10 +10,8 @@ export declare interface OrderProductFindManyResponse extends GlobalResponse {
 }
 
 export declare interface OrderProductFindOneData
-	extends Pick<
-		OrderProductRequired,
-		'id' | 'createdAt' | 'description' | 'direction' | 'price' | 'priceWithSale' | 'publicId' | 'quantity' | 'sale' | 'status' | 'tissue' | 'totalSum'
-	> {
+	extends Pick<OrderProductRequired, 'id' | 'createdAt' | 'description' | 'direction' | 'price' | 'priceWithSale' | 'publicId' | 'quantity' | 'sale' | 'tissue' | 'totalSum'> {
+	status: OrderProductStatusEnum | ProductStatusEnum
 	model: ModelFindOneData
 }
 

@@ -11,7 +11,7 @@ import { PaginationRequestDto, RequestOtherFieldsDto } from '../../../common'
 import { OrderOptionalDto, OrderRequiredDto } from './fields.dtos'
 import { PaymentCreateOneRequest, PaymentCreateOneRequestDto } from '../../payment'
 import { OrderProductCreateOneRequest, OrderProductCreateOneRequestDto } from '../../order-product'
-import { IsArray, IsNotEmpty, IsObject } from 'class-validator'
+import { IsArray, IsNotEmpty, IsObject, IsOptional, IsUUID } from 'class-validator'
 
 export class OrderFindManyRequestDto
 	extends IntersectionType(
@@ -43,6 +43,12 @@ export class OrderCreateOneWithPaymentProductRequestDto
 	@IsArray()
 	@IsObject({ each: true })
 	payments: Omit<PaymentCreateOneRequest, 'orderId'>[]
+
+	@ApiProperty({ type: String, isArray: true })
+	@IsOptional()
+	@IsArray()
+	@IsUUID('4', { each: true })
+	cartSPStatusIds: string[]
 }
 
 export class OrderUpdateOneRequestDto extends PickType(OrderOptionalDto, ['clientId', 'status', 'deliveryAddress', 'deliveryDate', 'deletedAt']) implements OrderUpdateOneRequest {}
