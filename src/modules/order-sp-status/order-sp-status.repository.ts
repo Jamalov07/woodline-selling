@@ -175,6 +175,7 @@ export class OrderSPStatusRepository {
 				priceWithSale: true,
 				totalSum: true,
 				sale: true,
+				status: true,
 				spStatus: {
 					select: {
 						id: true,
@@ -198,6 +199,7 @@ export class OrderSPStatusRepository {
 				priceWithSale: body.priceWithSale,
 				sale: body.sale,
 				totalSum: body.totalSum,
+				status: body.status,
 			},
 		})
 

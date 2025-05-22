@@ -14,6 +14,6 @@ export declare interface OrderSPStatusCreateOneRequest
 		Pick<OrderSPStatusOptional, 'orderId'> {}
 
 export declare interface OrderSPStatusUpdateOneRequest
-	extends Pick<OrderSPStatusOptional, 'quantity' | 'spStatusId' | 'deletedAt' | 'description' | 'price' | 'priceWithSale' | 'sale' | 'totalSum'> {}
+	extends Pick<OrderSPStatusOptional, 'quantity' | 'spStatusId' | 'deletedAt' | 'description' | 'price' | 'priceWithSale' | 'sale' | 'totalSum' | 'status'> {}
 
 export declare interface OrderSPStatusDeleteOneRequest extends Pick<OrderSPStatusOptional, 'id'>, Pick<RequestOtherFields, 'method'> {}

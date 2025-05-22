@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto, IsIntOrBigInt } from '@common'
 import { OrderSPStatusOptional, OrderSPStatusRequired } from '../interfaces'
+import { $Enums, OrderProductStatusEnum } from '@prisma/client'
 
 export class OrderSPStatusRequiredDto extends DefaultRequiredFieldsDto implements OrderSPStatusRequired {
 	@ApiProperty({ type: Number })
@@ -43,6 +44,11 @@ export class OrderSPStatusRequiredDto extends DefaultRequiredFieldsDto implement
 	@IsNotEmpty()
 	@IsIntOrBigInt()
 	totalSum: bigint
+
+	@ApiProperty({ enum: OrderProductStatusEnum })
+	@IsNotEmpty()
+	@IsEnum(OrderProductStatusEnum)
+	status: $Enums.OrderProductStatusEnum
 }
 
 export class OrderSPStatusOptionalDto extends DefaultOptionalFieldsDto implements OrderSPStatusOptional {
@@ -85,4 +91,9 @@ export class OrderSPStatusOptionalDto extends DefaultOptionalFieldsDto implement
 	@IsOptional()
 	@IsIntOrBigInt()
 	totalSum?: bigint
+
+	@ApiPropertyOptional({ enum: OrderProductStatusEnum })
+	@IsOptional()
+	@IsEnum(OrderProductStatusEnum)
+	status?: $Enums.OrderProductStatusEnum
 }

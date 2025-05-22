@@ -556,6 +556,7 @@ model OrderSPStatusModel {
   priceWithSale  BigInt     @map("price_with_sale")  @db.BigInt       @default(0)
   totalSum       BigInt     @map("total_sum")        @db.BigInt       @default(0)
   description    String     @map("decsription")      @db.VarChar()    @default("")
+  status         OrderProductStatusEnum                               @default(new)
 
   createdAt      DateTime   @map("created_at")       @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt      DateTime   @map("updated_at")       @db.Timestamptz  @updatedAt

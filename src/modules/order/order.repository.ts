@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../shared'
 import {
 	OrderCreateOneRequest,
+	OrderCreateOneWithPaymentProductRequest,
 	OrderDeleteOneRequest,
 	OrderFindManyRequest,
 	OrderFindOneRequest,
@@ -180,6 +181,62 @@ export class OrderRepository {
 				purchaseStatus: body.purchaseStatus,
 			},
 			select: { id: true, createdAt: true, client: true, deliveryAddress: true, deliveryDate: true, purchaseStatus: true, staff: true, status: true },
+		})
+		return order
+	}
+
+	async createOneWithAll(body: OrderCreateOneWithPaymentProductRequest) {
+		const order = await this.prisma.orderModel.create({
+			data: {
+				deliveryAddress: body.deliveryAddress,
+				clientId: body.clientId,
+				deliveryDate: new Date(body.deliveryDate),
+				staffId: body.staffId,
+				purchaseStatus: body.purchaseStatus,
+				payments: {
+					createMany: {
+						skipDuplicates: false,
+						data: body.payments.map((p) => {
+							return {
+								description: p.description,
+								exchangeRate: p.exchangeRate,
+								fromCurrency: p.fromCurrency,
+								method: p.method,
+								sum: p.sum,
+								totalSum: p.totalSum,
+							}
+						}),
+					},
+				},
+				// products: {
+				// 	createMany: {
+				// 		skipDuplicates:false,dat
+				// 	}
+				// }
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				client: true,
+				deliveryAddress: true,
+				deliveryDate: true,
+				purchaseStatus: true,
+				staff: true,
+				status: true,
+				payments: {
+					select: {
+						id: true,
+						createdAt: true,
+						description: true,
+						exchangeRate: true,
+						fromCurrency: true,
+						method: true,
+						sum: true,
+						toCurrency: true,
+						totalSum: true,
+					},
+				},
+			},
 		})
 		return order
 	}

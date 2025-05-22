@@ -28,9 +28,41 @@ export class CartSPStatusRepository {
 		const cartSPStatuss = await this.prisma.cartSPStatusModel.findMany({
 			where: {
 				deletedAt: deletedAtConverter(query.isDeleted),
-
 				staffId: query.staffId,
 				spStatusId: query.spStatusId,
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				description: true,
+				price: true,
+				priceWithSale: true,
+				sale: true,
+				quantity: true,
+				totalSum: true,
+				staff: true,
+				spStatus: {
+					select: {
+						status: true,
+						sp: {
+							select: {
+								id: true,
+								product: {
+									select: {
+										id: true,
+										description: true,
+										direction: true,
+										tissue: true,
+										quantity: true,
+										publicId: true,
+										model: { select: { id: true, name: true, furnitureType: { select: { id: true, name: true, createdAt: true } } } },
+									},
+								},
+								storehouse: { select: { name: true, id: true, createdAt: true } },
+							},
+						},
+					},
+				},
 			},
 			...paginationOptions,
 		})
@@ -42,6 +74,39 @@ export class CartSPStatusRepository {
 		const staff = await this.prisma.cartSPStatusModel.findFirst({
 			where: {
 				id: query.id,
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				description: true,
+				price: true,
+				priceWithSale: true,
+				sale: true,
+				quantity: true,
+				totalSum: true,
+				staff: true,
+				spStatus: {
+					select: {
+						status: true,
+						sp: {
+							select: {
+								id: true,
+								product: {
+									select: {
+										id: true,
+										description: true,
+										direction: true,
+										tissue: true,
+										quantity: true,
+										publicId: true,
+										model: { select: { id: true, name: true, furnitureType: { select: { id: true, name: true, createdAt: true } } } },
+									},
+								},
+								storehouse: { select: { name: true, id: true, createdAt: true } },
+							},
+						},
+					},
+				},
 			},
 		})
 

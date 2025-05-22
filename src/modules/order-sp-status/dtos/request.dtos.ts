@@ -20,7 +20,7 @@ export class OrderSPStatusCreateOneRequestDto
 	implements OrderSPStatusCreateOneRequest {}
 
 export class OrderSPStatusUpdateOneRequestDto
-	extends PickType(OrderSPStatusOptionalDto, ['quantity', 'spStatusId', 'deletedAt', 'description', 'price', 'priceWithSale', 'sale', 'totalSum'])
+	extends PickType(OrderSPStatusOptionalDto, ['quantity', 'spStatusId', 'deletedAt', 'description', 'status', 'price', 'priceWithSale', 'sale', 'totalSum'])
 	implements OrderSPStatusUpdateOneRequest {}
 
 export class OrderSPStatusDeleteOneRequestDto
