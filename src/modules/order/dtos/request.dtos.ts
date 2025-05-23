@@ -32,12 +32,6 @@ export class OrderCreateOneWithPaymentProductRequestDto
 	extends PickType(OrderRequiredDto, ['clientId', 'deliveryAddress', 'deliveryDate'])
 	implements OrderCreateOneWithPaymentProductRequest
 {
-	@ApiProperty({ type: OrderProductWithoutOrderIdDto, isArray: true })
-	@IsNotEmpty()
-	@IsArray()
-	@IsObject({ each: true })
-	products: Omit<OrderProductCreateOneRequest, 'orderId'>[]
-
 	@ApiProperty({ type: PaymentWithoutOrderIdDto, isArray: true })
 	@IsNotEmpty()
 	@IsArray()
@@ -48,7 +42,13 @@ export class OrderCreateOneWithPaymentProductRequestDto
 	@IsOptional()
 	@IsArray()
 	@IsUUID('4', { each: true })
-	cartSPStatusIds: string[]
+	cartIds: string[]
+
+	@ApiProperty({ type: String, isArray: true })
+	@IsOptional()
+	@IsArray()
+	@IsUUID('4', { each: true })
+	cartSPSIds: string[]
 }
 
 export class OrderUpdateOneRequestDto extends PickType(OrderOptionalDto, ['clientId', 'status', 'deliveryAddress', 'deliveryDate', 'deletedAt']) implements OrderUpdateOneRequest {}

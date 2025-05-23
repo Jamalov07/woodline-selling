@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../shared'
 import {
 	InventoryCreateOneRequest,
@@ -11,6 +11,7 @@ import {
 } from './interfaces'
 import { deletedAtConverter } from '../../common'
 import { InventoryController } from './inventory.controller'
+import { InventoryStatusEnum, InventoryTypeEnum } from '@prisma/client'
 
 @Injectable()
 export class InventoryRepository {
@@ -46,6 +47,25 @@ export class InventoryRepository {
 		const staff = await this.prisma.inventoryModel.findFirst({
 			where: {
 				id: query.id,
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				fromStorekeeper: true,
+				toStorekeeper: true,
+				fromWarehouse: true,
+				toWarehouse: true,
+				provider: true,
+				status: true,
+				type: true,
+				products: {
+					select: {
+						id: true,
+						productId: true,
+						createdAt: true,
+						statuses: { select: { id: true, quantity: true, status: true } },
+					},
+				},
 			},
 		})
 
@@ -140,6 +160,22 @@ export class InventoryRepository {
 				type: body.type,
 			},
 		})
+
+		for (const pr of body.products) {
+			await this.prisma.iPModel.create({
+				data: {
+					productId: pr.productId,
+					inventoryId: inventory.id,
+					statuses: {
+						createMany: {
+							skipDuplicates: true,
+							data: pr.statuses.map((s) => ({ status: s.name, quantity: s.quantity })),
+						},
+					},
+				},
+			})
+		}
+
 		return inventory
 	}
 
@@ -157,6 +193,107 @@ export class InventoryRepository {
 				type: body.type,
 			},
 		})
+
+		await this.prisma.iPStatusModel.deleteMany({ where: { id: { in: body.productStatusIdsToDelete } } })
+		await this.prisma.iPModel.deleteMany({ where: { id: { in: body.productIdsToDelete } } })
+
+		for (const pr of body.products) {
+			await this.prisma.iPModel.create({
+				data: {
+					productId: pr.productId,
+					inventoryId: inventory.id,
+					statuses: {
+						createMany: {
+							skipDuplicates: true,
+							data: pr.statuses.map((s) => ({ status: s.name, quantity: s.quantity })),
+						},
+					},
+				},
+			})
+		}
+
+		if (inventory.status === InventoryStatusEnum.accepted) {
+			const invent = await this.findOne({ id: inventory.id })
+
+			//purchase
+			if (inventory.type === InventoryTypeEnum.purchase) {
+				for (const pr of invent.products) {
+					let storehouseProduct = await this.prisma.sPModel.findFirst({ where: { storehouseId: inventory.toWarehouseId, productId: pr.productId } })
+					if (!storehouseProduct) {
+						storehouseProduct = await this.prisma.sPModel.create({
+							data: {
+								storehouseId: inventory.toWarehouseId,
+								productId: pr.productId,
+								statuses: {
+									createMany: { skipDuplicates: false, data: pr.statuses.map((s) => ({ quantity: s.quantity, status: s.status })) },
+								},
+							},
+						})
+					} else {
+						for (const status of pr.statuses) {
+							let newSt = await this.prisma.sPStatusModel.findFirst({ where: { spId: storehouseProduct.id, status: status.status } })
+							if (newSt) {
+								await this.prisma.sPStatusModel.update({ where: { id: newSt.id }, data: { quantity: newSt.quantity + status.quantity } })
+							} else {
+								newSt = await this.prisma.sPStatusModel.create({ data: { status: status.status, quantity: status.quantity, spId: storehouseProduct.id } })
+							}
+						}
+					}
+				}
+
+				//selling
+			} else if (inventory.type === InventoryTypeEnum.selling) {
+				for (const pr of invent.products) {
+					const storehouseProduct = await this.prisma.sPModel.findFirst({ where: { storehouseId: inventory.toWarehouseId, productId: pr.productId } })
+					if (!storehouseProduct) {
+						throw new BadRequestException('product not found in storehouse')
+					} else {
+						for (const status of pr.statuses) {
+							const newSt = await this.prisma.sPStatusModel.findFirst({ where: { spId: storehouseProduct.id, status: status.status } })
+							if (newSt) {
+								if (!(newSt.quantity - status.quantity)) {
+									throw new BadRequestException('product not enough in stehouse')
+								} else {
+									await this.prisma.sPStatusModel.update({ where: { id: newSt.id }, data: { quantity: newSt.quantity - status.quantity } })
+								}
+							} else {
+								throw new BadRequestException('product with this status not found in storehouse')
+							}
+						}
+					}
+				}
+
+				//transfer
+			} else {
+				for (const pr of invent.products) {
+					const fromSP = await this.prisma.sPModel.findFirst({ where: { storehouseId: invent.fromWarehouse.id, productId: pr.productId } })
+					if (!fromSP) {
+						throw new BadRequestException('product not found in storehouse')
+					}
+					let toSP = await this.prisma.sPModel.findFirst({ where: { storehouseId: invent.toWarehouse.id, productId: pr.productId } })
+					if (!toSP) {
+						toSP = await this.prisma.sPModel.create({
+							data: {
+								productId: pr.productId,
+								storehouseId: invent.toWarehouse.id,
+								statuses: {
+									createMany: { skipDuplicates: false, data: pr.statuses.map((s) => ({ quantity: s.quantity, status: s.status })) },
+								},
+							},
+						})
+					} else {
+						for (const st of pr.statuses) {
+							let newSt = await this.prisma.sPStatusModel.findFirst({ where: { spId: toSP.id, status: st.status } })
+							if (newSt) {
+								await this.prisma.sPStatusModel.update({ where: { id: newSt.id }, data: { quantity: newSt.quantity + st.quantity } })
+							} else {
+								newSt = await this.prisma.sPStatusModel.create({ data: { status: st.status, quantity: st.quantity, spId: toSP.id } })
+							}
+						}
+					}
+				}
+			}
+		}
 
 		return inventory
 	}

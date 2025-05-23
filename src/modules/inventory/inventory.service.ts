@@ -112,7 +112,7 @@ export class InventoryService {
 			throw new BadRequestException(`you can't update accepted inventory`)
 		}
 
-		await this.inventoryRepository.updateOne(query, { ...body })
+		const updated = await this.inventoryRepository.updateOne(query, { ...body })
 
 		return createResponse({ data: null, success: { messages: ['update one success'] } })
 	}

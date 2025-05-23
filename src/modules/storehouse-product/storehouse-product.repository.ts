@@ -40,7 +40,6 @@ export class StorehouseProductRepository {
 						status: {
 							in: query.statuses,
 						},
-						isBooked: query.isBooked,
 					},
 				},
 			},
@@ -76,7 +75,6 @@ export class StorehouseProductRepository {
 						status: {
 							in: query.statuses,
 						},
-						isBooked: query.isBooked,
 					},
 				},
 			},

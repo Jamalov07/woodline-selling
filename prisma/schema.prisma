@@ -88,7 +88,7 @@ enum OrderProductStatusEnum {
 }
 
 enum ProductStatusEnum {
-  ready     @map("ready")
+  active    @map("active")
   defected  @map("defected") 
 
   @@map("product_status")
@@ -99,8 +99,9 @@ enum SPStatusEnum {
   active     @map("active")
   confirmed  @map("confirmed")
   defected   @map("defected") 
+  sold       @map("sold")
 
-  @@map("sp_stattus")
+  @@map("sp_statuss")
 }
 
 enum ClientPurchaseStatusEnum {
@@ -212,7 +213,7 @@ model StaffModel {
   roles      StaffRoleModel[]
   actions    ActionModel[]
   orders     OrderModel[]
-  bookings   SPStatusModel[]
+  bookings   SPSBookingModel[]
   incomings  InventoryModel[]  @relation(name: "in")
   outgoings  InventoryModel[]  @relation(name: "out")
   cartSPStatuses  CartSPStatusModel[]
@@ -435,27 +436,44 @@ model SPModel {
 }
 
 model SPStatusModel {
-  id                   String             @map("id")                     @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  isBooked             Boolean            @map("is_booked")              @db.Boolean      @default(false)
-  spId                 String             @map("sp_id")  @db.Uuid 
-  bookedStorekeeperId  String?            @map("booked_storekeeper_id")  @db.Uuid
-  status               SPStatusEnum       @map("status")                                  @default(new)
-  quantity             Int                @map("quantity")               @db.Integer      @default(1)
+  id         String        @map("id")          @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  spId       String        @map("sp_id")       @db.Uuid 
+  status     SPStatusEnum  @map("status")                       @default(new)
+  quantity   Int           @map("quantity")    @db.Integer      @default(1)
 
-  createdAt            DateTime           @map("created_at")             @db.Timestamptz  @default(dbgenerated("NOW()"))
-  updatedAt            DateTime           @map("updated_at")             @db.Timestamptz  @updatedAt
-  deletedAt            DateTime?          @map("deleted_at")             @db.Timestamptz
+  createdAt  DateTime      @map("created_at")  @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt  DateTime      @map("updated_at")  @db.Timestamptz  @updatedAt
+  deletedAt  DateTime?     @map("deleted_at")  @db.Timestamptz
 
-  bookedStorekeeper  StaffModel?  @relation(fields: [ bookedStorekeeperId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
-  sp                 SPModel      @relation(fields: [ spId                ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  sp  SPModel  @relation(fields: [ spId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
 
-  orders  OrderSPStatusModel[]
-  carts   CartSPStatusModel[]
+  orders    OrderSPStatusModel[]
+  carts     CartSPStatusModel[]
+  bookings  SPSBookingModel[]
 
   @@id([ id ])
   @@index([ id ])
   @@map("sp_status")
 }
+
+model SPSBookingModel {
+  id                   String     @map("id")                     @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
+  spsId                String     @map("sp_id")                  @db.Uuid 
+  bookedStorekeeperId  String?    @map("booked_storekeeper_id")  @db.Uuid
+  count                Int        @map("count")                  @db.Integer      @default(1)
+
+  createdAt            DateTime   @map("created_at")             @db.Timestamptz  @default(dbgenerated("NOW()"))
+  updatedAt            DateTime   @map("updated_at")             @db.Timestamptz  @updatedAt
+  deletedAt            DateTime?  @map("deleted_at")             @db.Timestamptz
+
+  bookedStorekeeper  StaffModel?    @relation(fields: [ bookedStorekeeperId ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+  sps                SPStatusModel  @relation(fields: [ spsId               ], references: [ id ], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ id ])
+  @@index([ id ])
+  @@map("sp_booking")
+}
+
 
 model InventoryModel {
   id                 String                @map("id")                   @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))

@@ -64,6 +64,26 @@ export class OrderRepository {
 						status: true,
 					},
 				},
+				sps: {
+					select: {
+						id: true,
+						createdAt: true,
+						quantity: true,
+						description: true,
+						price: true,
+						priceWithSale: true,
+						totalSum: true,
+						sale: true,
+						status: true,
+						spStatus: {
+							select: {
+								id: true,
+								status: true,
+								sp: { select: { product: { select: { direction: true, publicId: true, description: true, model: true, quantity: true, tissue: true } } } },
+							},
+						},
+					},
+				},
 			},
 			...paginationOptions,
 		})
@@ -100,6 +120,26 @@ export class OrderRepository {
 						tissue: true,
 						totalSum: true,
 						status: true,
+					},
+				},
+				sps: {
+					select: {
+						id: true,
+						createdAt: true,
+						quantity: true,
+						description: true,
+						price: true,
+						priceWithSale: true,
+						totalSum: true,
+						sale: true,
+						status: true,
+						spStatus: {
+							select: {
+								id: true,
+								status: true,
+								sp: { select: { product: { select: { direction: true, publicId: true, description: true, model: true, quantity: true, tissue: true } } } },
+							},
+						},
 					},
 				},
 			},
@@ -186,6 +226,10 @@ export class OrderRepository {
 	}
 
 	async createOneWithAll(body: OrderCreateOneWithPaymentProductRequest) {
+		const carts = await this.prisma.cartModel.findMany({ where: { id: { in: body.cartIds } } })
+
+		const cartSPSs = await this.prisma.cartSPStatusModel.findMany({ where: { id: { in: body.cartSPSIds } } })
+
 		const order = await this.prisma.orderModel.create({
 			data: {
 				deliveryAddress: body.deliveryAddress,
@@ -208,11 +252,41 @@ export class OrderRepository {
 						}),
 					},
 				},
-				// products: {
-				// 	createMany: {
-				// 		skipDuplicates:false,dat
-				// 	}
-				// }
+				products: {
+					createMany: {
+						skipDuplicates: false,
+						data: carts.map((c) => {
+							return {
+								direction: c.direction,
+								modelId: c.modelId,
+								totalSum: c.totalSum,
+								publicId: c.publicId,
+								tissue: c.tissue,
+								description: c.direction,
+								price: c.price,
+								priceWithSale: c.priceWithSale,
+								sale: c.sale,
+								quantity: c.quantity,
+							}
+						}),
+					},
+				},
+				sps: {
+					createMany: {
+						skipDuplicates: false,
+						data: cartSPSs.map((p) => {
+							return {
+								spStatusId: p.spStatusId,
+								quantity: p.quantity,
+								description: p.description,
+								price: p.price,
+								priceWithSale: p.priceWithSale,
+								sale: p.sale,
+								totalSum: p.totalSum,
+							}
+						}),
+					},
+				},
 			},
 			select: {
 				id: true,
@@ -236,8 +310,48 @@ export class OrderRepository {
 						totalSum: true,
 					},
 				},
+				products: {
+					select: {
+						id: true,
+						createdAt: true,
+						description: true,
+						direction: true,
+						model: { select: { id: true, createdAt: true, name: true, furnitureType: { select: { name: true, id: true, createdAt: true } } } },
+						price: true,
+						priceWithSale: true,
+						quantity: true,
+						sale: true,
+						publicId: true,
+						tissue: true,
+						totalSum: true,
+						status: true,
+					},
+				},
+				sps: {
+					select: {
+						id: true,
+						createdAt: true,
+						quantity: true,
+						description: true,
+						price: true,
+						priceWithSale: true,
+						totalSum: true,
+						sale: true,
+						status: true,
+						spStatus: {
+							select: {
+								id: true,
+								status: true,
+								sp: { select: { product: { select: { direction: true, publicId: true, description: true, model: true, quantity: true, tissue: true } } } },
+							},
+						},
+					},
+				},
 			},
 		})
+
+		await this.prisma.cartModel.deleteMany({ where: { id: { in: body.cartIds } } })
+
 		return order
 	}
 

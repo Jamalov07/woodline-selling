@@ -30,6 +30,7 @@ export class FurnitureTypeRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				name: { contains: query.name, mode: 'insensitive' },
 			},
+			select: { id: true, name: true, createdAt: true },
 			...paginationOptions,
 		})
 
@@ -41,6 +42,7 @@ export class FurnitureTypeRepository {
 			where: {
 				id: query.id,
 			},
+			select: { id: true, name: true, createdAt: true },
 		})
 
 		return staff

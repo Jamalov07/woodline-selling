@@ -30,7 +30,13 @@ export class ModelRepository {
 				deletedAt: deletedAtConverter(query.isDeleted),
 				name: { contains: query.name, mode: 'insensitive' },
 			},
-			select: { id: true, name: true, createdAt: true, updatedAt: true, deletedAt: true, furnitureType: true, provider: true },
+			select: {
+				id: true,
+				name: true,
+				createdAt: true,
+				furnitureType: { select: { id: true, name: true, createdAt: true } },
+				provider: { select: { id: true, fullname: true, phone: true, balance: true, createdAt: true } },
+			},
 			...paginationOptions,
 		})
 
@@ -42,7 +48,13 @@ export class ModelRepository {
 			where: {
 				id: query.id,
 			},
-			select: { id: true, name: true, createdAt: true, updatedAt: true, deletedAt: true, furnitureType: true, provider: true },
+			select: {
+				id: true,
+				name: true,
+				createdAt: true,
+				furnitureType: { select: { id: true, name: true, createdAt: true } },
+				provider: { select: { id: true, fullname: true, phone: true, balance: true, createdAt: true } },
+			},
 		})
 
 		return staff

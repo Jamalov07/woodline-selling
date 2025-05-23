@@ -19,9 +19,9 @@ export declare interface OrderCreateOneRequest extends Pick<OrderRequired, 'clie
 export declare interface OrderCreateOneWithPaymentProductRequest
 	extends Pick<OrderRequired, 'clientId' | 'deliveryAddress' | 'deliveryDate'>,
 		Pick<OrderOptional, 'staffId' | 'purchaseStatus'> {
-	products: Omit<OrderProductCreateOneRequest, 'orderId'>[]
 	payments: Omit<PaymentCreateOneRequest, 'orderId'>[]
-	cartSPStatusIds: string[]
+	cartIds: string[]
+	cartSPSIds: string[]
 }
 
 export declare interface OrderUpdateOneRequest extends Pick<OrderOptional, 'clientId' | 'deletedAt' | 'status' | 'deliveryDate' | 'deliveryAddress' | 'staffId'> {}
