@@ -38,18 +38,6 @@ export class ProductRepository {
 					{ model: { name: { contains: query.search, mode: 'insensitive' } } },
 					{ model: { furnitureType: { name: { contains: query.search, mode: 'insensitive' } } } },
 				],
-				storehouses: {
-					some: {
-						statuses: {
-							some: {
-								status: {
-									in: query.statuses,
-								},
-								isBooked: query.isBooked,
-							},
-						},
-					},
-				},
 			},
 			...paginationOptions,
 		})
@@ -81,18 +69,6 @@ export class ProductRepository {
 					{ model: { name: { contains: query.search, mode: 'insensitive' } } },
 					{ model: { furnitureType: { name: { contains: query.search, mode: 'insensitive' } } } },
 				],
-				storehouses: {
-					some: {
-						statuses: {
-							some: {
-								status: {
-									in: query.statuses,
-								},
-								isBooked: query.isBooked,
-							},
-						},
-					},
-				},
 			},
 		})
 

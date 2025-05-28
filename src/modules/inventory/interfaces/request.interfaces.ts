@@ -23,7 +23,8 @@ export declare interface InventoryCreateOneProduct {
 	statuses: InventoryCreateOneProductStatus[]
 }
 export declare interface InventoryCreateOneRequest
-	extends Pick<InventoryRequired, 'fromWarehouseId' | 'fromStorekeeperId' | 'providerId' | 'toStorekeeperId' | 'toWarehouseId' | 'status' | 'type'> {
+	extends Pick<InventoryRequired, 'type'>,
+		Pick<InventoryOptional, 'fromWarehouseId' | 'fromStorekeeperId' | 'providerId' | 'toStorekeeperId' | 'toWarehouseId' | 'status'> {
 	products: InventoryCreateOneProduct[]
 }
 

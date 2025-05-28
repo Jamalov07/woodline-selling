@@ -35,13 +35,32 @@ export class StorehouseProductRepository {
 					{ product: { model: { name: { contains: query.search, mode: 'insensitive' } } } },
 					{ product: { model: { furnitureType: { name: { contains: query.search, mode: 'insensitive' } } } } },
 				],
-				statuses: {
-					some: {
-						status: {
-							in: query.statuses,
-						},
+				// statuses: {
+				// 	some: {
+				// 		status: {
+				// 			in: query.statuses,
+				// 		},
+				// 	},
+				// },
+			},
+			select: {
+				id: true,
+				createdAt: true,
+				product: {
+					select: {
+						id: true,
+						description: true,
+						direction: true,
+						publicId: true,
+						quantity: true,
+						tissue: true,
+						model: { select: { id: true, name: true, createdAt: true, furnitureType: { select: { id: true, name: true, createdAt: true } } } },
 					},
 				},
+				storehouse: {
+					select: { name: true, type: true, createdAt: true, id: true },
+				},
+				statuses: { select: { id: true, createdAt: true, quantity: true, status: true } },
 			},
 			...paginationOptions,
 		})
@@ -70,13 +89,13 @@ export class StorehouseProductRepository {
 					{ product: { model: { name: { contains: query.search, mode: 'insensitive' } } } },
 					{ product: { model: { furnitureType: { name: { contains: query.search, mode: 'insensitive' } } } } },
 				],
-				statuses: {
-					some: {
-						status: {
-							in: query.statuses,
-						},
-					},
-				},
+				// statuses: {
+				// 	some: {
+				// 		status: {
+				// 			in: query.statuses,
+				// 		},
+				// 	},
+				// },
 			},
 		})
 

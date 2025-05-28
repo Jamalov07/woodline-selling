@@ -11,6 +11,7 @@ import {
 } from './interfaces'
 import { deletedAtConverter } from '../../common'
 import { OrderSPStatusController } from './order-sp-status.controller'
+import { OrderProductStatusEnum } from '@prisma/client'
 
 @Injectable()
 export class OrderSPStatusRepository {
@@ -202,6 +203,10 @@ export class OrderSPStatusRepository {
 				status: body.status,
 			},
 		})
+
+		if (body.status === OrderProductStatusEnum.received) {
+			await this.prisma.sPStatusModel.update({ where: { id: orderSPStatus.spStatusId }, data: { quantity: { decrement: orderSPStatus.quantity } } })
+		}
 
 		return orderSPStatus
 	}

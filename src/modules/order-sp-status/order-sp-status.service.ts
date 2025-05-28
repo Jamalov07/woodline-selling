@@ -11,7 +11,7 @@ import {
 } from './interfaces'
 import { createResponse, CRequest, DeleteMethodEnum } from '../../common'
 import { StaffService } from '../staff'
-import { StaffRoleEnum } from '@prisma/client'
+import { OrderProductStatusEnum, StaffRoleEnum } from '@prisma/client'
 
 @Injectable()
 export class OrderSPStatusService {
@@ -91,7 +91,11 @@ export class OrderSPStatusService {
 	}
 
 	async updateOne(query: OrderSPStatusGetOneRequest, body: OrderSPStatusUpdateOneRequest) {
-		await this.getOne(query)
+		const orderSPS = await this.getOne(query)
+
+		if (orderSPS.data.status == OrderProductStatusEnum.received) {
+			throw new BadRequestException("you can't update received product")
+		}
 
 		await this.orderSPStatusRepository.updateOne(query, { ...body })
 

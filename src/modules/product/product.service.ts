@@ -38,7 +38,7 @@ export class ProductService {
 		const staff = await this.productRepository.findOne(query)
 
 		if (!staff) {
-			throw new BadRequestException('furniture type not found')
+			throw new BadRequestException('product not found')
 		}
 		return createResponse({ data: { ...staff }, success: { messages: ['find one success'] } })
 	}
@@ -62,7 +62,7 @@ export class ProductService {
 		const staff = await this.productRepository.getOne(query)
 
 		if (!staff) {
-			throw new BadRequestException('furniture type not found')
+			throw new BadRequestException('product not found')
 		}
 
 		return createResponse({ data: staff, success: { messages: ['get one success'] } })

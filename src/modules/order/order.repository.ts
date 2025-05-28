@@ -226,9 +226,17 @@ export class OrderRepository {
 	}
 
 	async createOneWithAll(body: OrderCreateOneWithPaymentProductRequest) {
-		const carts = await this.prisma.cartModel.findMany({ where: { id: { in: body.cartIds } } })
+		let carts = []
+		if (body.cartIds?.length) {
+			carts = await this.prisma.cartModel.findMany({ where: { id: { in: body.cartIds } } })
+			await this.prisma.cartModel.deleteMany({ where: { id: { in: body.cartIds } } })
+		}
 
-		const cartSPSs = await this.prisma.cartSPStatusModel.findMany({ where: { id: { in: body.cartSPSIds } } })
+		let cartSPSs = []
+		if (body.cartSPSIds?.length) {
+			cartSPSs = await this.prisma.cartSPStatusModel.findMany({ where: { id: { in: body.cartSPSIds } } })
+			await this.prisma.cartSPStatusModel.deleteMany({ where: { id: { in: body.cartSPSIds } } })
+		}
 
 		const order = await this.prisma.orderModel.create({
 			data: {
@@ -342,15 +350,34 @@ export class OrderRepository {
 							select: {
 								id: true,
 								status: true,
-								sp: { select: { product: { select: { direction: true, publicId: true, description: true, model: true, quantity: true, tissue: true } } } },
+								sp: {
+									select: {
+										product: {
+											select: {
+												direction: true,
+												publicId: true,
+												description: true,
+												model: {
+													select: {
+														id: true,
+														createdAt: true,
+														name: true,
+														provider: true,
+														furnitureType: { select: { id: true, name: true, createdAt: true } },
+													},
+												},
+												quantity: true,
+												tissue: true,
+											},
+										},
+									},
+								},
 							},
 						},
 					},
 				},
 			},
 		})
-
-		await this.prisma.cartModel.deleteMany({ where: { id: { in: body.cartIds } } })
 
 		return order
 	}
