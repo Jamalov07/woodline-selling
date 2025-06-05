@@ -81,7 +81,10 @@ enum OrderStatusEnum {
 
 enum OrderProductStatusEnum {
   new        @map("new")
+  accepted   @map("accepted")
   cancelled  @map("cancelled") 
+  sold       @map("sold") 
+  loaded     @map("loaded") 
   received   @map("received")
 
   @@map("order_product_status")
@@ -477,9 +480,6 @@ model SPSBookingModel {
 
 model InventoryModel {
   id                 String                @map("id")                   @db.Uuid         @default(dbgenerated("GEN_RANDOM_UUID()"))
-  // purchase  toWarehouseId toStorekeeperId
-  // selling  fromWarehouseId fromStorekeeperId
-  // transfer to && from 
   type               InventoryTypeEnum     @map("type")
   providerId         String?               @map("provider_id")          @db.Uuid 
   toWarehouseId      String?               @map("to_warehouse_id")      @db.Uuid 
@@ -574,7 +574,7 @@ model OrderSPStatusModel {
   priceWithSale  BigInt     @map("price_with_sale")  @db.BigInt       @default(0)
   totalSum       BigInt     @map("total_sum")        @db.BigInt       @default(0)
   description    String     @map("decsription")      @db.VarChar()    @default("")
-  status         OrderProductStatusEnum                               @default(new)
+  status         OrderProductStatusEnum                               @default(sold)
 
   createdAt      DateTime   @map("created_at")       @db.Timestamptz  @default(dbgenerated("NOW()"))
   updatedAt      DateTime   @map("updated_at")       @db.Timestamptz  @updatedAt
