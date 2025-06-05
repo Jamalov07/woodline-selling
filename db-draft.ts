@@ -161,3 +161,81 @@ interface Order {
 
 	products: OrderProduct[]
 }
+
+//======
+
+enum PaymentMethod {
+	cash_with_receipt, // Наличный с чеком
+	cash_without_receipt, // Наличный без чека
+	card_payme, // С карты PayMe
+	card_uzum, // С карты Uzum
+	card_anor, // С карты Anor
+	card_solfy, // С карты Solfy
+	card_zoodpay, // С карты ZoodPay
+	card_to_card, // С карты на карту
+	transfer, // Перечисление
+	terminal, // Терминал
+}
+
+enum PaymentCurrency {
+	uzs,
+	usd,
+}
+
+interface Payment {
+	sum: number
+	method: PaymentMethod
+	fromCurrency: PaymentCurrency
+	exchangeRate: number
+	toCurrency: PaymentCurrency
+	totalSum: number
+	description: string
+
+	orderId: string
+}
+
+interface FurnitureType {
+	name: string
+}
+
+interface Model {
+	name: string
+	providerId: string
+	furnitureTypId: string
+}
+
+//=============
+
+enum UserRoleName {
+	client,
+	provider,
+	seller,
+	storekeeper,
+	admin,
+}
+
+interface User {
+	phone: string
+	fullname: string
+	password: string
+	refreshToken: string
+	balance: number
+	whereFrom: string
+}
+
+interface UserRole {
+	userId: string
+	role: UserRoleName
+}
+
+interface UserRoleAction {
+	userRoleId: string
+	actionId: string
+}
+
+interface Action {
+	url: string
+	name: string
+	method: string
+	description: string
+}
